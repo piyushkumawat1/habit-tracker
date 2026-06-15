@@ -11,7 +11,7 @@ export default function DashboardLayout({ currentPage, onNavigate, children }) {
 
   return (
     <div id="app">
-      <Sidebar currentPage={currentPage} onNavigate={handleNavigate} />
+      <Sidebar currentPage={currentPage} onNavigate={handleNavigate} isOpen={sidebarOpen} />
 
       {sidebarOpen && <div className="sidebar-overlay active" onClick={() => setSidebarOpen(false)} />}
 

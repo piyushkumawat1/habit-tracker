@@ -1,6 +1,6 @@
 import { useAuth } from '../../context/AuthContext.jsx';
 
-export default function Sidebar({ currentPage, onNavigate }) {
+export default function Sidebar({ currentPage, onNavigate, isOpen }) {
   const { user, logout } = useAuth();
 
   const links = [
@@ -14,7 +14,7 @@ export default function Sidebar({ currentPage, onNavigate }) {
   ];
 
   return (
-    <nav id="sidebar" className="sidebar">
+    <nav id="sidebar" className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div 
         className="sidebar-brand" 
         onClick={() => onNavigate('home')}
