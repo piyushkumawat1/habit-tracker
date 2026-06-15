@@ -1,0 +1,206 @@
+import { useState, useRef } from 'react';
+import { useAuth } from '../context/AuthContext.jsx';
+import { authApi } from '../lib/api.js';
+import { useToast } from '../context/ToastContext.jsx';
+import { supabase } from '../lib/supabase';
+import { useTheme } from '../context/ThemeContext.jsx';
+
+export default function Profile() {
+  const { user, updateUser, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const showToast = useToast();
+  
+  const [name, setName] = useState(user?.name || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [password, setPassword] = useState('');
+  const [avatar, setAvatar] = useState(user?.avatar || '');
+  
+  const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('Image must be less than 2MB', '⚠️');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      setAvatar(publicUrl);
+      showToast('Avatar uploaded successfully', '✅');
+    } catch (error) {
+      showToast('Error uploading avatar', '❌');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      // 1. Update Profile (public.users)
+      const data = { name, email, avatar };
+      const res = await authApi.updateProfile(data);
+      updateUser(res.data);
+
+      // 2. Update Password if provided (auth.users)
+      if (password) {
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw error;
+        setPassword('');
+      }
+      
+      showToast('Profile updated successfully', '✅');
+    } catch (err) {
+      showToast(err.message || 'Failed to update profile', '❌');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section className="page active" style={{ maxWidth: 600, margin: '0 auto', paddingTop: '2rem' }}>
+      <div className="page-header" style={{ marginBottom: '2rem' }}>
+        <div>
+          <h1>Your Profile</h1>
+          <p className="page-subtitle">Manage your personal information and preferences</p>
+        </div>
+      </div>
+
+      <div className="glass-card" style={{ padding: '2rem' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div 
+              className="user-avatar" 
+              style={{ width: 100, height: 100, fontSize: '3rem', cursor: 'pointer', position: 'relative', overflow: 'hidden', borderRadius: '50%', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              {avatar ? (
+                <img src={avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                name?.[0]?.toUpperCase() || email?.[0]?.toUpperCase() || 'U'
+              )}
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: '0.75rem', padding: '6px 0', textAlign: 'center', fontWeight: '500' }}>
+                Edit
+              </div>
+            </div>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              style={{ display: 'none' }} 
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Name</label>
+            <input 
+              type="text" 
+              value={name} 
+              onChange={e => setName(e.target.value)} 
+              className="form-input"
+              placeholder="Your name"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Email (Cannot be changed here)</label>
+            <input 
+              type="email" 
+              value={email} 
+              className="form-input"
+              disabled
+              style={{ opacity: 0.6 }}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>New Password (optional)</label>
+            <input 
+              type="password" 
+              value={password} 
+              onChange={e => setPassword(e.target.value)} 
+              className="form-input"
+              placeholder="Leave blank to keep current"
+              minLength={6}
+            />
+          </div>
+
+          <div className="form-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)' }}>
+            <div>
+              <label style={{ margin: 0, fontWeight: 600 }}>App Theme</label>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)', margin: 0 }}>Switch between dark and light mode</p>
+            </div>
+            <button 
+              type="button" 
+              onClick={toggleTheme} 
+              style={{ 
+                background: 'var(--bg-raised)', 
+                border: '1px solid var(--border)', 
+                color: 'var(--text-primary)', 
+                padding: '8px 16px', 
+                borderRadius: 'var(--radius-full)',
+                cursor: 'pointer',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              {theme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode'}
+            </button>
+          </div>
+
+          <button type="submit" className="btn btn-primary" disabled={loading} style={{ marginTop: '1rem', width: '100%' }}>
+            {loading ? 'Saving...' : 'Save Changes'}
+          </button>
+
+          <button 
+            type="button" 
+            className="btn" 
+            onClick={logout} 
+            style={{ 
+              marginTop: '0.5rem', 
+              width: '100%', 
+              background: 'transparent', 
+              border: '1px solid rgba(251, 113, 133, 0.3)', 
+              color: 'var(--rose)',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(251, 113, 133, 0.1)';
+              e.currentTarget.style.borderColor = 'var(--rose)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.borderColor = 'rgba(251, 113, 133, 0.3)';
+            }}
+          >
+            Sign Out
+          </button>
+        </form>
+      </div>
+    </section>
+  );
+}
