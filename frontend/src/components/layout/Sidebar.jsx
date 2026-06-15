@@ -22,10 +22,8 @@ export default function Sidebar({ currentPage, onNavigate }) {
         onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
         onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
       >
-        <div className="brand-icon" style={{ background: 'var(--accent-soft)', borderRadius: '8px', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px' }}>
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
+        <div className="brand-icon" style={{ borderRadius: '8px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px' }}>
+          <img src="/logo.png" alt="Habitly Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
         <span className="brand-name" style={{ color: 'var(--text-primary)', fontSize: '1.25rem', fontWeight: '700', letterSpacing: '0.5px' }}>Habitly</span>
       </div>

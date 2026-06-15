@@ -34,11 +34,8 @@ export default function Login({ onSwitch }) {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-brand">
-          <div className="brand-icon" style={{ width: 48, height: 48 }}>
-            <svg width="36" height="36" viewBox="0 0 26 26" fill="none">
-              <rect width="26" height="26" rx="7" fill="#8b84ff" opacity="0.15" />
-              <path d="M7.5 13.5L11 17L18.5 9.5" stroke="#8b84ff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+          <div className="brand-icon" style={{ width: 64, height: 64, borderRadius: '16px', overflow: 'hidden' }}>
+            <img src="/logo.png" alt="Habitly Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <h1>Welcome back</h1>
           <p>Sign in to continue your habit journey</p>
