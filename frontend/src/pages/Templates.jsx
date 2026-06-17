@@ -29,8 +29,8 @@ export default function Templates() {
 
   async function loadTemplates() {
     try {
-      const data = await templatesApi.getAll();
-      setTemplates(data || []);
+      const res = await templatesApi.getAll();
+      setTemplates(res.data || []);
     } catch (err) {
       showToast('Failed to load templates.', '❌');
     } finally {
