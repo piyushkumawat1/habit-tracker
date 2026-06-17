@@ -111,7 +111,13 @@ export default function Profile() {
       showToast('Notifications enabled successfully!', '🔔');
     } catch (err) {
       console.error('Detailed Push Error:', err);
-      showToast(err.message || 'Failed to enable notifications', '❌');
+      
+      // Handle Brave/Privacy browser specific block
+      if (err.name === 'AbortError' && err.message.includes('push service error')) {
+        showToast('Push blocked! If using Brave, enable "Google services for push messaging" in Settings.', '❌');
+      } else {
+        showToast(err.message || 'Failed to enable notifications', '❌');
+      }
     } finally {
       setSubscribing(false);
     }
