@@ -69,7 +69,7 @@ export const logsApi = {
   },
   toggle: async (date, habitId) => {
     // Check if log exists
-    const { data: existing } = await supabase.from('logs').select('*').eq('date', date).eq('habit_id', habitId).single();
+    const { data: existing } = await supabase.from('logs').select('*').eq('date', date).eq('habit_id', habitId).maybeSingle();
     if (existing) {
       await supabase.from('logs').delete().eq('id', existing.id);
       return { data: { action: 'removed' } };
