@@ -16,7 +16,64 @@ export default function Profile() {
   const [avatar, setAvatar] = useState(user?.avatar || '');
   
   const [loading, setLoading] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Utility function to convert VAPID key string to Uint8Array
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+
+  const handleSubscribe = async () => {
+    setSubscribing(true);
+    try {
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        throw new Error('Push notifications are not supported by your browser.');
+      }
+
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        throw new Error('Notification permission was denied.');
+      }
+
+      const publicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
+      if (!publicKey) {
+        throw new Error('VAPID Public Key is missing from environment variables.');
+      }
+      
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(publicKey)
+      });
+
+      const { error } = await supabase
+        .from('push_subscriptions')
+        .insert([{ user_id: user.id, subscription }]);
+
+      if (error) {
+        if (error.code === '23505') {
+          showToast('Already subscribed on this device!', '✅');
+          return;
+        }
+        throw error;
+      }
+
+      showToast('Notifications enabled successfully!', '🔔');
+    } catch (err) {
+      showToast(err.message, '❌');
+    } finally {
+      setSubscribing(false);
+    }
+  };
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -169,6 +226,30 @@ export default function Profile() {
               }}
             >
               {theme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode'}
+            </button>
+          </div>
+
+          <div className="form-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)' }}>
+            <div>
+              <label style={{ margin: 0, fontWeight: 600 }}>Push Notifications</label>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)', margin: 0 }}>Receive habit reminders on this device</p>
+            </div>
+            <button 
+              type="button" 
+              onClick={handleSubscribe} 
+              disabled={subscribing}
+              style={{ 
+                background: 'var(--accent)', 
+                border: 'none', 
+                color: '#fff', 
+                padding: '8px 16px', 
+                borderRadius: 'var(--radius-full)',
+                cursor: subscribing ? 'not-allowed' : 'pointer',
+                fontWeight: 600,
+                opacity: subscribing ? 0.7 : 1
+              }}
+            >
+              {subscribing ? 'Enabling...' : 'Enable Reminders'}
             </button>
           </div>
 
