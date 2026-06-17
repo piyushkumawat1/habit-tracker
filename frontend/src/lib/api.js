@@ -137,14 +137,18 @@ export const templatesApi = {
     return formatRes(supabase.from('custom_templates').delete().eq('id', id));
   },
   apply: async (userId, templateHabitsArray) => {
-    // Add the user_id to all habits from the template pack
+    // Add the required fields (id, timestamps) that Supabase expects
+    const now = new Date().toISOString();
     const habitsToInsert = templateHabitsArray.map(habit => ({
+      id: crypto.randomUUID(),
       user_id: userId,
       name: habit.name,
-      category: habit.category,
+      category: habit.category || 'Other',
       frequency: habit.frequency || 'Daily',
       difficulty: habit.difficulty || 'Easy',
-      icon: habit.icon || 'star'
+      icon: habit.icon || '⭐',
+      created_at: now,
+      updated_at: now
     }));
     return formatRes(supabase.from('habits').insert(habitsToInsert));
   }
