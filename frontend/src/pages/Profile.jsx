@@ -44,10 +44,24 @@ export default function Profile() {
         throw new Error('Notification permission was denied. Please allow notifications in your browser settings.');
       }
 
-      // 2. Register service worker
-      console.log('Registering service worker...');
+      const publicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
+      if (!publicKey) {
+        throw new Error('VAPID Public Key is missing from environment variables.');
+      }
+      
+      console.log('Using VAPID Key starting with:', publicKey.substring(0, 10));
+
+      // Forcefully unregister old broken service workers that might be holding onto the bad keys
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (let reg of registrations) {
+        console.log('Unregistering old service worker:', reg);
+        await reg.unregister();
+      }
+
+      // 2. Register service worker completely fresh
+      console.log('Registering fresh service worker...');
       const registration = await navigator.serviceWorker.register('/sw.js');
-      console.log('Service worker registered:', registration);
+      console.log('Service worker registered');
 
       // 3. Wait for the service worker to become active
       if (registration.installing) {
@@ -66,31 +80,20 @@ export default function Profile() {
       }
       console.log('Service worker is active');
 
-      // 4. Check for existing subscription first
+      // 4. Double check there are no phantom subscriptions
       const existingSub = await registration.pushManager.getSubscription();
       if (existingSub) {
-        // Already subscribed on this browser, save to DB if needed
-        const { error } = await supabase
-          .from('push_subscriptions')
-          .upsert([{ user_id: user.id, subscription: existingSub.toJSON() }], { onConflict: 'subscription' });
-        
-        if (error) console.error('DB upsert error:', error);
-        showToast('Notifications already enabled on this device!', '✅');
-        return;
+        console.log('Found old subscription, unsubscribing...');
+        await existingSub.unsubscribe();
       }
 
       // 5. Subscribe to push service
-      const publicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
-      if (!publicKey) {
-        throw new Error('VAPID Public Key is missing from environment variables.');
-      }
-      
-      console.log('Subscribing to push service...');
+      console.log('Subscribing to push service with VAPID...');
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(publicKey)
       });
-      console.log('Push subscription created:', subscription);
+      console.log('Push subscription created successfully!', subscription);
 
       // 6. Save to Supabase
       const { error } = await supabase
@@ -107,7 +110,7 @@ export default function Profile() {
 
       showToast('Notifications enabled successfully!', '🔔');
     } catch (err) {
-      console.error('Push subscription error:', err);
+      console.error('Detailed Push Error:', err);
       showToast(err.message || 'Failed to enable notifications', '❌');
     } finally {
       setSubscribing(false);
