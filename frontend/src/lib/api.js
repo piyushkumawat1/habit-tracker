@@ -126,4 +126,28 @@ export const challengesApi = {
   },
 };
 
+export const templatesApi = {
+  getAll: async () => {
+    return formatRes(supabase.from('custom_templates').select('*').order('created_at', { ascending: false }));
+  },
+  create: async (templateData) => {
+    return formatRes(supabase.from('custom_templates').insert([templateData]).select().single());
+  },
+  delete: async (id) => {
+    return formatRes(supabase.from('custom_templates').delete().eq('id', id));
+  },
+  apply: async (userId, templateHabitsArray) => {
+    // Add the user_id to all habits from the template pack
+    const habitsToInsert = templateHabitsArray.map(habit => ({
+      user_id: userId,
+      name: habit.name,
+      category: habit.category,
+      frequency: habit.frequency || 'Daily',
+      difficulty: habit.difficulty || 'Easy',
+      icon: habit.icon || 'star'
+    }));
+    return formatRes(supabase.from('habits').insert(habitsToInsert));
+  }
+};
+
 export default supabase;
