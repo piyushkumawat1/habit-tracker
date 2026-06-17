@@ -38,26 +38,64 @@ export default function Profile() {
         throw new Error('Push notifications are not supported by your browser.');
       }
 
-      const registration = await navigator.serviceWorker.register('/sw.js');
-      
+      // 1. Request notification permission FIRST
       const permission = await Notification.requestPermission();
       if (permission !== 'granted') {
-        throw new Error('Notification permission was denied.');
+        throw new Error('Notification permission was denied. Please allow notifications in your browser settings.');
       }
 
+      // 2. Register service worker
+      console.log('Registering service worker...');
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      console.log('Service worker registered:', registration);
+
+      // 3. Wait for the service worker to become active
+      if (registration.installing) {
+        console.log('Waiting for service worker to activate...');
+        await new Promise((resolve) => {
+          registration.installing.addEventListener('statechange', (e) => {
+            if (e.target.state === 'activated') resolve();
+          });
+        });
+      } else if (registration.waiting) {
+        await new Promise((resolve) => {
+          registration.waiting.addEventListener('statechange', (e) => {
+            if (e.target.state === 'activated') resolve();
+          });
+        });
+      }
+      console.log('Service worker is active');
+
+      // 4. Check for existing subscription first
+      const existingSub = await registration.pushManager.getSubscription();
+      if (existingSub) {
+        // Already subscribed on this browser, save to DB if needed
+        const { error } = await supabase
+          .from('push_subscriptions')
+          .upsert([{ user_id: user.id, subscription: existingSub.toJSON() }], { onConflict: 'subscription' });
+        
+        if (error) console.error('DB upsert error:', error);
+        showToast('Notifications already enabled on this device!', '✅');
+        return;
+      }
+
+      // 5. Subscribe to push service
       const publicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
       if (!publicKey) {
         throw new Error('VAPID Public Key is missing from environment variables.');
       }
       
+      console.log('Subscribing to push service...');
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(publicKey)
       });
+      console.log('Push subscription created:', subscription);
 
+      // 6. Save to Supabase
       const { error } = await supabase
         .from('push_subscriptions')
-        .insert([{ user_id: user.id, subscription }]);
+        .insert([{ user_id: user.id, subscription: subscription.toJSON() }]);
 
       if (error) {
         if (error.code === '23505') {
@@ -69,7 +107,8 @@ export default function Profile() {
 
       showToast('Notifications enabled successfully!', '🔔');
     } catch (err) {
-      showToast(err.message, '❌');
+      console.error('Push subscription error:', err);
+      showToast(err.message || 'Failed to enable notifications', '❌');
     } finally {
       setSubscribing(false);
     }
