@@ -29,9 +29,9 @@ export default function Coach() {
       // 1. Get the user's session token to prove they are logged in
       const { data: { session } } = await supabase.auth.getSession();
       
-      // 2. Fetch the Edge Function directly to handle the stream
+      // 2. Fetch the Vercel Edge Function directly to handle the stream
       const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-coach`, 
+        '/api/ai-coach', 
         {
           method: 'POST',
           headers: {
