@@ -14,6 +14,7 @@ import Insights from './pages/Insights.jsx';
 import Challenges from './pages/Challenges.jsx';
 import Journey from './pages/Journey.jsx';
 import Profile from './pages/Profile.jsx';
+import Coach from './pages/Coach.jsx';
 import Templates from './pages/Templates.jsx';
 import './index.css';
 
@@ -46,6 +47,7 @@ function AppContent() {
       case 'calendar': return <Calendar habits={habits} logs={logs} refresh={refresh} />;
       case 'insights': return <Insights habits={habits} logs={logs} />;
       case 'challenges': return <Challenges habits={habits} logs={logs} />;
+      case 'coach': return <Coach />;
       case 'templates': return <Templates />;
       case 'journey': return <Journey habits={habits} logs={logs} />;
       case 'profile': return <Profile />;
