@@ -1,6 +1,31 @@
+import { useState, useEffect } from 'react';
 import { dateKey, calcHabitStreak, categoryLabel, capitalize } from '../lib/utils';
+import { supabase } from '../lib/api.js';
 
 export default function Insights({ habits, logs }) {
+  const [smartTrends, setSmartTrends] = useState(null);
+  const [trendsLoading, setTrendsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadTrends() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const res = await fetch('/api/mood-insights', {
+          headers: { 'Authorization': `Bearer ${session?.access_token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setSmartTrends(data);
+        }
+      } catch (err) {
+        console.error("Failed to load smart trends", err);
+      } finally {
+        setTrendsLoading(false);
+      }
+    }
+    loadTrends();
+  }, [habits, logs]);
+
   const totalHabits = habits.length;
 
   // ── Consistency (30 days) ──
@@ -98,8 +123,37 @@ export default function Insights({ habits, logs }) {
       <div className="page-header">
         <div>
           <h1>Insights</h1>
-          <p className="page-subtitle">Analyze your patterns</p>
+          <p className="page-subtitle">Your progress over time.</p>
         </div>
+      </div>
+
+      {/* Smart Trends (AI) */}
+      <div className="card" style={{ marginBottom: '24px', background: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%)', border: '1px solid var(--primary)' }}>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary)' }}>✨ Smart AI Trends</h3>
+        {trendsLoading ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-secondary)' }}>
+            <div className="loading-spinner" style={{ width: '20px', height: '20px', borderTopColor: 'var(--primary)' }} />
+            <span>Analyzing your habits and mood...</span>
+          </div>
+        ) : smartTrends ? (
+          <div>
+            <p style={{ fontSize: '1.05rem', lineHeight: '1.6', margin: '0 0 16px 0' }}>{smartTrends.insight}</p>
+            {smartTrends.topHabit && (
+              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                <div style={{ background: 'var(--bg-raised)', padding: '12px 16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Top Driver</div>
+                  <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{smartTrends.topHabit}</div>
+                </div>
+                <div style={{ background: 'var(--bg-raised)', padding: '12px 16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Correlation</div>
+                  <div style={{ fontWeight: 600, color: 'var(--success)' }}>+{smartTrends.correlation}% Mood</div>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <p style={{ color: 'var(--text-secondary)', margin: 0 }}>Log your mood for a few days to unlock personalized insights.</p>
+        )}
       </div>
 
       <div className="insights-grid">

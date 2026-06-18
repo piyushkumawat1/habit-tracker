@@ -1,6 +1,7 @@
 import { getToday, calcOverallStreak, calcHabitStreak, capitalize, formatTime } from '../lib/utils';
 import { logsApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
+import MoodTracker from '../components/MoodTracker.jsx';
 
 export default function Home({ habits, logs, refresh }) {
   const showToast = useToast();
@@ -32,6 +33,8 @@ export default function Home({ habits, logs, refresh }) {
           <p className="page-subtitle">{dateStr}</p>
         </div>
       </div>
+      
+      <MoodTracker />
 
       <div className="stats-grid">
         <div className="stat-card stat-card--primary">

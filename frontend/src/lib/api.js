@@ -154,4 +154,37 @@ export const templatesApi = {
   }
 };
 
+// ── Mood & Energy ──
+export const moodApi = {
+  getToday: async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { data: null };
+    const today = new Date().toISOString().split('T')[0];
+    return formatRes(supabase.from('mood_logs').select('*').eq('user_id', user.id).eq('date', today).maybeSingle());
+  },
+  logToday: async (moodLevel, energyLevel) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Not authenticated");
+    
+    const today = new Date().toISOString().split('T')[0];
+    const payload = {
+      user_id: user.id,
+      date: today,
+      mood: moodLevel,
+      energy: energyLevel,
+      updated_at: new Date().toISOString()
+    };
+    
+    // Check if exists
+    const { data: existing } = await supabase.from('mood_logs').select('id').eq('user_id', user.id).eq('date', today).maybeSingle();
+    
+    if (existing) {
+      return formatRes(supabase.from('mood_logs').update(payload).eq('id', existing.id).select().single());
+    } else {
+      payload.id = crypto.randomUUID();
+      return formatRes(supabase.from('mood_logs').insert(payload).select().single());
+    }
+  }
+};
+
 export default supabase;
