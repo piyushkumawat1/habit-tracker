@@ -73,12 +73,13 @@ export default function Coach() {
             
             try {
               const parsed = JSON.parse(dataStr);
-              // Extract the text delta specifically from Claude's response format
-              if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+              // Extract the text delta specifically from OpenAI/Moonshot's response format
+              const content = parsed.choices?.[0]?.delta?.content;
+              if (content) {
                 // Update the last message in the array (which is the assistant's currently typing message)
                 setMessages(prev => {
                   const newMessages = [...prev];
-                  newMessages[newMessages.length - 1].content += parsed.delta.text;
+                  newMessages[newMessages.length - 1].content += content;
                   return newMessages;
                 });
               }

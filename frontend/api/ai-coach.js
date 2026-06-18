@@ -55,35 +55,32 @@ export default async function handler(req) {
     The user's current habits are: ${JSON.stringify(habits)}. 
     Give them actionable, short advice based on these habits. Keep responses relatively brief and highly encouraging. Use emojis where appropriate.`;
 
-    const anthropicKey = process.env.ANTHROPIC_API_KEY;
-    if (!anthropicKey) {
-      throw new Error("Missing ANTHROPIC_API_KEY in Vercel Environment Variables");
-    }
+    const kimiKey = process.env.KIMI_API_KEY || "sk-7EAZcjxrnfqIeg61pB773f0HQ0qusOGi8DFfEBlJoxRop8fr";
 
-    const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
+    const aiResponse = await fetch('https://api.moonshot.cn/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'x-api-key': anthropicKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
+        'Authorization': `Bearer ${kimiKey}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20240620',
-        max_tokens: 500,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: message }],
+        model: 'moonshot-v1-8k',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: message }
+        ],
         stream: true,
       }),
     });
 
-    if (!anthropicResponse.ok) {
-      const errText = await anthropicResponse.text();
-      console.error("Anthropic Error:", errText);
-      return new Response(`Anthropic Error: ${anthropicResponse.statusText}`, { status: 500 });
+    if (!aiResponse.ok) {
+      const errText = await aiResponse.text();
+      console.error("AI API Error:", errText);
+      return new Response(`AI API Error: ${errText}`, { status: 500 });
     }
 
     // Return the stream to the frontend
-    return new Response(anthropicResponse.body, {
+    return new Response(aiResponse.body, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'text/event-stream',
