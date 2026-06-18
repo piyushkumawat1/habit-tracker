@@ -175,15 +175,13 @@ export const moodApi = {
       updated_at: new Date().toISOString()
     };
     
-    // Check if exists
-    const { data: existing } = await supabase.from('mood_logs').select('id').eq('user_id', user.id).eq('date', today).maybeSingle();
-    
-    if (existing) {
-      return formatRes(supabase.from('mood_logs').update(payload).eq('id', existing.id).select().single());
-    } else {
-      payload.id = crypto.randomUUID();
-      return formatRes(supabase.from('mood_logs').insert(payload).select().single());
-    }
+    // Use upsert to prevent race conditions if the user clicks multiple buttons very fast
+    return formatRes(
+      supabase.from('mood_logs')
+        .upsert(payload, { onConflict: 'user_id, date' })
+        .select()
+        .single()
+    );
   }
 };
 
