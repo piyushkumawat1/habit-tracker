@@ -55,7 +55,7 @@ export default async function handler(req) {
     The user's current habits are: ${JSON.stringify(habits)}. 
     Give them actionable, short advice based on these habits. Keep responses relatively brief and highly encouraging. Use emojis where appropriate.`;
 
-    const kimiKey = process.env.KIMI_API_KEY || "sk-7EAZcjxrnfqIeg61pB773f0HQ0qusOGi8DFfEBlJoxRop8fr";
+    const kimiKey = process.env.KIMI_API_KEY || "sk-pL2MuJGStyhiBNKRlvUbri89enb86X48lnsQjKlFYpndoHsm";
 
     const aiResponse = await fetch('https://api.moonshot.cn/v1/chat/completions', {
       method: 'POST',
