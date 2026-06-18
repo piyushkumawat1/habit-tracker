@@ -55,7 +55,10 @@ export default async function handler(req) {
     The user's current habits are: ${JSON.stringify(habits)}. 
     Give them actionable, short advice based on these habits. Keep responses relatively brief and highly encouraging. Use emojis where appropriate.`;
 
-    const kimiKey = process.env.KIMI_API_KEY || "sk-pL2MuJGStyhiBNKRlvUbri89enb86X48lnsQjKlFYpndoHsm";
+    const kimiKey = process.env.KIMI_API_KEY;
+    if (!kimiKey) {
+      throw new Error("Missing KIMI_API_KEY in Vercel Environment Variables");
+    }
 
     const aiResponse = await fetch('https://api.moonshot.cn/v1/chat/completions', {
       method: 'POST',
