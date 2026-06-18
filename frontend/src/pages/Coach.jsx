@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { supabase } from '../lib/api.js';
+import supabase from '../lib/api.js';
 
 export default function Coach() {
   const [input, setInput] = useState('');
