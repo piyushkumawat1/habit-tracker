@@ -43,7 +43,14 @@ export default function Coach() {
       );
 
       if (!res.ok) {
-        throw new Error('Failed to connect to AI Coach');
+        let errMessage = `HTTP ${res.status}`;
+        try {
+          const errData = await res.json();
+          errMessage = errData.error || errMessage;
+        } catch (e) {
+          errMessage = await res.text();
+        }
+        throw new Error(errMessage);
       }
 
       // 3. Setup stream reading
@@ -84,7 +91,7 @@ export default function Coach() {
       console.error('Error fetching AI response:', error);
       setMessages(prev => {
         const newMessages = [...prev];
-        newMessages[newMessages.length - 1].content = "Sorry, I had trouble connecting to the coaching servers. Please ensure the AI Coach Edge Function is deployed and the API key is set.";
+        newMessages[newMessages.length - 1].content = `⚠️ Server Error: ${error.message}`;
         return newMessages;
       });
     } finally {
