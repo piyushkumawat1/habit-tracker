@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { dateKey, calcHabitStreak, categoryLabel, capitalize } from '../lib/utils';
-import { supabase } from '../lib/api.js';
+import supabase from '../lib/api.js';
 
 export default function Insights({ habits, logs }) {
   const [smartTrends, setSmartTrends] = useState(null);
