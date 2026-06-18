@@ -55,19 +55,19 @@ export default async function handler(req) {
     The user's current habits are: ${JSON.stringify(habits)}. 
     Give them actionable, short advice based on these habits. Keep responses relatively brief and highly encouraging. Use emojis where appropriate.`;
 
-    const kimiKey = process.env.KIMI_API_KEY;
-    if (!kimiKey) {
-      throw new Error("Missing KIMI_API_KEY in Vercel Environment Variables");
+    const groqKey = process.env.GROQ_API_KEY;
+    if (!groqKey) {
+      throw new Error("Missing GROQ_API_KEY in Vercel Environment Variables");
     }
 
-    const aiResponse = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+    const aiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${kimiKey}`,
+        'Authorization': `Bearer ${groqKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'moonshot-v1-8k',
+        model: 'llama3-70b-8192',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: message }
