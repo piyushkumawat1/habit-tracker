@@ -44,11 +44,12 @@ export default function Coach() {
 
       if (!res.ok) {
         let errMessage = `HTTP ${res.status}`;
+        const rawText = await res.text();
         try {
-          const errData = await res.json();
+          const errData = JSON.parse(rawText);
           errMessage = errData.error || errMessage;
         } catch (e) {
-          errMessage = await res.text();
+          errMessage = rawText || errMessage;
         }
         throw new Error(errMessage);
       }
