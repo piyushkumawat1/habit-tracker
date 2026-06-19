@@ -82,6 +82,7 @@ export default function MoodTracker() {
           {MOODS.map(m => (
             <button
               key={m.level}
+              type="button"
               onClick={() => handleLog(m.level, energy || 2)}
               style={{
                 flex: 1,
@@ -114,6 +115,7 @@ export default function MoodTracker() {
             {ENERGIES.map(e => (
               <button
                 key={e.level}
+                type="button"
                 onClick={() => handleLog(mood, e.level)}
                 style={{
                   flex: 1,
