@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { getToday, dateKey, calcOverallStreak } from '../lib/utils';
 import { Card, CardContent } from '../components/ui/Card.jsx';
+import DataExport from '../components/DataExport.jsx';
 
 function generateTimelineEvents(habits, logs) {
   const events = [];
@@ -151,6 +152,7 @@ export default function Journey({ habits, logs }) {
         </div>
       </div>
 
+      <DataExport habits={habits} logs={logs} />
       <canvas ref={canvasRef} width="800" height="1600" style={{ display: 'none' }} />
     </section>
   );
