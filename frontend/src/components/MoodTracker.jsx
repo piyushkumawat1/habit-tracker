@@ -56,7 +56,7 @@ export default function MoodTracker() {
       // 3. Rollback on failure
       setMood(prevMood);
       setEnergy(prevEnergy);
-      showToast('Failed to save log', '❌');
+      showToast(`Error: ${err.message}`, '❌');
       console.error(err);
     }
   }

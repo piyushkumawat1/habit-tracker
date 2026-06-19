@@ -178,7 +178,7 @@ export const moodApi = {
     // Use upsert to prevent race conditions if the user clicks multiple buttons very fast
     return formatRes(
       supabase.from('mood_logs')
-        .upsert(payload, { onConflict: 'user_id, date' })
+        .upsert(payload, { onConflict: 'user_id,date' })
         .select()
         .single()
     );
