@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Papa from 'papaparse';
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { useToast } from '../context/ToastContext.jsx';
 import { formatTime } from '../lib/utils';
 
@@ -68,7 +68,7 @@ export default function DataExport({ habits, logs }) {
 
     const tableData = data.map(row => [row.Date, row.Habit, row.Category, row.Time]);
 
-    doc.autoTable({
+    autoTable(doc, {
       startY: 40,
       head: [['Date', 'Habit', 'Category', 'Time']],
       body: tableData,
@@ -105,7 +105,7 @@ export default function DataExport({ habits, logs }) {
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
             <button 
               type="button"
-              className="btn btn-secondary" 
+              className="btn btn-outline" 
               onClick={handleExportCSV} 
               disabled={!isPro}
               style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: '150px', justifyContent: 'center' }}
