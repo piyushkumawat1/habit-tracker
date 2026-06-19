@@ -72,12 +72,29 @@ export const logsApi = {
     const { data: existing } = await supabase.from('logs').select('*').eq('date', date).eq('habit_id', habitId).maybeSingle();
     if (existing) {
       await supabase.from('logs').delete().eq('id', existing.id);
+      // Remove XP if unmarked
+      await supabase.rpc('add_garden_xp', { xp_amount: -20, water_amount: -10 }).catch(() => {});
       return { data: { action: 'removed' } };
     } else {
       const { data } = await supabase.from('logs').insert({ id: crypto.randomUUID(), date, habit_id: habitId }).select().single();
+      // Add XP on completion
+      await supabase.rpc('add_garden_xp', { xp_amount: 20, water_amount: 10 }).catch(() => {});
       return { data: { action: 'added', log: data } };
     }
   },
+};
+
+// ── Virtual Garden ──
+export const gardenApi = {
+  get: async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { data: null };
+    
+    // Auto-create garden if it doesn't exist via RPC
+    await supabase.rpc('add_garden_xp', { xp_amount: 0, water_amount: 0 }).catch(() => {});
+    
+    return formatRes(supabase.from('virtual_garden').select('*').eq('user_id', user.id).maybeSingle());
+  }
 };
 
 // ── Challenges ──

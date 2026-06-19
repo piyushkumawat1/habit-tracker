@@ -13,6 +13,7 @@ export default function Sidebar({ currentPage, onNavigate, isOpen }) {
     { page: 'insights', label: 'Insights', icon: <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> },
     { page: 'coach', label: 'AI Coach', icon: <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10-1.74 0-3.37-.44-4.82-1.2l-4.18.82.82-4.18A9.96 9.96 0 0 1 2 12C2 6.48 6.48 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> },
     { page: 'journey', label: 'Journey', icon: <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> },
+    { page: 'garden', label: 'Garden', icon: <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22v-7l-2-2"/><path d="M12 15l2-2"/><path d="M7 8c0 2.2-2.5 3-4 3 0-4.4 2-8 4-8s4 3.6 4 8c-1.5 0-4-.8-4-3z"/><path d="M17 8c0 2.2 2.5 3 4 3 0-4.4-2-8-4-8s-4 3.6-4 8c1.5 0 4-.8 4-3z"/></svg> },
   ];
 
   return (

@@ -16,6 +16,7 @@ import Journey from './pages/Journey.jsx';
 import Profile from './pages/Profile.jsx';
 import Coach from './pages/Coach.jsx';
 import Templates from './pages/Templates.jsx';
+import VirtualGarden from './pages/VirtualGarden.jsx';
 import './index.css';
 
 function AppContent() {
@@ -51,6 +52,7 @@ function AppContent() {
       case 'templates': return <Templates />;
       case 'journey': return <Journey habits={habits} logs={logs} />;
       case 'profile': return <Profile />;
+      case 'garden': return <VirtualGarden />;
       default: return <Home habits={habits} logs={logs} refresh={refresh} />;
     }
   }
