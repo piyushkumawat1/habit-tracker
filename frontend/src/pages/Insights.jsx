@@ -102,8 +102,20 @@ export default function Insights({ habits, logs }) {
 
   // ── Heatmap ──
   const heatCells = [];
+  const todayDate = new Date();
+  const currentDow = todayDate.getDay();
+  // Calculate the Saturday of the current week to ensure 7-row alignment
+  const endOfThisWeek = new Date(todayDate);
+  endOfThisWeek.setDate(todayDate.getDate() + (6 - currentDow));
+
   for (let d = 83; d >= 0; d--) {
-    const dt = new Date(Date.now() - d * 86400000);
+    const dt = new Date(endOfThisWeek.getTime() - d * 86400000);
+    // If it's a future day in the current week, render a faint empty placeholder
+    if (dt > todayDate) {
+      heatCells.push(<div key={`future-${d}`} className="heatmap-cell" style={{ opacity: 0.1 }} title="Future" />);
+      continue;
+    }
+
     const dk = dateKey(dt);
     const dayLogs = logs[dk] || {};
     const done = Object.keys(dayLogs).filter(id => habits.some(h => h.id === id)).length;
