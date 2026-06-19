@@ -6,6 +6,7 @@ import { useHabits } from './hooks/useHabits.js';
 import DashboardLayout from './layouts/DashboardLayout.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import LandingPage from './pages/LandingPage.jsx';
 import Home from './pages/Home.jsx';
 import Habits from './pages/Habits.jsx';
 import AddHabit from './pages/AddHabit.jsx';
@@ -22,7 +23,7 @@ import './index.css';
 function AppContent() {
   const { isAuthenticated, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState('home');
-  const [authView, setAuthView] = useState('login');
+  const [authView, setAuthView] = useState('landing');
   const { habits, logs, loading: dataLoading, refresh } = useHabits();
 
   if (loading) {
@@ -35,9 +36,9 @@ function AppContent() {
   }
 
   if (!isAuthenticated) {
-    return authView === 'login'
-      ? <Login onSwitch={() => setAuthView('register')} />
-      : <Register onSwitch={() => setAuthView('login')} />;
+    if (authView === 'landing') return <LandingPage onNavigate={setAuthView} />;
+    if (authView === 'login') return <Login onSwitch={() => setAuthView('register')} onBack={() => setAuthView('landing')} />;
+    if (authView === 'register') return <Register onSwitch={() => setAuthView('login')} onBack={() => setAuthView('landing')} />;
   }
 
   function renderPage() {

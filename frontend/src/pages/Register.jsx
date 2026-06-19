@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 
-export default function Register({ onSwitch }) {
+export default function Register({ onSwitch, onBack }) {
   const { register, loginWithGoogle } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -33,8 +33,13 @@ export default function Register({ onSwitch }) {
 
   return (
     <div className="auth-page">
-      <div className="auth-card">
-        <div className="auth-brand">
+      <div className="auth-card glass-card">
+        {onBack && (
+          <button type="button" onClick={onBack} className="btn-ghost" style={{ padding: 0, marginBottom: 20, color: 'var(--text-secondary)' }}>
+            ← Back to Home
+          </button>
+        )}
+        <div className="auth-header">
           <div className="brand-icon" style={{ width: 64, height: 64, borderRadius: '16px', overflow: 'hidden' }}>
             <img src="/logo.png" alt="Habitly Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
