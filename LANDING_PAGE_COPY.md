@@ -1,63 +1,62 @@
-# Habitly: The Gamified Habit Tracker
-
-Welcome to the ultimate copy document for the Habitly Landing Page. This document outlines the core value propositions, feature sets, and the psychological triggers we use to drive user retention and revenue.
-
-## 🎯 The Pitch
-**"Grow your habits, grow your garden."**
-Building an app for the modern world means shifting away from clunky spreadsheets. Habitly is a lightning-fast, app-like web experience that combines deep behavioral psychology, AI coaching, and gamification to make consistency addictive.
+# Habitly
+*Build better habits. Find your balance. Watch yourself grow.*
 
 ---
 
-## ✨ Core Features (What We Do)
+## 🌟 Hero Section
 
-### 1. Seamless Daily Logging
-- **Frictionless UI:** Glassmorphism design, instant optimistic UI updates, and satisfying micro-animations.
-- **Categorization:** Sort habits by Health, Productivity, Mindfulness, Learning, or Social.
-- **Time-blocking:** Morning, Afternoon, or Evening routines.
-
-### 2. The "Tamagotchi Effect" (Virtual Garden)
-- **Concept:** Every completed habit grants your digital plant +20 XP and +10 Water.
-- **Psychology:** Triggers loss aversion ("I don't want my plant to wither!") and daily retention.
-- **Stages:** Evolve from a Seed 🌰 → Sprout 🌱 → Small Plant 🌿 → Blooming Tree 🌸.
-- **Viral Loop:** Native Web Share API integration allows users to post their "Blooming Tree" to social media, driving organic, zero-cost user acquisition.
-
-### 3. Holistic Mood & Energy Tracking
-- **Check-ins:** Users log their daily Energy (Low, Medium, High) and Mood (Terrible to Fantastic).
-- **The "Why":** Consistency isn't just about checking boxes; it's about understanding *how* habits affect mental health.
-
-### 4. AI-Powered Habit Coach
-- **Intelligence:** Powered by Llama-3 (Groq API).
-- **Correlations:** The AI analyzes the user's Supabase database to find hidden patterns. For example: *"On days you meditate, your mood is 30% higher."*
-- **Personalized Advice:** Provides actionable, daily motivation based entirely on the user's unique data.
-
-### 5. Advanced Insights & Heatmaps
-- **GitHub-style Heatmaps:** 12-week consistency grids.
-- **Data Visualizations:** 30-day streak growth charts, donut charts for category breakdowns, and weekly completion rates.
+**Headline:** Plant the Seeds of a Better You.
+**Sub-headline:** Habitly isn't just another checklist. It’s a beautifully designed, AI-powered companion that helps you build life-changing routines, track your daily energy, and watch your progress blossom into a digital garden.
+**Call to Action (CTA):** [ Start Your Journey for Free ]
 
 ---
 
-## 💰 The Business Model (Subscription Plan)
+## ✨ Features That Actually Work
 
-To maximize revenue, Habitly operates on a **Freemium** model. We use "Loss Aversion" and "Blurred Paywalls" to show Free users exactly what they are missing out on.
+### 🗓️ Your Routine, Mastered
+Stop feeling overwhelmed. Organize your day into simple Morning, Afternoon, and Evening routines. Whether it’s drinking water, reading 10 pages, or meditating, Habitly categorizes your goals so you can focus on what matters right now.
 
-### 🌱 Free Tier ($0/month)
-*Perfect for beginners trying to build their first routine.*
-- Up to 5 Active Habits
-- Standard 7-Day Consistency Tracking
-- Basic Mood Logging
-- Virtual Garden (Locked at 'Sprout' stage)
+### 🌱 Grow Your Virtual Garden
+Consistency has never been this rewarding. Every time you complete a habit, you earn water and XP for your digital plant. Watch it grow from a tiny seed into a beautiful blooming tree as you string together perfect days. Miss a day? Don't worry, your plant is resilient—just like you.
 
-### 🚀 Pro Tier ($4.99/month or $39.99/year)
-*For power-users and data nerds who want total control over their life.*
-- **Unlimited Habits**
-- **AI Habit Coach:** Unlock the Llama-3 AI for personalized correlations and insights.
-- **Full Virtual Garden:** Unlock the ability to grow your plant into a massive 'Blooming Tree' and access exclusive plant types.
-- **Data Export PRO:** Download your complete habit history to CSV for Excel analysis, or generate beautifully formatted PDF reports.
-- **Unlimited History:** View heatmaps and streak data going back years instead of just 7 days.
+### 🧠 Know Yourself Better
+Habits don’t exist in a vacuum; they affect how you feel. Habitly tracks your daily mood and energy levels alongside your tasks. Over time, you'll discover exactly which routines make you feel vibrant and which ones drain you.
+
+### 🤖 Meet Your Personal AI Coach
+What if your habit tracker could talk to you? Our built-in AI Coach analyzes your unique consistency, mood, and energy data to give you personalized, actionable advice every single day. It’s like having a productivity expert right in your pocket.
+
+### 📊 Insights That Tell a Story
+Visualize your journey with stunning data. See your 12-week consistency heatmap, track your longest streaks, and view beautiful donut charts of your habits. See exactly how far you've come.
 
 ---
 
-## 🧠 Psychological Triggers Used
-1. **Priming:** The first thing users see every morning is their Virtual Garden via a Daily Welcome Modal. This instantly establishes emotional investment before they even look at their tasks.
-2. **Blurred Paywalls:** Instead of hiding Pro features, we display them clearly (like the Data Export UI) but blur the buttons behind a Lock Icon. This increases conversion rates by 3x compared to invisible paywalls.
-3. **Variable Rewards:** The AI Coach generates different, personalized insights every time you check it, acting like a slot machine for motivation.
+## 💎 Pricing Plans
+
+We believe building good habits should be accessible to everyone, but we also offer advanced tools for those ready to take total control of their lives.
+
+### 🌱 The Sprout Plan (Free Forever)
+*Everything you need to start building momentum.*
+- Track up to 5 active habits at once.
+- Grow your Virtual Garden up to the "Sprout" stage.
+- Log your daily mood and energy.
+- View your 7-day consistency heatmap.
+
+### 🌳 Habitly PRO ($4.99/mo or $39.99/yr)
+*For those who want deep insights, infinite growth, and complete control.*
+- **Unlimited Habits:** Track every aspect of your routine.
+- **Unlock the AI Coach:** Get personalized, data-driven daily advice.
+- **The Blooming Tree:** Fully unlock the Virtual Garden and grow exclusive, massive plants.
+- **Advanced Insights:** View lifetime heatmaps, comprehensive charts, and streak history.
+- **Data Export:** Securely download your habit history to CSV or generate beautiful PDF reports to analyze your journey offline.
+
+---
+
+## 💬 Testimonials (Placeholder)
+> *"Habitly changed how I approach my day. I used to hate tracking habits, but watching my little digital tree grow every time I read a book has completely rewired my brain."* - Sarah J.
+
+> *"The AI Coach is mind-blowing. It noticed that my mood was consistently lower on days I skipped my morning walk, and it nudged me to get back on track. Incredible app."* - Mark T.
+
+---
+
+**Footer CTA:** Don't wait for tomorrow to become the person you want to be today.
+[ Get Started Free ]
