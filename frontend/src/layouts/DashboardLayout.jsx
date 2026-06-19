@@ -1,9 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../components/layout/Sidebar.jsx';
+import WelcomeModal from '../components/WelcomeModal.jsx';
 import VirtualGarden from '../pages/VirtualGarden.jsx';
 
 export default function DashboardLayout({ currentPage, onNavigate, children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    const today = new Date().toISOString().split('T')[0];
+    const lastView = localStorage.getItem('lastGardenViewDate');
+    if (lastView !== today) {
+      setShowWelcome(true);
+    }
+  }, []);
+
+  function handleDismissWelcome() {
+    const today = new Date().toISOString().split('T')[0];
+    localStorage.setItem('lastGardenViewDate', today);
+    setShowWelcome(false);
+  }
 
   function handleNavigate(page) {
     onNavigate(page);
@@ -27,6 +43,8 @@ export default function DashboardLayout({ currentPage, onNavigate, children }) {
       <main className="main-content">
         {children}
       </main>
+
+      {showWelcome && <WelcomeModal onClose={handleDismissWelcome} />}
     </div>
   );
 }
