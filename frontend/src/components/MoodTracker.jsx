@@ -20,7 +20,7 @@ export default function MoodTracker() {
   const [mood, setMood] = useState(null);
   const [energy, setEnergy] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { showToast } = useToast();
+  const showToast = useToast();
 
   useEffect(() => {
     loadToday();
