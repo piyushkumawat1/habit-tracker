@@ -242,7 +242,7 @@ export default function Insights({ habits, logs }) {
         <div className="insight-card glass-card">
           <h3>Best Streaks</h3>
           <div className="streaks-list">
-            {habits.length === 0 ? <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Add habits to see your streaks.</p> :
+            {habits.length === 0 ? <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Add habits to see your streaks.</p> :
               sorted.map(h => (
                 <div className="streak-item" key={h.id}>
                   <span className="streak-item-icon">{h.icon}</span>
@@ -261,7 +261,7 @@ export default function Insights({ habits, logs }) {
         <div className="insight-card glass-card">
           <h3>Habit Breakdown by Category</h3>
           <div className="chart-container">
-            {habits.length === 0 ? <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Add habits to see the breakdown.</p> : (
+            {habits.length === 0 ? <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Add habits to see the breakdown.</p> : (
               <div className="donut-chart-wrapper">
                 <svg className="donut-svg" viewBox="0 0 140 140">
                   {catEntries.map(([cat, count]) => {
@@ -273,7 +273,7 @@ export default function Insights({ habits, logs }) {
                     return <circle key={cat} cx="70" cy="70" r={radius} fill="none" stroke={color} strokeWidth="18" strokeDasharray={`${da} ${circumference}`} strokeDashoffset={doff} transform="rotate(-90 70 70)" />;
                   })}
                   <text x="70" y="66" textAnchor="middle" fill="var(--text-primary)" fontSize="22" fontWeight="800">{totalHabits}</text>
-                  <text x="70" y="84" textAnchor="middle" fill="var(--text-muted)" fontSize="10" fontWeight="500">habits</text>
+                  <text x="70" y="84" textAnchor="middle" fill="var(--text-secondary)" fontSize="10" fontWeight="500">habits</text>
                 </svg>
                 <div className="donut-legend">
                   {catEntries.map(([cat, count]) => (
@@ -292,7 +292,7 @@ export default function Insights({ habits, logs }) {
         <div className="insight-card glass-card span-2">
           <h3>Consistency Heatmap (Last 12 Weeks)</h3>
           <div className="heatmap-container">
-            {totalHabits === 0 ? <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Add habits to see the heatmap.</p> : (
+            {totalHabits === 0 ? <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Add habits to see the heatmap.</p> : (
               <div className="heatmap-wrapper">
                 <div className="heatmap-days">
                   {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => <span key={i}>{d}</span>)}
