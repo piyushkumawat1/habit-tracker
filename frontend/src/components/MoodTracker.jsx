@@ -51,7 +51,6 @@ export default function MoodTracker() {
     // 2. Background Sync
     try {
       await moodApi.logToday(newMood, newEnergy);
-      showToast('Logged successfully!', '✅');
     } catch (err) {
       // 3. Rollback on failure
       setMood(prevMood);
