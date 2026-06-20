@@ -41,8 +41,9 @@ We believe building good habits should be accessible to everyone, but we also of
 - Log your daily mood and energy.
 - View your 7-day consistency heatmap.
 
-### 🌳 Habitly PRO ($4.99/mo or $39.99/yr)
-*For those who want deep insights, infinite growth, and complete control.*
+### 🌳**Pro Plan**
+- **Price:** ₹10
+- **Audience:** Users who are serious about building long-term systems and want deep analysis and personalized advice.ontrol.*
 - **Unlimited Habits:** Track every aspect of your routine.
 - **Unlock the AI Coach:** Get personalized, data-driven daily advice.
 - **The Blooming Tree:** Fully unlock the Virtual Garden and grow exclusive, massive plants.

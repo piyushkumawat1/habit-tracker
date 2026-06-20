@@ -2,12 +2,10 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 
 export default function Register({ onSwitch, onBack }) {
-  const { register, loginWithGoogle, verifyOtp } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [otp, setOtp] = useState('');
-  const [showOtpScreen, setShowOtpScreen] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -16,26 +14,10 @@ export default function Register({ onSwitch, onBack }) {
     setError('');
     setLoading(true);
     try {
-      const data = await register(email, password, name || undefined);
-      // If session is null, email confirmation is required via OTP
-      if (!data.session) {
-        setShowOtpScreen(true);
-      }
+      await register(email, password, name || undefined);
+      // Wait for AuthContext's onAuthStateChange to pick up the session
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleVerifyOtp(e) {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    try {
-      await verifyOtp(email, otp, 'signup');
-    } catch (err) {
-      setError(err.message || 'Verification failed. Please check your code.');
     } finally {
       setLoading(false);
     }
@@ -79,48 +61,27 @@ export default function Register({ onSwitch, onBack }) {
           <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
         </div>
 
-        {showOtpScreen ? (
-          <form onSubmit={handleVerifyOtp}>
-            <div className="auth-header">
-              <h2>Verify your email</h2>
-              <p style={{ color: 'var(--text-secondary)' }}>We sent a 6-digit code to <strong>{email}</strong></p>
-            </div>
-            <div className="form-group" style={{ marginTop: '20px' }}>
-              <label className="form-label" htmlFor="otp-code">6-Digit Code</label>
-              <input id="otp-code" type="text" className="form-input" placeholder="123456" required maxLength={6} value={otp} onChange={e => setOtp(e.target.value)} style={{ letterSpacing: '0.5em', textAlign: 'center', fontSize: '1.2rem' }} />
-            </div>
-            <button type="submit" className="btn btn-primary btn-block" disabled={loading || otp.length < 6}>
-              {loading ? 'Verifying...' : 'Verify & Continue'}
-            </button>
-            <p className="auth-switch" style={{ marginTop: '16px' }}>
-              Didn't receive it? <button type="button" className="link-btn" onClick={() => setShowOtpScreen(false)}>Go back</button>
-            </p>
-          </form>
-        ) : (
-          <>
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label className="form-label" htmlFor="reg-name">Name (optional)</label>
-                <input id="reg-name" type="text" className="form-input" placeholder="Your name" value={name} onChange={e => setName(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="reg-email">Email</label>
-                <input id="reg-email" type="email" className="form-input" placeholder="you@example.com" required value={email} onChange={e => setEmail(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="reg-password">Password</label>
-                <input id="reg-password" type="password" className="form-input" placeholder="At least 6 characters" required minLength={6} value={password} onChange={e => setPassword(e.target.value)} />
-              </div>
-              <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-                {loading ? 'Creating account...' : 'Create Account'}
-              </button>
-            </form>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label" htmlFor="reg-name">Name (optional)</label>
+            <input id="reg-name" type="text" className="form-input" placeholder="Your name" value={name} onChange={e => setName(e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="reg-email">Email</label>
+            <input id="reg-email" type="email" className="form-input" placeholder="you@example.com" required value={email} onChange={e => setEmail(e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="reg-password">Password</label>
+            <input id="reg-password" type="password" className="form-input" placeholder="At least 6 characters" required minLength={6} value={password} onChange={e => setPassword(e.target.value)} />
+          </div>
+          <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+            {loading ? 'Creating account...' : 'Create Account'}
+          </button>
+        </form>
 
-            <p className="auth-switch">
-              Already have an account? <button className="link-btn" onClick={onSwitch}>Sign in</button>
-            </p>
-          </>
-        )}
+        <p className="auth-switch">
+          Already have an account? <button className="link-btn" onClick={onSwitch}>Sign in</button>
+        </p>
       </div>
     </div>
   );

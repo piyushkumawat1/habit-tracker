@@ -318,7 +318,7 @@ export default function LandingPage({ onNavigate }) {
             <div className="sh-card pricing-card popular">
               <div className="popular-badge">Most popular</div>
               <h3 className="pricing-tier">Pro</h3>
-              <div className="pricing-price">$4.99 <span>/ per month</span></div>
+              <div className="pricing-price">₹10 <span>/ lifetime</span></div>
               <p className="pricing-desc">For people serious about the long game.</p>
               <ul className="pricing-features">
                 <li><Icons.Check /> Unlimited habits</li>
