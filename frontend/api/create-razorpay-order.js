@@ -59,7 +59,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ order });
   } catch (error) {
-    console.error('Razorpay Error:', error);
-    return res.status(500).json({ error: error.message });
+    console.error('Razorpay Error:', JSON.stringify(error, null, 2), error);
+    const errorMessage = error?.error?.description || error?.message || 'Razorpay order creation failed internally';
+    return res.status(500).json({ error: errorMessage });
   }
 }
