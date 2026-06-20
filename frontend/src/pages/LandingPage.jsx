@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTheme } from '../context/ThemeContext';
 import '../landing.css';
 
 // Reusable SVG Icons
@@ -10,10 +11,15 @@ const Icons = {
   Tree: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22v-8"/><path d="M12 14c-2.5 0-4.5-2-4.5-4.5S9.5 5 12 5s4.5 2 4.5 4.5S14.5 14 12 14z"/><path d="M8 8.5C8 6.5 9 5 12 5s4 1.5 4 3.5"/></svg>,
   BarChart: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>,
   Brain: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>,
-  Download: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+  Download: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>,
+  Sun: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>,
+  Moon: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>,
+  Monitor: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
 };
 
 export default function LandingPage({ onNavigate }) {
+  const { theme, toggleTheme } = useTheme();
+
   // Ensure we mount at the top of the page
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -49,6 +55,9 @@ export default function LandingPage({ onNavigate }) {
             <li><a href="#pricing">Pricing</a></li>
           </ul>
           <div className="landing-nav-actions">
+            <button className="sh-btn sh-btn-ghost" onClick={toggleTheme} style={{ padding: '0 8px' }} title="Toggle Theme">
+              {theme === 'dark' ? <Icons.Sun /> : <Icons.Moon />}
+            </button>
             <button className="sh-btn sh-btn-ghost" onClick={() => onNavigate('login')}>Sign in</button>
             <button className="sh-btn sh-btn-primary" onClick={() => onNavigate('register')}>
               Get Habitly <Icons.ArrowRight />
@@ -175,32 +184,32 @@ export default function LandingPage({ onNavigate }) {
 
           <div className="feature-grid">
             <div className="sh-card sh-card-hover feature-card">
-              <div className="feature-icon"><Icons.Calendar /></div>
+              <div className="feature-icon" style={{ background: 'var(--secondary)' }}><Icons.Calendar /></div>
               <h4>Flexible habit scheduling</h4>
               <p>Daily, weekly, time-of-day specific. Match the cadence your life actually has.</p>
             </div>
             <div className="sh-card sh-card-hover feature-card">
-              <div className="feature-icon"><Icons.Smile /></div>
+              <div className="feature-icon" style={{ background: 'var(--secondary)' }}><Icons.Smile /></div>
               <h4>Mood & Energy Tracking</h4>
               <p>Habits don't happen in a vacuum. Track how your daily habits correlate directly to how you feel.</p>
             </div>
             <div className="sh-card sh-card-hover feature-card">
-              <div className="feature-icon"><Icons.Tree /></div>
+              <div className="feature-icon" style={{ background: 'var(--secondary)' }}><Icons.Tree /></div>
               <h4>Virtual Garden</h4>
               <p>Visual streaks, freeze days, and your own digital plant that grows with your consistency.</p>
             </div>
             <div className="sh-card sh-card-hover feature-card">
-              <div className="feature-icon"><Icons.BarChart /></div>
+              <div className="feature-icon" style={{ background: 'var(--secondary)' }}><Icons.BarChart /></div>
               <h4>Deep analytics</h4>
               <p>Per-habit completion, time-of-day patterns, consistency heatmaps, and beautiful category charts.</p>
             </div>
             <div className="sh-card sh-card-hover feature-card">
-              <div className="feature-icon"><Icons.Brain /></div>
+              <div className="feature-icon" style={{ background: 'var(--secondary)' }}><Icons.Brain /></div>
               <h4>AI coach</h4>
               <p>Personalized advice based on your real data. It spots patterns, suggests tweaks, and celebrates the wins.</p>
             </div>
             <div className="sh-card sh-card-hover feature-card">
-              <div className="feature-icon"><Icons.Download /></div>
+              <div className="feature-icon" style={{ background: 'var(--secondary)' }}><Icons.Download /></div>
               <h4>Data Export PRO</h4>
               <p>Your habits are yours. Export your full history securely to CSV or generate beautiful PDF reports.</p>
             </div>
