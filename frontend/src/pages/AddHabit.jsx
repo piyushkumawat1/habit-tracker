@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { habitsApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const COLORS = ['#8b84ff', '#2dd4bf', '#4ade80', '#fbbf24', '#fb7185', '#38bdf8', '#a78bfa', '#f472b6'];
 const ICONS = ['💧', '🧘', '📖', '🏃', '✍️', '🎯', '🧠', '💤', '🍎', '🚴', '🧹', '💻', '🎵', '📸', '🌿', '☕'];
 
-export default function AddHabit({ onNavigate, refresh }) {
+export default function AddHabit({ onNavigate, refresh, habits }) {
+  const { user } = useAuth();
   const showToast = useToast();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -38,6 +40,26 @@ export default function AddHabit({ onNavigate, refresh }) {
 
   const times = [{ key: 'morning', label: '🌅 Morning' }, { key: 'afternoon', label: '☀️ Afternoon' }, { key: 'evening', label: '🌙 Evening' }, { key: 'anytime', label: '⏰ Anytime' }];
   const difficulties = [{ key: 'easy', label: 'Easy', dot: '🟢' }, { key: 'medium', label: 'Medium', dot: '🟡' }, { key: 'hard', label: 'Hard', dot: '🔴' }];
+
+  if (!user?.is_pro && habits && habits.length >= 5) {
+    return (
+      <section id="page-add-habit" className="page active">
+        <div className="page-header">
+          <div><h1>Add New Habit</h1><p className="page-subtitle">Define your commitment</p></div>
+        </div>
+        <div className="card glass-card" style={{ textAlign: 'center', padding: '60px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', marginTop: '24px' }}>
+          <div style={{ fontSize: '4rem' }}>🔒</div>
+          <h2 style={{ margin: 0 }}>Pro Plan Required</h2>
+          <p style={{ color: 'var(--text-secondary)', maxWidth: 400, margin: '0 auto', lineHeight: 1.5 }}>
+            You've reached the maximum limit of 5 habits on the Free plan. Upgrade to Pro to track unlimited habits and unlock deep insights.
+          </p>
+          <button className="btn btn-primary" onClick={() => onNavigate('profile')} style={{ marginTop: 12 }}>
+            Upgrade to Pro
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="page-add-habit" className="page active">

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { dateKey, calcHabitStreak, categoryLabel, capitalize } from '../lib/utils';
 import supabase from '../lib/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function Insights({ habits, logs }) {
+  const { user } = useAuth();
   const [smartTrends, setSmartTrends] = useState(null);
   const [trendsLoading, setTrendsLoading] = useState(true);
 
@@ -108,11 +110,19 @@ export default function Insights({ habits, logs }) {
   const endOfThisWeek = new Date(todayDate);
   endOfThisWeek.setDate(todayDate.getDate() + (6 - currentDow));
 
-  for (let d = 83; d >= 0; d--) {
+  const daysLimit = user?.is_pro ? 83 : 83; // Keep loop 83 to maintain grid size
+
+  for (let d = daysLimit; d >= 0; d--) {
     const dt = new Date(endOfThisWeek.getTime() - d * 86400000);
     // If it's a future day in the current week, render a faint empty placeholder
     if (dt > todayDate) {
       heatCells.push(<div key={`future-${d}`} className="heatmap-cell" style={{ opacity: 0.1 }} title="Future" />);
+      continue;
+    }
+    
+    // Pro Gate for Heatmap
+    if (!user?.is_pro && d > 6) {
+      heatCells.push(<div key={`locked-${d}`} className="heatmap-cell" style={{ opacity: 0.1, background: 'var(--border)' }} title="Pro Feature: View full history" />);
       continue;
     }
 
@@ -289,8 +299,8 @@ export default function Insights({ habits, logs }) {
         </div>
 
         {/* Heatmap */}
-        <div className="insight-card glass-card span-2">
-          <h3>Consistency Heatmap (Last 12 Weeks)</h3>
+        <div className="insight-card glass-card span-2" style={{ position: 'relative' }}>
+          <h3>Consistency Heatmap {user?.is_pro ? '(Last 12 Weeks)' : '(Last 7 Days)'}</h3>
           <div className="heatmap-container">
             {totalHabits === 0 ? <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Add habits to see the heatmap.</p> : (
               <div className="heatmap-wrapper">
@@ -301,6 +311,11 @@ export default function Insights({ habits, logs }) {
               </div>
             )}
           </div>
+          {!user?.is_pro && totalHabits > 0 && (
+            <div style={{ position: 'absolute', bottom: 16, right: 16, background: 'var(--bg-raised)', padding: '6px 12px', borderRadius: '16px', border: '1px solid var(--accent)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+              <span style={{ fontSize: '0.8rem', color: 'var(--accent)', fontWeight: 600 }}>🌟 Pro: View full 12 weeks</span>
+            </div>
+          )}
         </div>
       </div>
     </section>

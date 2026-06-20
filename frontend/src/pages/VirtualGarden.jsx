@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { gardenApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function VirtualGarden() {
+  const { user } = useAuth();
   const [garden, setGarden] = useState(null);
   const [loading, setLoading] = useState(true);
   const showToast = useToast();
@@ -62,12 +64,12 @@ export default function VirtualGarden() {
   let nextThreshold = 100;
   let prevThreshold = 0;
 
-  if (xp >= 600) {
+  if (xp >= 600 && user?.is_pro) {
     stage = 'Blooming Tree';
     emoji = '🌸';
     nextThreshold = 1000;
     prevThreshold = 600;
-  } else if (xp >= 300) {
+  } else if (xp >= 300 && user?.is_pro) {
     stage = 'Small Plant';
     emoji = '🌿';
     nextThreshold = 600;
@@ -75,11 +77,13 @@ export default function VirtualGarden() {
   } else if (xp >= 100) {
     stage = 'Sprout';
     emoji = '🌱';
-    nextThreshold = 300;
+    nextThreshold = user?.is_pro ? 300 : xp; // Cap at current XP visually for free users
     prevThreshold = 100;
   }
 
-  const progress = Math.max(0, Math.min(100, ((xp - prevThreshold) / (nextThreshold - prevThreshold)) * 100));
+  const progress = user?.is_pro 
+    ? Math.max(0, Math.min(100, ((xp - prevThreshold) / (nextThreshold - prevThreshold)) * 100))
+    : (xp >= 300 ? 100 : Math.max(0, Math.min(100, ((xp - prevThreshold) / (300 - prevThreshold)) * 100)));
 
   return (
     <section id="page-garden" className="page active">
@@ -105,14 +109,21 @@ export default function VirtualGarden() {
           </span>
         </div>
 
-        <div style={{ width: '100%', maxWidth: '400px', marginTop: '20px' }}>
+        <div style={{ width: '100%', maxWidth: '400px', marginTop: '20px', position: 'relative' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
             <span>{xp} XP</span>
-            <span>{nextThreshold} XP</span>
+            <span>{user?.is_pro ? nextThreshold : 'Max XP (Free)'}</span>
           </div>
           <div style={{ width: '100%', height: '12px', background: 'var(--bg-raised)', borderRadius: '10px', overflow: 'hidden' }}>
             <div style={{ height: '100%', width: `${progress}%`, background: 'var(--success)', transition: 'width 0.5s ease', borderRadius: '10px' }} />
           </div>
+          {!user?.is_pro && xp >= 100 && (
+            <div style={{ marginTop: '16px', background: 'var(--bg-surface)', padding: '12px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-primary)' }}>
+                🌟 Your plant is ready to grow! Upgrade to Pro to unlock the Small Plant and Blooming Tree stages.
+              </p>
+            </div>
+          )}
           <p style={{ marginTop: '12px', fontSize: '0.85rem', color: 'var(--text-tertiary)' }}>Complete habits to earn XP and water your plant!</p>
         </div>
 

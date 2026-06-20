@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import supabase from '../lib/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
 
-export default function Coach() {
+export default function Coach({ onNavigate }) {
+  const { user } = useAuth();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Hello! I am your Habitly AI Coach ✨. I can see all your current habits. How can I help you crush your goals today?' }
@@ -107,6 +109,27 @@ export default function Coach() {
       sendMessage();
     }
   };
+
+  if (!user?.is_pro) {
+    return (
+      <div className="page-container" style={{ display: 'flex', flexDirection: 'column', height: '100%', paddingBottom: '24px' }}>
+        <div className="page-header" style={{ flexShrink: 0, marginBottom: '16px' }}>
+          <h1 className="page-title">✨ AI Coach</h1>
+          <p className="page-subtitle">Personalized advice based on your actual habit data.</p>
+        </div>
+        <div className="card glass-card" style={{ flex: 1, textAlign: 'center', padding: '60px 20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '16px', border: '1px solid var(--accent)', background: 'linear-gradient(135deg, rgba(99,102,241,0.05) 0%, rgba(168,85,247,0.05) 100%)' }}>
+          <div style={{ fontSize: '5rem', animation: 'float 6s ease-in-out infinite' }}>🤖</div>
+          <h2 style={{ margin: 0 }}>Meet Your AI Coach</h2>
+          <p style={{ color: 'var(--text-secondary)', maxWidth: 450, margin: '0 auto', lineHeight: 1.6 }}>
+            Unlock personalized, data-driven advice every day. The AI Coach analyzes your mood and habit data to give you highly specific tips and keep you accountable. Available exclusively on the Pro Plan.
+          </p>
+          <button className="btn btn-primary" onClick={() => onNavigate('profile')} style={{ marginTop: 16, padding: '12px 32px', fontSize: '1.05rem', boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)' }}>
+            Upgrade to Pro
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="page-container" style={{ display: 'flex', flexDirection: 'column', height: '100%', maxHeight: '100vh', paddingBottom: '0' }}>

@@ -45,11 +45,11 @@ function AppContent() {
     switch (currentPage) {
       case 'home': return <Home habits={habits} logs={logs} refresh={refresh} />;
       case 'habits': return <Habits habits={habits} logs={logs} refresh={refresh} onNavigate={setCurrentPage} />;
-      case 'add-habit': return <AddHabit onNavigate={setCurrentPage} refresh={refresh} />;
+      case 'add-habit': return <AddHabit onNavigate={setCurrentPage} refresh={refresh} habits={habits} />;
       case 'calendar': return <Calendar habits={habits} logs={logs} refresh={refresh} />;
       case 'insights': return <Insights habits={habits} logs={logs} />;
       case 'challenges': return <Challenges habits={habits} logs={logs} />;
-      case 'coach': return <Coach />;
+      case 'coach': return <Coach onNavigate={setCurrentPage} />;
       case 'templates': return <Templates />;
       case 'journey': return <Journey habits={habits} logs={logs} />;
       case 'profile': return <Profile />;
