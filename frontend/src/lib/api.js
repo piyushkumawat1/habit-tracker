@@ -153,7 +153,7 @@ export const templatesApi = {
   delete: async (id) => {
     return formatRes(supabase.from('custom_templates').delete().eq('id', id));
   },
-  apply: async (userId, templateHabitsArray) => {
+  apply: async (userId, templateHabitsArray, templateTitle) => {
     // Add the required fields (id, timestamps) that Supabase expects
     const now = new Date().toISOString();
     const habitsToInsert = templateHabitsArray.map(habit => ({
@@ -164,6 +164,7 @@ export const templatesApi = {
       frequency: habit.frequency || 'Daily',
       difficulty: habit.difficulty || 'Easy',
       icon: habit.icon || '⭐',
+      description: templateTitle ? `[Template] ${templateTitle}` : null,
       created_at: now,
       updated_at: now
     }));

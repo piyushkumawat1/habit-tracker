@@ -83,7 +83,7 @@ export default function Templates() {
     if (!confirm(`Deploy ${template.title} to your Dashboard?`)) return;
     
     try {
-      await templatesApi.apply(user.id, template.habits);
+      await templatesApi.apply(user.id, template.habits, template.title);
       showToast(`${template.title} habits added to your dashboard!`, '🚀');
     } catch (error) {
       showToast('Failed to deploy template.', '❌');

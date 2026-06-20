@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../landing.css';
 
 // Reusable SVG Icons
@@ -19,14 +19,26 @@ export default function LandingPage({ onNavigate }) {
     window.scrollTo(0, 0);
   }, []);
 
+  const [habits, setHabits] = useState({
+    meditation: true,
+    workout: false
+  });
+
+  const toggleHabit = (id) => {
+    setHabits(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const completedCount = Object.values(habits).filter(Boolean).length;
+  const progressPercent = (completedCount / Object.keys(habits).length) * 100;
+
   return (
     <div className="landing-body">
       <div className="landing-container">
         {/* Navigation */}
         <nav className="landing-nav">
           <a href="#" className="landing-brand">
-            <div style={{ width: 24, height: 24, background: '#6366f1', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ width: 10, height: 10, background: '#fff', borderRadius: '50%' }}></div>
+            <div style={{ width: 24, height: 24, background: 'var(--primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 10, height: 10, background: 'var(--primary-foreground)', borderRadius: '50%' }}></div>
             </div>
             Habitly
           </a>
@@ -37,8 +49,8 @@ export default function LandingPage({ onNavigate }) {
             <li><a href="#pricing">Pricing</a></li>
           </ul>
           <div className="landing-nav-actions">
-            <button className="landing-btn-ghost" onClick={() => onNavigate('login')}>Sign in</button>
-            <button className="landing-btn-primary" onClick={() => onNavigate('register')}>
+            <button className="sh-btn sh-btn-ghost" onClick={() => onNavigate('login')}>Sign in</button>
+            <button className="sh-btn sh-btn-primary" onClick={() => onNavigate('register')}>
               Get Habitly <Icons.ArrowRight />
             </button>
           </div>
@@ -48,9 +60,11 @@ export default function LandingPage({ onNavigate }) {
         <section className="hero-section">
           <div className="hero-bg-grid"></div>
           <div className="hero-content">
-            <div className="hero-badge">
-              <span className="hero-badge-dot"></span>
-              New • AI Coach v2 is here
+            <div className="hero-badge-container">
+              <span className="sh-badge sh-badge-outline">
+                <span style={{ width: 6, height: 6, background: '#10b981', borderRadius: '50%', display: 'inline-block', marginRight: 6 }}></span>
+                New • AI Coach v2 is here
+              </span>
             </div>
             <h1 className="hero-title">
               The habit tracker built for <span>consistency</span>
@@ -59,10 +73,10 @@ export default function LandingPage({ onNavigate }) {
               Habitly helps you design routines, log your mood in seconds, and see the patterns that actually move the needle. Smart gamification, deep analytics, and an AI coach — designed beautifully.
             </p>
             <div className="hero-actions">
-              <button className="landing-btn-primary" onClick={() => onNavigate('register')}>
+              <button className="sh-btn sh-btn-primary" style={{ height: 44, padding: '0 24px', fontSize: '1rem' }} onClick={() => onNavigate('register')}>
                 Start free — no card required <Icons.ArrowRight />
               </button>
-              <button className="landing-btn-secondary" onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}>
+              <button className="sh-btn sh-btn-outline" style={{ height: 44, padding: '0 24px', fontSize: '1rem' }} onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}>
                 See all features
               </button>
             </div>
@@ -72,38 +86,55 @@ export default function LandingPage({ onNavigate }) {
             </div>
           </div>
 
+          {/* Dynamic Mockup */}
           <div className="hero-mockup">
-            <div className="mockup-header">
-              <div className="mockup-dot red"></div>
-              <div className="mockup-dot yellow"></div>
-              <div className="mockup-dot green"></div>
-            </div>
-            
-            <div style={{ background: '#f8fafc', padding: 16, borderRadius: 12, marginBottom: 16 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-                <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Today</span>
-                <span style={{ color: '#64748b', fontSize: '0.8rem' }}>60% complete</span>
-              </div>
-              <div style={{ height: 6, background: '#e2e8f0', borderRadius: 999 }}>
-                <div style={{ height: '100%', width: '60%', background: '#6366f1', borderRadius: 999 }}></div>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ border: '1px solid #e4e4e7', padding: 12, borderRadius: 12, display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid #6366f1', background: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}><Icons.Check /></div>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>Morning meditation</div>
-                  <div style={{ color: '#64748b', fontSize: '0.8rem' }}>7:00 AM • 🧠 Mind</div>
-                </div>
-                <div style={{ marginLeft: 'auto', color: '#f59e0b', fontSize: '0.9rem', fontWeight: 600 }}>🔥 47</div>
+            <div className="sh-card" style={{ padding: 24 }}>
+              <div style={{ display: 'flex', gap: 6, marginBottom: 24 }}>
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f56' }}></div>
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffbd2e' }}></div>
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#27c93f' }}></div>
               </div>
               
-              <div style={{ border: '1px solid #e4e4e7', padding: 12, borderRadius: 12, display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid #e4e4e7' }}></div>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>Workout · push day</div>
-                  <div style={{ color: '#64748b', fontSize: '0.8rem' }}>6:30 PM • 🏋️ Health</div>
+              <div style={{ background: 'var(--secondary)', padding: 16, borderRadius: 'var(--radius)', marginBottom: 16 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+                  <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>Today</span>
+                  <span style={{ color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>{progressPercent}% complete</span>
+                </div>
+                <div style={{ height: 6, background: 'var(--border)', borderRadius: 999 }}>
+                  <div style={{ height: '100%', width: `${progressPercent}%`, background: 'var(--primary)', borderRadius: 999, transition: 'width 0.3s ease-out' }}></div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {/* Habit 1 */}
+                <div 
+                  className="dynamic-item"
+                  style={{ border: '1px solid var(--border)', padding: 12, borderRadius: 'var(--radius)', display: 'flex', alignItems: 'center', gap: 12 }}
+                  onClick={() => toggleHabit('meditation')}
+                >
+                  <div className={`checkbox-dynamic ${habits.meditation ? 'checkbox-checked' : 'checkbox-unchecked'}`} style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icons.Check />
+                  </div>
+                  <div style={{ flex: 1, opacity: habits.meditation ? 0.6 : 1, transition: 'opacity 0.2s' }}>
+                    <div style={{ fontWeight: 600, fontSize: '0.9rem', textDecoration: habits.meditation ? 'line-through' : 'none' }}>Morning meditation</div>
+                    <div style={{ color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>7:00 AM • 🧠 Mind</div>
+                  </div>
+                  <div style={{ color: '#f59e0b', fontSize: '0.875rem', fontWeight: 600 }}>🔥 47</div>
+                </div>
+                
+                {/* Habit 2 */}
+                <div 
+                  className="dynamic-item"
+                  style={{ border: '1px solid var(--border)', padding: 12, borderRadius: 'var(--radius)', display: 'flex', alignItems: 'center', gap: 12 }}
+                  onClick={() => toggleHabit('workout')}
+                >
+                  <div className={`checkbox-dynamic ${habits.workout ? 'checkbox-checked' : 'checkbox-unchecked'}`} style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icons.Check />
+                  </div>
+                  <div style={{ flex: 1, opacity: habits.workout ? 0.6 : 1, transition: 'opacity 0.2s' }}>
+                    <div style={{ fontWeight: 600, fontSize: '0.9rem', textDecoration: habits.workout ? 'line-through' : 'none' }}>Workout · push day</div>
+                    <div style={{ color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>6:30 PM • 🏋️ Health</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -114,19 +145,19 @@ export default function LandingPage({ onNavigate }) {
       {/* Social Proof */}
       <section className="stats-banner">
         <div className="stats-grid">
-          <div className="stat-item">
+          <div className="stat-item dynamic-item">
             <h3>120k+</h3>
             <p>Active habit builders</p>
           </div>
-          <div className="stat-item">
+          <div className="stat-item dynamic-item">
             <h3>9.2M</h3>
             <p>Habits checked off</p>
           </div>
-          <div className="stat-item">
+          <div className="stat-item dynamic-item">
             <h3>4.9★</h3>
             <p>App Store rating</p>
           </div>
-          <div className="stat-item">
+          <div className="stat-item dynamic-item">
             <h3>78%</h3>
             <p>Stick past 60 days</p>
           </div>
@@ -143,32 +174,32 @@ export default function LandingPage({ onNavigate }) {
           </div>
 
           <div className="feature-grid">
-            <div className="feature-card">
+            <div className="sh-card sh-card-hover feature-card">
               <div className="feature-icon"><Icons.Calendar /></div>
               <h4>Flexible habit scheduling</h4>
               <p>Daily, weekly, time-of-day specific. Match the cadence your life actually has.</p>
             </div>
-            <div className="feature-card">
+            <div className="sh-card sh-card-hover feature-card">
               <div className="feature-icon"><Icons.Smile /></div>
               <h4>Mood & Energy Tracking</h4>
               <p>Habits don't happen in a vacuum. Track how your daily habits correlate directly to how you feel.</p>
             </div>
-            <div className="feature-card">
+            <div className="sh-card sh-card-hover feature-card">
               <div className="feature-icon"><Icons.Tree /></div>
               <h4>Virtual Garden</h4>
               <p>Visual streaks, freeze days, and your own digital plant that grows with your consistency.</p>
             </div>
-            <div className="feature-card">
+            <div className="sh-card sh-card-hover feature-card">
               <div className="feature-icon"><Icons.BarChart /></div>
               <h4>Deep analytics</h4>
               <p>Per-habit completion, time-of-day patterns, consistency heatmaps, and beautiful category charts.</p>
             </div>
-            <div className="feature-card">
+            <div className="sh-card sh-card-hover feature-card">
               <div className="feature-icon"><Icons.Brain /></div>
               <h4>AI coach</h4>
               <p>Personalized advice based on your real data. It spots patterns, suggests tweaks, and celebrates the wins.</p>
             </div>
-            <div className="feature-card">
+            <div className="sh-card sh-card-hover feature-card">
               <div className="feature-icon"><Icons.Download /></div>
               <h4>Data Export PRO</h4>
               <p>Your habits are yours. Export your full history securely to CSV or generate beautiful PDF reports.</p>
@@ -190,16 +221,30 @@ export default function LandingPage({ onNavigate }) {
             <div className="checklist-item"><Icons.Check className="checklist-icon" /> Time-of-day analysis: when you actually follow through</div>
           </div>
           <div className="split-visual">
-             <div className="mockup-card">
+             <div className="sh-card sh-card-hover" style={{ padding: 24 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-                  <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Consistency · 12 weeks</span>
-                  <span style={{ color: '#64748b', fontSize: '0.8rem' }}>86% on-track</span>
+                  <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>Consistency · 12 weeks</span>
+                  <span style={{ color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>86% on-track</span>
                 </div>
                 {/* Simulated Heatmap */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 4 }}>
-                  {Array.from({length: 84}).map((_, i) => (
-                    <div key={i} style={{ width: 12, height: 12, borderRadius: 3, background: Math.random() > 0.3 ? '#6366f1' : '#e2e8f0', opacity: Math.random() > 0.3 ? (Math.random() * 0.5 + 0.5) : 1 }}></div>
-                  ))}
+                  {Array.from({length: 84}).map((_, i) => {
+                    const isActive = Math.random() > 0.3;
+                    const opacity = isActive ? (Math.random() * 0.5 + 0.5) : 1;
+                    return (
+                      <div 
+                        key={i} 
+                        className="dynamic-item"
+                        style={{ 
+                          width: '100%', 
+                          paddingBottom: '100%',
+                          borderRadius: 3, 
+                          background: isActive ? 'var(--primary)' : 'var(--secondary)', 
+                          opacity 
+                        }}
+                      />
+                    );
+                  })}
                 </div>
              </div>
           </div>
@@ -207,27 +252,31 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* AI Coach Section */}
-      <section id="ai" className="split-section" style={{ background: '#fafafa' }}>
+      <section id="ai" className="split-section" style={{ background: 'var(--muted)' }}>
         <div className="landing-container split-container" style={{ flexDirection: 'row-reverse' }}>
           <div className="split-content">
             <div className="section-label">AI Coach</div>
             <h2 className="section-title">A coach that actually reads your data.</h2>
             <p className="section-subtitle" style={{ marginBottom: 32 }}>Habitly's AI looks at your check-ins, mood, and timing — then tells you what to change next. No generic tips, no fluff. Just the next move.</p>
-            <button className="landing-btn-ghost" style={{ padding: 0, color: '#6366f1' }}>Try AI Coach with Pro <Icons.ArrowRight /></button>
+            <button className="sh-btn sh-btn-ghost" style={{ padding: 0 }}>Try AI Coach with Pro <Icons.ArrowRight /></button>
           </div>
           <div className="split-visual">
-             <div className="mockup-card mockup-alert">
-               <div className="mockup-alert-icon"><Icons.BarChart /></div>
+             <div className="sh-card sh-card-hover" style={{ padding: 24, display: 'flex', gap: 16, marginBottom: 16 }}>
+               <div style={{ width: 32, height: 32, background: 'var(--secondary)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted-foreground)', flexShrink: 0 }}>
+                 <Icons.BarChart />
+               </div>
                <div>
-                 <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: 4 }}>Pattern detected</div>
-                 <div style={{ color: '#52525b', fontSize: '0.85rem', lineHeight: 1.5 }}>Your completion rate drops 38% on Fridays. Try moving 'Workout' to mornings — it's the only weekday it sticks.</div>
+                 <div style={{ fontWeight: 600, fontSize: '0.875rem', marginBottom: 4 }}>Pattern detected</div>
+                 <div style={{ color: 'var(--muted-foreground)', fontSize: '0.875rem', lineHeight: 1.5 }}>Your completion rate drops 38% on Fridays. Try moving 'Workout' to mornings — it's the only weekday it sticks.</div>
                </div>
              </div>
-             <div className="mockup-card mockup-alert">
-               <div className="mockup-alert-icon"><Icons.Smile /></div>
+             <div className="sh-card sh-card-hover" style={{ padding: 24, display: 'flex', gap: 16 }}>
+               <div style={{ width: 32, height: 32, background: 'var(--secondary)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted-foreground)', flexShrink: 0 }}>
+                 <Icons.Smile />
+               </div>
                <div>
-                 <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: 4 }}>Mood correlation</div>
-                 <div style={{ color: '#52525b', fontSize: '0.85rem', lineHeight: 1.5 }}>Mood is +30% on days you meditate before 8 AM. Want me to set a reminder for tomorrow?</div>
+                 <div style={{ fontWeight: 600, fontSize: '0.875rem', marginBottom: 4 }}>Mood correlation</div>
+                 <div style={{ color: 'var(--muted-foreground)', fontSize: '0.875rem', lineHeight: 1.5 }}>Mood is +30% on days you meditate before 8 AM. Want me to set a reminder for tomorrow?</div>
                </div>
              </div>
           </div>
@@ -244,32 +293,32 @@ export default function LandingPage({ onNavigate }) {
           </div>
 
           <div className="pricing-grid">
-            <div className="pricing-card">
+            <div className="sh-card pricing-card">
               <h3 className="pricing-tier">Free</h3>
               <div className="pricing-price">$0 <span>/ forever</span></div>
               <p className="pricing-desc">Everything you need to start building momentum.</p>
               <ul className="pricing-features">
-                <li><Icons.Check className="checklist-icon" /> Up to 5 active habits</li>
-                <li><Icons.Check className="checklist-icon" /> Basic mood & energy logging</li>
-                <li><Icons.Check className="checklist-icon" /> 7-day consistency view</li>
-                <li><Icons.Check className="checklist-icon" /> Virtual Garden (Sprout stage)</li>
+                <li><Icons.Check /> Up to 5 active habits</li>
+                <li><Icons.Check /> Basic mood & energy logging</li>
+                <li><Icons.Check /> 7-day consistency view</li>
+                <li><Icons.Check /> Virtual Garden (Sprout stage)</li>
               </ul>
-              <button className="landing-btn-secondary" style={{ width: '100%' }} onClick={() => onNavigate('register')}>Get started</button>
+              <button className="sh-btn sh-btn-outline" style={{ width: '100%', marginTop: 'auto' }} onClick={() => onNavigate('register')}>Get started</button>
             </div>
 
-            <div className="pricing-card popular">
+            <div className="sh-card pricing-card popular">
               <div className="popular-badge">Most popular</div>
               <h3 className="pricing-tier">Pro</h3>
               <div className="pricing-price">$4.99 <span>/ per month</span></div>
               <p className="pricing-desc">For people serious about the long game.</p>
               <ul className="pricing-features">
-                <li><Icons.Check className="checklist-icon" /> Unlimited habits</li>
-                <li><Icons.Check className="checklist-icon" /> AI Coach with deep correlations</li>
-                <li><Icons.Check className="checklist-icon" /> Full analytics & lifetime heatmaps</li>
-                <li><Icons.Check className="checklist-icon" /> Virtual Garden (Blooming Tree)</li>
-                <li><Icons.Check className="checklist-icon" /> CSV / PDF data export</li>
+                <li><Icons.Check /> Unlimited habits</li>
+                <li><Icons.Check /> AI Coach with deep correlations</li>
+                <li><Icons.Check /> Full analytics & lifetime heatmaps</li>
+                <li><Icons.Check /> Virtual Garden (Blooming Tree)</li>
+                <li><Icons.Check /> CSV / PDF data export</li>
               </ul>
-              <button className="landing-btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => onNavigate('register')}>Start 14-day trial</button>
+              <button className="sh-btn sh-btn-primary" style={{ width: '100%', marginTop: 'auto' }} onClick={() => onNavigate('register')}>Start 14-day trial</button>
             </div>
           </div>
         </div>
