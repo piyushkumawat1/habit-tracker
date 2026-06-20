@@ -75,7 +75,13 @@ export function AuthProvider({ children }) {
       options: { data: { name } }
     });
     if (error) throw error;
-    return data.user;
+    return data;
+  };
+
+  const verifyOtp = async (email, token, type = 'signup') => {
+    const { data, error } = await supabase.auth.verifyOtp({ email, token, type });
+    if (error) throw error;
+    return data;
   };
 
   const logout = async () => {
@@ -87,7 +93,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, login, loginWithGoogle, register, logout, updateUser, isAuthenticated: !!session }}>
+    <AuthContext.Provider value={{ user, session, loading, login, loginWithGoogle, register, verifyOtp, logout, updateUser, isAuthenticated: !!session }}>
       {children}
     </AuthContext.Provider>
   );
