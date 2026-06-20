@@ -40,9 +40,16 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Not Authenticated' });
     }
 
+    const razorpayKeyId = process.env.VITE_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID;
+    const razorpayKeySecret = process.env.VITE_RAZORPAY_KEY_SECRET || process.env.RAZORPAY_KEY_SECRET;
+
+    if (!razorpayKeyId || !razorpayKeySecret) {
+      throw new Error("Missing Razorpay Environment Variables (Key ID or Secret)");
+    }
+
     const razorpay = new Razorpay({
-      key_id: process.env.VITE_RAZORPAY_KEY_ID,
-      key_secret: process.env.RAZORPAY_KEY_SECRET,
+      key_id: razorpayKeyId,
+      key_secret: razorpayKeySecret,
     });
 
     const options = {

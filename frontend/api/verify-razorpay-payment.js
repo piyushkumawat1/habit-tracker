@@ -28,7 +28,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing payment details' });
     }
 
-    const secret = process.env.RAZORPAY_KEY_SECRET;
+    const secret = process.env.VITE_RAZORPAY_KEY_SECRET || process.env.RAZORPAY_KEY_SECRET;
     if (!secret) {
       throw new Error("Missing RAZORPAY_KEY_SECRET in environment");
     }
