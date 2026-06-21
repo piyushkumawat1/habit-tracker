@@ -1,191 +1,830 @@
-import { useState } from 'react';
-import { getToday, calcOverallStreak, calcHabitStreak, capitalize, formatTime } from '../lib/utils';
-import { logsApi } from '../lib/api.js';
+import { useState, useMemo, useCallback, useRef } from 'react';
+import { getToday, calcOverallStreak, calcHabitStreak, capitalize, formatTime, dateKey } from '../lib/utils';
+import { logsApi, habitsApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
-import MoodTracker from '../components/MoodTracker.jsx';
+import Dialog from '../components/ui/Dialog.jsx';
+import {
+  Flame, Star, Snowflake, Sparkles, Plus, RefreshCw, Check,
+  ChevronRight, Sun, Moon, Cloud, Clock, TrendingUp, Zap, Eye, Sunrise
+} from 'lucide-react';
 
-export default function Home({ habits, logs, refresh }) {
-  const showToast = useToast();
-  const [expandedTemplates, setExpandedTemplates] = useState({});
+// ── Constants ──
+const MILESTONES = [7, 21, 30, 60, 100, 365];
+const ICONS = ['💧', '🧘', '📖', '🏃', '✍️', '🎯', '🧠', '💤', '🍎', '🚴', '🧹', '💻', '🎵', '📸', '🌿', '☕'];
+const CATEGORIES = ['health', 'mindfulness', 'learning', 'productivity', 'social', 'fitness', 'finance', 'hobbies'];
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  const toggleTemplate = (tName) => {
-    setExpandedTemplates(prev => ({
-      ...prev,
-      [tName]: !prev[tName]
-    }));
-  };
+// ── Helpers ──
+function getGreeting() {
+  const h = new Date().getHours();
+  const day = new Date().toLocaleDateString('en-US', { weekday: 'long' });
 
-  const today = getToday();
-  const todayLogs = logs[today] || {};
-  const completed = habits.filter(h => todayLogs[h.id]).length;
-  const total = habits.length;
-  const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
-  const streak = calcOverallStreak(habits, logs);
+  if (h < 5) return `Good night 🌙`;
+  if (h < 12) return `Good morning 👋`;
+  if (h < 17) return `Good afternoon ☀️`;
+  if (h < 21) return `Good evening 🌅`;
+  return `Good night 🌙`;
+}
 
-  async function handleToggle(habitId) {
-    const wasCompleted = !!todayLogs[habitId];
-    await logsApi.toggle(today, habitId);
-    showToast(wasCompleted ? 'Habit unmarked' : 'Habit completed! Keep going! 🎉', wasCompleted ? '↩️' : '✅');
-    refresh();
+function getFormattedDate() {
+  return new Date().toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+}
+
+function getFormattedTime() {
+  return new Date().toLocaleTimeString('en-US', {
+    hour: 'numeric', minute: '2-digit', hour12: true
+  });
+}
+
+function getDifficultyPriority(diff) {
+  if (diff === 'hard') return 0;
+  if (diff === 'medium') return 1;
+  return 2;
+}
+
+function getTimePriority(time) {
+  const order = { morning: 0, afternoon: 1, evening: 2, anytime: 3 };
+  return order[time] ?? 3;
+}
+
+function getNextMilestone(streak) {
+  for (const m of MILESTONES) {
+    if (streak < m) return m;
+  }
+  return MILESTONES[MILESTONES.length - 1];
+}
+
+function getMilestoneLabel(milestone) {
+  if (milestone <= 7) return '🎯 7-Day Spark';
+  if (milestone <= 21) return '🔥 21-Day Builder';
+  if (milestone <= 30) return '💪 30-Day Champion';
+  if (milestone <= 60) return '⭐ 60-Day Master';
+  if (milestone <= 100) return '🏆 100-Day Legend';
+  return '👑 365-Day Titan';
+}
+
+function calcLongestStreak(habits, logs) {
+  if (!habits || habits.length === 0) return 0;
+  let longest = 0;
+  let current = 0;
+
+  for (let d = 365; d >= 0; d--) {
+    const dk = dateKey(new Date(Date.now() - d * 86400000));
+    const dayLogs = logs[dk] || {};
+    const allDone = habits.every(h => dayLogs[h.id]);
+    if (allDone && habits.length > 0) {
+      current++;
+      if (current > longest) longest = current;
+    } else {
+      current = 0;
+    }
+  }
+  return longest;
+}
+
+function calcStreakFreezes(streak) {
+  // 1 freeze earned per 7-day streak, max 3
+  return Math.min(3, Math.floor(streak / 7));
+}
+
+function getEarliestHabitDate(habits) {
+  if (!habits || habits.length === 0) return null;
+  let earliest = habits[0].created_at;
+  for (const h of habits) {
+    if (h.created_at < earliest) earliest = h.created_at;
+  }
+  return new Date(earliest).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// ── Heatmap data builder ──
+function buildHeatmapData(habits, logs) {
+  const today = new Date();
+  const sixMonthsAgo = new Date(today);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  // Start from the Sunday of that week
+  sixMonthsAgo.setDate(sixMonthsAgo.getDate() - sixMonthsAgo.getDay());
+
+  const weeks = [];
+  const monthLabels = [];
+  let currentDate = new Date(sixMonthsAgo);
+  let totalCompletions = 0;
+  let lastMonth = -1;
+
+  while (currentDate <= today) {
+    const weekStart = new Date(currentDate);
+    const week = [];
+
+    for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+      const cellDate = new Date(weekStart);
+      cellDate.setDate(cellDate.getDate() + dayOfWeek);
+
+      if (cellDate > today) {
+        week.push(null); // future day
+        continue;
+      }
+
+      const dk = dateKey(cellDate);
+      const dayLogs = logs[dk] || {};
+      const completedCount = habits.filter(h => dayLogs[h.id]).length;
+      totalCompletions += completedCount;
+
+      const ratio = habits.length > 0 ? completedCount / habits.length : 0;
+      let level = 0;
+      if (ratio > 0 && ratio <= 0.25) level = 1;
+      else if (ratio > 0.25 && ratio <= 0.5) level = 2;
+      else if (ratio > 0.5 && ratio <= 0.75) level = 3;
+      else if (ratio > 0.75) level = 4;
+
+      // Track month labels
+      if (cellDate.getMonth() !== lastMonth && dayOfWeek === 0) {
+        monthLabels.push({ weekIndex: weeks.length, label: MONTH_NAMES[cellDate.getMonth()] });
+        lastMonth = cellDate.getMonth();
+      }
+
+      week.push({
+        date: dk,
+        displayDate: cellDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+        completions: completedCount,
+        level,
+      });
+    }
+    weeks.push(week);
+    currentDate.setDate(currentDate.getDate() + 7);
   }
 
-  const h = new Date().getHours();
-  let greeting = 'Good evening!';
-  if (h < 12) greeting = 'Good morning!';
-  else if (h < 17) greeting = 'Good afternoon!';
-  const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  return { weeks, monthLabels, totalCompletions };
+}
 
+// ── Coach Insight Generator (stub for AI API) ──
+function generateInsight(habits, logs) {
+  if (!habits || habits.length === 0) return null;
+
+  const today = getToday();
+  const signals = [];
+
+  // Signal 1: Recent miss rate per habit (last 7 days)
+  const missRates = habits.map(h => {
+    let misses = 0;
+    for (let d = 1; d <= 7; d++) {
+      const dk = dateKey(new Date(Date.now() - d * 86400000));
+      if (!logs[dk] || !logs[dk][h.id]) misses++;
+    }
+    return { habit: h, missRate: misses / 7 };
+  }).sort((a, b) => b.missRate - a.missRate);
+
+  // Signal 2: Hard habits that are frequently missed
+  const hardMissed = missRates.filter(m => m.habit.difficulty === 'hard' && m.missRate > 0.5);
+  if (hardMissed.length > 0) {
+    const h = hardMissed[0].habit;
+    signals.push({
+      text: `"${h.name}" seems challenging — you've missed it ${Math.round(hardMissed[0].missRate * 7)} of the last 7 days. Consider making it smaller or adjusting the difficulty.`,
+      habitId: h.id,
+      habitName: h.name,
+      type: 'difficulty_mismatch',
+    });
+  }
+
+  // Signal 3: Evening habits with high miss rate (time-of-day mismatch)
+  const eveningMissed = missRates.filter(m => m.habit.time === 'evening' && m.missRate > 0.4);
+  if (eveningMissed.length > 0 && signals.length < 3) {
+    const h = eveningMissed[0].habit;
+    signals.push({
+      text: `"${h.name}" is scheduled for evening but often missed. Try moving it to morning when willpower is highest.`,
+      habitId: h.id,
+      habitName: h.name,
+      type: 'time_mismatch',
+    });
+  }
+
+  // Signal 4: Consistently completed habits (positive reinforcement)
+  const perfectHabits = missRates.filter(m => m.missRate === 0);
+  if (perfectHabits.length > 0 && signals.length < 3) {
+    const h = perfectHabits[0].habit;
+    signals.push({
+      text: `You've nailed "${h.name}" every day this week! Consider stacking a new micro-habit right after it.`,
+      habitId: h.id,
+      habitName: h.name,
+      type: 'positive',
+    });
+  }
+
+  // Signal 5: General fallback
+  if (signals.length === 0) {
+    const h = habits[0];
+    signals.push({
+      text: `Focus on consistency over intensity. Even marking "${h.name}" as done 5 days a week builds powerful momentum.`,
+      habitId: h.id,
+      habitName: h.name,
+      type: 'general',
+    });
+  }
+
+  return signals;
+}
+
+
+// ═══════════════════════════════════════════
+//  MAIN COMPONENT
+// ═══════════════════════════════════════════
+export default function Home({ habits, logs, refresh, onNavigate }) {
+  const showToast = useToast();
+  const [tooltip, setTooltip] = useState(null);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editHabit, setEditHabit] = useState(null);
+  const [insightIndex, setInsightIndex] = useState(0);
+  const [insightSpinning, setInsightSpinning] = useState(false);
+  const [optimisticLogs, setOptimisticLogs] = useState({});
+
+  // Add-habit form state
+  const [newName, setNewName] = useState('');
+  const [newCategory, setNewCategory] = useState('health');
+  const [newFrequency, setNewFrequency] = useState('daily');
+  const [newDifficulty, setNewDifficulty] = useState('easy');
+  const [newIcon, setNewIcon] = useState('💧');
+  const [newTime, setNewTime] = useState('morning');
+
+  // Edit-habit form state
+  const [editName, setEditName] = useState('');
+  const [editCategory, setEditCategory] = useState('');
+  const [editDifficulty, setEditDifficulty] = useState('');
+
+  const today = getToday();
+  const todayLogs = { ...(logs[today] || {}), ...optimisticLogs };
+
+  // Computed values
+  const streak = useMemo(() => calcOverallStreak(habits, logs), [habits, logs]);
+  const longestStreak = useMemo(() => calcLongestStreak(habits, logs), [habits, logs]);
+  const heatmapData = useMemo(() => buildHeatmapData(habits, logs), [habits, logs]);
+  const insights = useMemo(() => generateInsight(habits, logs), [habits, logs]);
+  const nextMilestone = getNextMilestone(streak);
+  const milestoneLabel = getMilestoneLabel(nextMilestone);
+  const progressPct = nextMilestone > 0 ? Math.min(100, Math.round((streak / nextMilestone) * 100)) : 0;
+  const freezes = calcStreakFreezes(streak);
+  const startedDate = getEarliestHabitDate(habits);
+  const completed = habits.filter(h => todayLogs[h.id]).length;
+  const total = habits.length;
+
+  // Sort habits for Today's Focus: hard first, then by time-of-day
+  const todaysFocus = useMemo(() => {
+    return [...habits].sort((a, b) => {
+      const dp = getDifficultyPriority(a.difficulty) - getDifficultyPriority(b.difficulty);
+      if (dp !== 0) return dp;
+      return getTimePriority(a.time) - getTimePriority(b.time);
+    });
+  }, [habits]);
+
+  const isNewAccount = heatmapData.totalCompletions < 3;
+  const currentInsight = insights && insights.length > 0 ? insights[insightIndex % insights.length] : null;
+
+  // ── Handlers ──
+  async function handleToggle(habitId) {
+    const wasCompleted = !!todayLogs[habitId];
+
+    // Optimistic update
+    setOptimisticLogs(prev => {
+      const next = { ...prev };
+      if (wasCompleted) {
+        delete next[habitId];
+      } else {
+        next[habitId] = { id: 'optimistic', habit_id: habitId, date: today };
+      }
+      return next;
+    });
+
+    showToast(wasCompleted ? 'Habit unmarked' : 'Habit completed! Keep going! 🎉', wasCompleted ? '↩️' : '✅');
+
+    try {
+      await logsApi.toggle(today, habitId);
+      refresh();
+    } catch (err) {
+      // Revert optimistic update on failure
+      setOptimisticLogs(prev => {
+        const next = { ...prev };
+        delete next[habitId];
+        return next;
+      });
+      showToast('Failed to update. Please try again.', '❌');
+    }
+  }
+
+  async function handleCreateHabit(e) {
+    e.preventDefault();
+    if (!newName.trim()) return;
+
+    try {
+      await habitsApi.create({
+        name: newName.trim(),
+        category: newCategory,
+        frequency: newFrequency,
+        difficulty: newDifficulty,
+        icon: newIcon,
+        time: newTime,
+      });
+      showToast('Habit created!', '🎉');
+      setAddDialogOpen(false);
+      setNewName('');
+      setNewCategory('health');
+      setNewFrequency('daily');
+      setNewDifficulty('easy');
+      setNewIcon('💧');
+      setNewTime('morning');
+      refresh();
+    } catch (err) {
+      showToast('Failed to create habit', '❌');
+    }
+  }
+
+  async function handleEditHabit(e) {
+    e.preventDefault();
+    if (!editHabit || !editName.trim()) return;
+
+    try {
+      await habitsApi.update(editHabit.id, {
+        name: editName.trim(),
+        category: editCategory,
+        difficulty: editDifficulty,
+      });
+      showToast('Habit updated!', '✅');
+      setEditDialogOpen(false);
+      setEditHabit(null);
+      refresh();
+    } catch (err) {
+      showToast('Failed to update habit', '❌');
+    }
+  }
+
+  function openEditForInsight() {
+    if (!currentInsight) return;
+    const habit = habits.find(h => h.id === currentInsight.habitId);
+    if (!habit) return;
+    setEditHabit(habit);
+    setEditName(habit.name);
+    setEditCategory(habit.category || 'health');
+    setEditDifficulty(habit.difficulty || 'easy');
+    setEditDialogOpen(true);
+  }
+
+  function cycleInsight() {
+    setInsightSpinning(true);
+    setTimeout(() => setInsightSpinning(false), 600);
+    setInsightIndex(prev => prev + 1);
+  }
+
+  function handleCellHover(e, cell) {
+    if (!cell) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    setTooltip({
+      x: rect.left + rect.width / 2,
+      y: rect.top,
+      date: cell.displayDate,
+      completions: cell.completions,
+    });
+  }
+
+  function handleCellLeave() {
+    setTooltip(null);
+  }
+
+  const timeIcon = (time) => {
+    switch (time) {
+      case 'morning': return <Sunrise size={12} />;
+      case 'afternoon': return <Sun size={12} />;
+      case 'evening': return <Moon size={12} />;
+      default: return <Clock size={12} />;
+    }
+  };
+
+
+  // ═════════════════════════════════
+  //  RENDER
+  // ═════════════════════════════════
   return (
-    <section id="page-home" className="page active">
-      <div className="page-header">
-        <div>
-          <h1>{greeting}</h1>
-          <p className="page-subtitle">{dateStr}</p>
+    <section id="page-home" className="page active dashboard-warm">
+
+      {/* ── ACTIVITY HEATMAP ── */}
+      <div className="heatmap-section">
+        <div className="heatmap-header">
+          <div>
+            <h2>Completion Activity</h2>
+            <span className="heatmap-total">
+              <strong>{heatmapData.totalCompletions}</strong> completions in the last 6 months
+            </span>
+          </div>
+          <div className="heatmap-legend">
+            <span>Less</span>
+            <div className="heatmap-legend-cell" style={{ background: 'rgba(255,255,255,0.04)' }} />
+            <div className="heatmap-legend-cell" style={{ background: 'rgba(251,191,36,0.15)' }} />
+            <div className="heatmap-legend-cell" style={{ background: 'rgba(245,158,11,0.3)' }} />
+            <div className="heatmap-legend-cell" style={{ background: 'rgba(217,119,6,0.5)' }} />
+            <div className="heatmap-legend-cell" style={{ background: 'rgba(180,83,9,0.7)' }} />
+            <span>More</span>
+          </div>
         </div>
+
+        <div className="heatmap-scroll-wrapper">
+          <div className="heatmap-container">
+            {/* Month labels */}
+            <div className="heatmap-months">
+              {heatmapData.monthLabels.map((ml, i) => (
+                <span
+                  key={i}
+                  className="heatmap-month-label"
+                  style={{ marginLeft: i === 0 ? `${ml.weekIndex * 15}px` : undefined, width: `${((heatmapData.monthLabels[i + 1]?.weekIndex || heatmapData.weeks.length) - ml.weekIndex) * 15}px` }}
+                >
+                  {ml.label}
+                </span>
+              ))}
+            </div>
+
+            {/* Day rows */}
+            {DAY_LABELS.map((dayLabel, dayIndex) => (
+              <div key={dayLabel} className="heatmap-row">
+                <span className="heatmap-day-label">
+                  {dayIndex % 2 === 1 ? dayLabel : ''}
+                </span>
+                {heatmapData.weeks.map((week, weekIndex) => {
+                  const cell = week[dayIndex];
+                  if (!cell) return <div key={weekIndex} className="heatmap-cell" style={{ visibility: 'hidden' }} />;
+                  return (
+                    <div
+                      key={weekIndex}
+                      className={`heatmap-cell level-${cell.level}`}
+                      onMouseEnter={(e) => handleCellHover(e, cell)}
+                      onMouseLeave={handleCellLeave}
+                      onFocus={(e) => handleCellHover(e, cell)}
+                      onBlur={handleCellLeave}
+                      tabIndex={0}
+                      role="gridcell"
+                      aria-label={`${cell.displayDate}: ${cell.completions} completions`}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {isNewAccount && (
+          <div className="heatmap-empty-nudge">
+            <Sparkles size={16} />
+            Your activity will show up here as you log habits.
+          </div>
+        )}
       </div>
-      
-      <MoodTracker />
 
-      <div className="stats-grid">
-        <div className="stat-card stat-card--primary">
-          <div className="stat-icon">🔥</div>
-          <div className="stat-body">
-            <span className="stat-value">{streak}</span>
-            <span className="stat-label">Day Streak</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">✅</div>
-          <div className="stat-body">
-            <span className="stat-value">{completed}</span>
-            <span className="stat-label">Completed</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">📋</div>
-          <div className="stat-body">
-            <span className="stat-value">{total}</span>
-            <span className="stat-label">Total Habits</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">📈</div>
-          <div className="stat-body">
-            <span className="stat-value">{rate}%</span>
-            <span className="stat-label">Today's Rate</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="section-header" style={habits.length === 0 ? { display: 'none' } : {}}>
-        <h2>Today's Habits</h2>
-        <span className="remaining-badge">{total - completed} remaining</span>
-      </div>
-
-      {habits.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-icon">🌱</div>
-          <h3>No habits yet</h3>
-          <p>Start your journey by adding your first habit!</p>
-        </div>
-      ) : (
-        <div className="quick-log-list">
-          {(() => {
-            const habitGroups = [];
-            const templatesMap = {};
-
-            habits.forEach(h => {
-              if (h.description && h.description.startsWith('[Template] ')) {
-                const tName = h.description.replace('[Template] ', '');
-                if (!templatesMap[tName]) {
-                  templatesMap[tName] = { name: tName, habits: [], doneCount: 0, totalCount: 0 };
-                  habitGroups.push({ type: 'template', name: tName, data: templatesMap[tName] });
-                }
-                templatesMap[tName].habits.push(h);
-                templatesMap[tName].totalCount++;
-                if (todayLogs[h.id]) templatesMap[tName].doneCount++;
-              } else {
-                habitGroups.push({ type: 'habit', data: h });
-              }
-            });
-
-            return habitGroups.map((group, idx) => {
-              if (group.type === 'template') {
-                const t = group.data;
-                const isExpanded = expandedTemplates[t.name];
-                const isAllDone = t.doneCount === t.totalCount && t.totalCount > 0;
-                
-                return (
-                  <div key={`template-${t.name}`} className="template-group" style={{ animationDelay: `${idx * 0.05}s` }}>
-                    <div 
-                      className={`quick-log-item ${isAllDone ? 'completed' : ''}`} 
-                      onClick={() => toggleTemplate(t.name)}
-                      style={{ background: 'var(--bg-raised)', border: '1px solid var(--border)', marginBottom: isExpanded ? '0' : '12px' }}
-                    >
-                      <span className="ql-icon">📁</span>
-                      <div className="ql-check" style={isAllDone ? { background: 'var(--primary)', borderColor: 'var(--primary)' } : { borderColor: 'var(--border-strong)' }}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                      </div>
-                      <div className="ql-info">
-                        <div className="ql-name">{t.name} (Template)</div>
-                        <div className="ql-meta">
-                          <span>{t.doneCount}/{t.totalCount} completed</span>
-                        </div>
-                      </div>
-                      <span className="ql-expand-icon" style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.2s', padding: '0 8px', fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>
-                        ▼
-                      </span>
-                    </div>
-                    
-                    {isExpanded && (
-                      <div className="template-habits" style={{ paddingLeft: '24px', paddingTop: '8px', marginBottom: '12px', borderLeft: '2px solid var(--border)', marginLeft: '12px' }}>
-                        {t.habits.map((h) => {
-                          const done = !!todayLogs[h.id];
-                          const habitStreak = calcHabitStreak(h.id, logs);
-                          return (
-                            <div key={h.id} className={`quick-log-item ${done ? 'completed' : ''}`} onClick={() => handleToggle(h.id)}>
-                              <span className="ql-icon">{h.icon}</span>
-                              <div className="ql-check" style={done ? { background: h.color, borderColor: h.color } : { borderColor: h.color }}>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                              </div>
-                              <div className="ql-info">
-                                <div className="ql-name">{h.name}</div>
-                                <div className="ql-meta">
-                                  <span>{capitalize(h.category)}</span><span>·</span><span>{formatTime(h.time)}</span>
-                                </div>
-                              </div>
-                              {habitStreak > 0 && <span className="ql-streak">🔥 {habitStreak}d</span>}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                );
-              } else {
-                const h = group.data;
-                const done = !!todayLogs[h.id];
-                const habitStreak = calcHabitStreak(h.id, logs);
-                return (
-                  <div key={h.id} className={`quick-log-item ${done ? 'completed' : ''}`} style={{ animationDelay: `${idx * 0.05}s` }} onClick={() => handleToggle(h.id)}>
-                    <span className="ql-icon">{h.icon}</span>
-                    <div className="ql-check" style={done ? { background: h.color, borderColor: h.color } : { borderColor: h.color }}>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
-                    <div className="ql-info">
-                      <div className="ql-name">{h.name}</div>
-                      <div className="ql-meta">
-                        <span>{capitalize(h.category)}</span><span>·</span><span>{formatTime(h.time)}</span>
-                      </div>
-                    </div>
-                    {habitStreak > 0 && <span className="ql-streak">🔥 {habitStreak}d</span>}
-                  </div>
-                );
-              }
-            });
-          })()}
+      {/* ── Tooltip (portal-style, rendered at body level) ── */}
+      {tooltip && (
+        <div
+          className="heatmap-tooltip"
+          style={{ left: tooltip.x, top: tooltip.y }}
+        >
+          <span className="tooltip-date">{tooltip.date}</span>
+          {tooltip.completions > 0 ? (
+            <span><strong>{tooltip.completions}</strong> completion{tooltip.completions !== 1 ? 's' : ''}</span>
+          ) : (
+            <span>No completions</span>
+          )}
         </div>
       )}
+
+
+      {/* ── TWO-COLUMN DASHBOARD ── */}
+      {habits.length === 0 ? (
+        /* ── Empty State ── */
+        <div className="glass-card">
+          <div className="dashboard-empty">
+            <div className="dashboard-empty-icon">
+              <Flame size={32} />
+            </div>
+            <h3>Welcome to your Dashboard!</h3>
+            <p>Start your journey by creating your first habit. We'll track your streaks, show your progress, and give you personalized insights.</p>
+            <button className="greeting-add-btn" onClick={() => setAddDialogOpen(true)}>
+              <Plus size={16} /> Create Your First Habit
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="dashboard-grid">
+          {/* ═════ LEFT COLUMN ═════ */}
+          <div className="dashboard-col">
+
+            {/* ── Greeting Card ── */}
+            <div className="glass-card">
+              <div className="greeting-card">
+                <div className="greeting-text">
+                  <h1>{getGreeting()}</h1>
+                  <span className="greeting-date">{getFormattedDate()} · {getFormattedTime()}</span>
+                </div>
+                <button className="greeting-add-btn" onClick={() => setAddDialogOpen(true)}>
+                  <Plus size={16} /> New Habit
+                </button>
+              </div>
+            </div>
+
+            {/* ── Today's Focus ── */}
+            <div className="glass-card">
+              <div className="dash-card-header">
+                <div className="dash-card-title">
+                  <Eye size={18} />
+                  Today's Focus
+                </div>
+                <span className="badge" style={{ color: completed === total && total > 0 ? 'var(--green)' : undefined }}>
+                  {completed}/{total}
+                </span>
+              </div>
+
+              <div className="focus-list">
+                {todaysFocus.map(h => {
+                  const done = !!todayLogs[h.id];
+                  const isHard = h.difficulty === 'hard';
+                  return (
+                    <div
+                      key={h.id}
+                      className={`focus-item ${done ? 'completed' : ''}`}
+                      onClick={() => handleToggle(h.id)}
+                    >
+                      <div className={`focus-checkbox ${done ? 'checked' : ''}`}>
+                        <Check size={14} />
+                      </div>
+                      {isHard && <Star size={14} className="focus-star" />}
+                      <div className="focus-info">
+                        <div className="focus-name">{h.name}</div>
+                        <div className="focus-meta">
+                          {timeIcon(h.time)}
+                          <span>{formatTime(h.time)}</span>
+                          <span>·</span>
+                          <span>{capitalize(h.difficulty || 'easy')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <button className="focus-view-all" onClick={() => onNavigate && onNavigate('habits')}>
+                View All Habits <ChevronRight size={14} />
+              </button>
+            </div>
+          </div>
+
+          {/* ═════ RIGHT COLUMN ═════ */}
+          <div className="dashboard-col">
+
+            {/* ── Quick Stats ── */}
+            <div className="glass-card">
+              <div className="dash-card-header">
+                <div className="dash-card-title">
+                  <TrendingUp size={18} />
+                  Quick Stats
+                </div>
+              </div>
+              <div className="quick-stats-row">
+                <div className="quick-stat-item">
+                  <span className="quick-stat-value">{completed}/{total}</span>
+                  <span className="quick-stat-label">Today's Progress</span>
+                </div>
+                <div className="quick-stat-item">
+                  <span className="quick-stat-value">{total}</span>
+                  <span className="quick-stat-label">Active Habits</span>
+                </div>
+              </div>
+            </div>
+
+            {/* ── Current Streak (Hero Card) ── */}
+            <div className="streak-hero-card">
+              <div className="streak-hero-top">
+                <div className="streak-flame">
+                  <Flame size={28} />
+                </div>
+                <div>
+                  <div className="streak-number">{streak}</div>
+                  <div className="streak-number-label">Day Streak</div>
+                </div>
+              </div>
+
+              {/* Progress bar */}
+              <div className="streak-progress">
+                <div className="streak-progress-label">
+                  <span>Progress to {milestoneLabel}</span>
+                  <span>{streak}/{nextMilestone} days</span>
+                </div>
+                <div className="streak-progress-bar">
+                  <div className="streak-progress-fill" style={{ width: `${progressPct}%` }} />
+                </div>
+              </div>
+
+              {/* Small stats */}
+              <div className="streak-stats-row">
+                <div className="streak-stat">
+                  <span className="streak-stat-label">Longest</span>
+                  <span className="streak-stat-value">{longestStreak} days</span>
+                </div>
+                <div className="streak-stat">
+                  <span className="streak-stat-label">Started</span>
+                  <span className="streak-stat-value">{startedDate || 'Today'}</span>
+                </div>
+              </div>
+
+              {/* Streak freeze */}
+              <div className="streak-freeze-row">
+                <div className="streak-freeze-left">
+                  <Snowflake size={16} />
+                  Streak Freezes
+                </div>
+                <span className="freeze-badge">{freezes}/3 available</span>
+              </div>
+
+              <button className="streak-cta" onClick={() => onNavigate && onNavigate('habits')}>
+                Keep going 💪
+              </button>
+            </div>
+
+            {/* ── Coach Insight ── */}
+            {currentInsight && (
+              <div className="coach-card">
+                <div className="coach-header">
+                  <div className="coach-title">
+                    <Sparkles size={18} />
+                    Coach Insight
+                  </div>
+                  <button
+                    className={`coach-refresh ${insightSpinning ? 'spinning' : ''}`}
+                    onClick={cycleInsight}
+                    aria-label="Get different insight"
+                  >
+                    <RefreshCw size={16} />
+                  </button>
+                </div>
+
+                <div className="coach-insight-text">
+                  {currentInsight.text.split(`"${currentInsight.habitName}"`).map((part, i, arr) => (
+                    <span key={i}>
+                      {part}
+                      {i < arr.length - 1 && <em>"{currentInsight.habitName}"</em>}
+                    </span>
+                  ))}
+                </div>
+
+                <button className="coach-action-btn" onClick={openEditForInsight}>
+                  <Zap size={14} />
+                  Adjust Habit
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+
+      {/* ═══════════════════════════════════
+           DIALOGS
+         ═══════════════════════════════════ */}
+
+      {/* ── Add Habit Dialog ── */}
+      <Dialog isOpen={addDialogOpen} onClose={() => setAddDialogOpen(false)} maxWidth={520}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: 4, color: 'var(--text-primary)' }}>Create New Habit</h2>
+        <p style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)', marginBottom: 20 }}>Define your daily commitment</p>
+
+        <form className="add-habit-dialog-form" onSubmit={handleCreateHabit}>
+          <div className="dialog-form-group">
+            <label htmlFor="new-habit-name">Habit Name *</label>
+            <input
+              id="new-habit-name"
+              type="text"
+              placeholder="e.g. Morning Meditation"
+              value={newName}
+              onChange={e => setNewName(e.target.value)}
+              maxLength={60}
+              autoFocus
+            />
+          </div>
+
+          <div className="dialog-form-row">
+            <div className="dialog-form-group">
+              <label htmlFor="new-habit-category">Category</label>
+              <select id="new-habit-category" value={newCategory} onChange={e => setNewCategory(e.target.value)}>
+                {CATEGORIES.map(c => <option key={c} value={c}>{capitalize(c)}</option>)}
+              </select>
+            </div>
+            <div className="dialog-form-group">
+              <label htmlFor="new-habit-frequency">Frequency</label>
+              <select id="new-habit-frequency" value={newFrequency} onChange={e => setNewFrequency(e.target.value)}>
+                <option value="daily">Daily</option>
+                <option value="weekdays">Weekdays</option>
+                <option value="weekends">Weekends</option>
+                <option value="weekly">Weekly</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="dialog-form-group">
+            <label>Difficulty</label>
+            <div className="dialog-difficulty-group">
+              {['easy', 'medium', 'hard'].map(d => (
+                <button
+                  key={d}
+                  type="button"
+                  className={`dialog-difficulty-option ${newDifficulty === d ? 'active' : ''}`}
+                  onClick={() => setNewDifficulty(d)}
+                >
+                  {d === 'easy' ? '🟢' : d === 'medium' ? '🟡' : '🔴'} {capitalize(d)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="dialog-form-group">
+            <label>Time of Day</label>
+            <div className="dialog-difficulty-group">
+              {[
+                { key: 'morning', label: '🌅 Morning' },
+                { key: 'afternoon', label: '☀️ Afternoon' },
+                { key: 'evening', label: '🌙 Evening' },
+                { key: 'anytime', label: '⏰ Anytime' },
+              ].map(t => (
+                <button
+                  key={t.key}
+                  type="button"
+                  className={`dialog-difficulty-option ${newTime === t.key ? 'active' : ''}`}
+                  onClick={() => setNewTime(t.key)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="dialog-form-group">
+            <label>Icon</label>
+            <div className="dialog-icon-grid">
+              {ICONS.map(i => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`dialog-icon-option ${newIcon === i ? 'active' : ''}`}
+                  onClick={() => setNewIcon(i)}
+                >
+                  {i}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button type="submit" className="btn btn-primary btn-block" disabled={!newName.trim()}>
+            Create Habit
+          </button>
+        </form>
+      </Dialog>
+
+      {/* ── Edit Habit Dialog ── */}
+      <Dialog isOpen={editDialogOpen} onClose={() => { setEditDialogOpen(false); setEditHabit(null); }} maxWidth={440}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: 4, color: 'var(--text-primary)' }}>Adjust Habit</h2>
+        <p style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)', marginBottom: 20 }}>Fine-tune based on coach insight</p>
+
+        <form className="add-habit-dialog-form" onSubmit={handleEditHabit}>
+          <div className="dialog-form-group">
+            <label htmlFor="edit-habit-name">Name</label>
+            <input
+              id="edit-habit-name"
+              type="text"
+              value={editName}
+              onChange={e => setEditName(e.target.value)}
+              maxLength={60}
+            />
+          </div>
+
+          <div className="dialog-form-group">
+            <label htmlFor="edit-habit-category">Category</label>
+            <select id="edit-habit-category" value={editCategory} onChange={e => setEditCategory(e.target.value)}>
+              {CATEGORIES.map(c => <option key={c} value={c}>{capitalize(c)}</option>)}
+            </select>
+          </div>
+
+          <div className="dialog-form-group">
+            <label>Difficulty</label>
+            <div className="dialog-difficulty-group">
+              {['easy', 'medium', 'hard'].map(d => (
+                <button
+                  key={d}
+                  type="button"
+                  className={`dialog-difficulty-option ${editDifficulty === d ? 'active' : ''}`}
+                  onClick={() => setEditDifficulty(d)}
+                >
+                  {d === 'easy' ? '🟢' : d === 'medium' ? '🟡' : '🔴'} {capitalize(d)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button type="submit" className="btn btn-primary btn-block" disabled={!editName.trim()}>
+            Save Changes
+          </button>
+        </form>
+      </Dialog>
     </section>
   );
 }

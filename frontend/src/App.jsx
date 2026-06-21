@@ -7,6 +7,7 @@ import DashboardLayout from './layouts/DashboardLayout.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import LandingPage from './pages/LandingPage.jsx';
+import TestDashboard from './pages/TestDashboard.jsx';
 import Home from './pages/Home.jsx';
 import Habits from './pages/Habits.jsx';
 import AddHabit from './pages/AddHabit.jsx';
@@ -36,14 +37,14 @@ function AppContent() {
   }
 
   if (!isAuthenticated) {
-    if (authView === 'landing') return <LandingPage onNavigate={setAuthView} />;
+    if (authView === 'landing') return <TestDashboard onNavigate={setAuthView} />;
     if (authView === 'login') return <Login onSwitch={() => setAuthView('register')} onBack={() => setAuthView('landing')} />;
     if (authView === 'register') return <Register onSwitch={() => setAuthView('login')} onBack={() => setAuthView('landing')} />;
   }
 
   function renderPage() {
     switch (currentPage) {
-      case 'home': return <Home habits={habits} logs={logs} refresh={refresh} />;
+      case 'home': return <Home habits={habits} logs={logs} refresh={refresh} onNavigate={setCurrentPage} />;
       case 'habits': return <Habits habits={habits} logs={logs} refresh={refresh} onNavigate={setCurrentPage} />;
       case 'add-habit': return <AddHabit onNavigate={setCurrentPage} refresh={refresh} habits={habits} />;
       case 'calendar': return <Calendar habits={habits} logs={logs} refresh={refresh} />;
@@ -54,7 +55,7 @@ function AppContent() {
       case 'journey': return <Journey habits={habits} logs={logs} />;
       case 'profile': return <Profile />;
       case 'garden': return <VirtualGarden />;
-      default: return <Home habits={habits} logs={logs} refresh={refresh} />;
+      default: return <Home habits={habits} logs={logs} refresh={refresh} onNavigate={setCurrentPage} />;
     }
   }
 
