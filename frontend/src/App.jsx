@@ -7,7 +7,6 @@ import DashboardLayout from './layouts/DashboardLayout.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import LandingPage from './pages/LandingPage.jsx';
-import TestDashboard from './pages/TestDashboard.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Habits from './pages/Habits.jsx';
 import AddHabit from './pages/AddHabit.jsx';
@@ -32,7 +31,7 @@ function AppContent() {
   if (!isAuthenticated) {
     return (
       <Routes>
-        <Route path="/" element={<TestDashboard />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<Navigate to="/" replace />} />

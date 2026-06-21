@@ -100,7 +100,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: { id: 'mock', name: 'Tester', email: 'test@example.com', is_pro: true }, session: {}, loading: false, login, loginWithGoogle, register, verifyOtp, logout, updateUser, isAuthenticated: true }}>
+    <AuthContext.Provider value={{ user, session, loading, login, loginWithGoogle, register, verifyOtp, logout, updateUser, isAuthenticated: !!session }}>
       {children}
     </AuthContext.Provider>
   );
