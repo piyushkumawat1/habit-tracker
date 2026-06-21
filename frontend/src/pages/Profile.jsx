@@ -34,6 +34,27 @@ export default function Profile() {
   const handleUpgrade = async () => {
     setUpgrading(true);
     try {
+      // FREE UPGRADE LOGIC (Active)
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) throw new Error("Authentication required");
+
+      const verifyRes = await fetch('/api/free-upgrade', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      const verifyData = await verifyRes.json();
+      if (!verifyRes.ok) throw new Error(verifyData.error || "Upgrade failed");
+      
+      showToast('Welcome to Habitly Pro! 🎉 (Free Upgrade)', '✅');
+      updateUser({ ...user, is_pro: true });
+
+      /* 
+      // --- ORIGINAL RAZORPAY LOGIC (Currently Disabled) ---
       const res = await loadRazorpayScript();
       if (!res) {
         showToast('Razorpay SDK failed to load. Are you offline?', '❌');
@@ -99,6 +120,8 @@ export default function Profile() {
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
+      // --- END ORIGINAL RAZORPAY LOGIC ---
+      */
       
     } catch (err) {
       console.error(err);
