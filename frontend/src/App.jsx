@@ -9,7 +9,6 @@ import Register from './pages/Register.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Habits from './pages/Habits.jsx';
-import AddHabit from './pages/AddHabit.jsx';
 import Insights from './pages/Insights.jsx';
 import Challenges from './pages/Challenges.jsx';
 import Profile from './pages/Profile.jsx';
@@ -50,7 +49,6 @@ function AppContent() {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard habits={habits} logs={logs} refresh={refresh} />} />
           <Route path="/habits" element={<Habits habits={habits} logs={logs} refresh={refresh} />} />
-          <Route path="/add-habit" element={<AddHabit refresh={refresh} habits={habits} />} />
           <Route path="/insights" element={<Insights habits={habits} logs={logs} />} />
           <Route path="/challenges" element={<Challenges habits={habits} logs={logs} />} />
           <Route path="/profile" element={<Profile />} />

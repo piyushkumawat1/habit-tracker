@@ -241,13 +241,6 @@ export default function Dashboard({ habits, logs, refresh }) {
   const [insightSpinning, setInsightSpinning] = useState(false);
   const [optimisticLogs, setOptimisticLogs] = useState({});
 
-  // Add-habit form state
-  const [newName, setNewName] = useState('');
-  const [newCategory, setNewCategory] = useState('health');
-  const [newFrequency, setNewFrequency] = useState('daily');
-  const [newDifficulty, setNewDifficulty] = useState('easy');
-  const [newIcon, setNewIcon] = useState('💧');
-  const [newTime, setNewTime] = useState('morning');
 
   // Edit-habit form state
   const [editName, setEditName] = useState('');
@@ -313,32 +306,6 @@ export default function Dashboard({ habits, logs, refresh }) {
     }
   }
 
-  async function handleCreateHabit(e) {
-    e.preventDefault();
-    if (!newName.trim()) return;
-
-    try {
-      await habitsApi.create({
-        name: newName.trim(),
-        category: newCategory,
-        frequency: newFrequency,
-        difficulty: newDifficulty,
-        icon: newIcon,
-        time: newTime,
-      });
-      showToast('Habit created!', '🎉');
-      setAddDialogOpen(false);
-      setNewName('');
-      setNewCategory('health');
-      setNewFrequency('daily');
-      setNewDifficulty('easy');
-      setNewIcon('💧');
-      setNewTime('morning');
-      refresh();
-    } catch (err) {
-      showToast('Failed to create habit', '❌');
-    }
-  }
 
   async function handleEditHabit(e) {
     e.preventDefault();
@@ -655,101 +622,7 @@ export default function Dashboard({ habits, logs, refresh }) {
            DIALOGS
          ═══════════════════════════════════ */}
 
-      {/* ── Add Habit Dialog ── */}
-      <Dialog isOpen={addDialogOpen} onClose={() => setAddDialogOpen(false)} maxWidth={520}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: 4, color: 'var(--text-primary)' }}>Create New Habit</h2>
-        <p style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)', marginBottom: 20 }}>Define your daily commitment</p>
-
-        <form className="add-habit-dialog-form" onSubmit={handleCreateHabit}>
-          <div className="dialog-form-group">
-            <label htmlFor="new-habit-name">Habit Name *</label>
-            <input
-              id="new-habit-name"
-              type="text"
-              placeholder="e.g. Morning Meditation"
-              value={newName}
-              onChange={e => setNewName(e.target.value)}
-              maxLength={60}
-              autoFocus
-            />
-          </div>
-
-          <div className="dialog-form-row">
-            <div className="dialog-form-group">
-              <label htmlFor="new-habit-category">Category</label>
-              <select id="new-habit-category" value={newCategory} onChange={e => setNewCategory(e.target.value)}>
-                {CATEGORIES.map(c => <option key={c} value={c}>{capitalize(c)}</option>)}
-              </select>
-            </div>
-            <div className="dialog-form-group">
-              <label htmlFor="new-habit-frequency">Frequency</label>
-              <select id="new-habit-frequency" value={newFrequency} onChange={e => setNewFrequency(e.target.value)}>
-                <option value="daily">Daily</option>
-                <option value="weekdays">Weekdays</option>
-                <option value="weekends">Weekends</option>
-                <option value="weekly">Weekly</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="dialog-form-group">
-            <label>Difficulty</label>
-            <div className="dialog-difficulty-group">
-              {['easy', 'medium', 'hard'].map(d => (
-                <button
-                  key={d}
-                  type="button"
-                  className={`dialog-difficulty-option ${newDifficulty === d ? 'active' : ''}`}
-                  onClick={() => setNewDifficulty(d)}
-                >
-                  {d === 'easy' ? '🟢' : d === 'medium' ? '🟡' : '🔴'} {capitalize(d)}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="dialog-form-group">
-            <label>Time of Day</label>
-            <div className="dialog-difficulty-group">
-              {[
-                { key: 'morning', label: '🌅 Morning' },
-                { key: 'afternoon', label: '☀️ Afternoon' },
-                { key: 'evening', label: '🌙 Evening' },
-                { key: 'anytime', label: '⏰ Anytime' },
-              ].map(t => (
-                <button
-                  key={t.key}
-                  type="button"
-                  className={`dialog-difficulty-option ${newTime === t.key ? 'active' : ''}`}
-                  onClick={() => setNewTime(t.key)}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="dialog-form-group">
-            <label>Icon</label>
-            <div className="dialog-icon-grid">
-              {ICONS.map(i => (
-                <button
-                  key={i}
-                  type="button"
-                  className={`dialog-icon-option ${newIcon === i ? 'active' : ''}`}
-                  onClick={() => setNewIcon(i)}
-                >
-                  {i}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button type="submit" className="btn btn-primary btn-block" disabled={!newName.trim()}>
-            Create Habit
-          </button>
-        </form>
-      </Dialog>
+      <CreateHabitModal isOpen={addDialogOpen} onClose={() => setAddDialogOpen(false)} refresh={refresh} />
 
       {/* ── Edit Habit Dialog ── */}
       <Dialog isOpen={editDialogOpen} onClose={() => { setEditDialogOpen(false); setEditHabit(null); }} maxWidth={440}>
