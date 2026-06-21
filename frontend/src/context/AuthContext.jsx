@@ -43,7 +43,14 @@ export function AuthProvider({ children }) {
       if (error && error.code !== 'PGRST116') {
         console.error('Error fetching profile:', error);
       }
-      setUser(data || { id: authUser.id, email: authUser.email, name: authUser.user_metadata?.full_name || authUser.user_metadata?.name });
+      let fetchedUser = data || { id: authUser.id, email: authUser.email, name: authUser.user_metadata?.full_name || authUser.user_metadata?.name };
+      
+      // --- PAYWALL BYPASS ---
+      // Temporarily granting all users Pro status so you can test features without upgrading.
+      fetchedUser.is_pro = true;
+      // ----------------------
+
+      setUser(fetchedUser);
     } finally {
       setLoading(false);
     }
