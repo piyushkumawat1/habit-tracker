@@ -229,7 +229,7 @@ function generateInsight(habits, logs) {
 // ═══════════════════════════════════════════
 //  MAIN COMPONENT
 // ═══════════════════════════════════════════
-export default function Home({ habits, logs, refresh, onNavigate }) {
+export default function Dashboard({ habits, logs, refresh, onNavigate }) {
   const showToast = useToast();
   const [tooltip, setTooltip] = useState(null);
   const [addDialogOpen, setAddDialogOpen] = useState(false);

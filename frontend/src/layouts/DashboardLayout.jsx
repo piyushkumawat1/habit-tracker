@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/layout/Sidebar.jsx';
 import WelcomeModal from '../components/WelcomeModal.jsx';
-import VirtualGarden from '../pages/VirtualGarden.jsx';
 
 export default function DashboardLayout({ currentPage, onNavigate, children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
