@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getToday, calcOverallStreak, calcHabitStreak, capitalize, formatTime, dateKey } from '../lib/utils';
 import { logsApi, habitsApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
@@ -229,7 +230,8 @@ function generateInsight(habits, logs) {
 // ═══════════════════════════════════════════
 //  MAIN COMPONENT
 // ═══════════════════════════════════════════
-export default function Dashboard({ habits, logs, refresh, onNavigate }) {
+export default function Dashboard({ habits, logs, refresh }) {
+  const navigate = useNavigate();
   const showToast = useToast();
   const [tooltip, setTooltip] = useState(null);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -565,7 +567,7 @@ export default function Dashboard({ habits, logs, refresh, onNavigate }) {
                 })}
               </div>
 
-              <button className="focus-view-all" onClick={() => onNavigate && onNavigate('habits')}>
+              <button className="focus-view-all" onClick={() => navigate('/habits')}>
                 View All Habits <ChevronRight size={14} />
               </button>
             </div>
@@ -638,7 +640,7 @@ export default function Dashboard({ habits, logs, refresh, onNavigate }) {
                 <span className="freeze-badge">{freezes}/3 available</span>
               </div>
 
-              <button className="streak-cta" onClick={() => onNavigate && onNavigate('habits')}>
+              <button className="streak-cta" onClick={() => navigate('/habits')}>
                 Keep going 💪
               </button>
             </div>

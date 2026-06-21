@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
+import { Link } from 'react-router-dom';
 
-export default function Login({ onSwitch, onBack }) {
+export default function Login() {
   const { login, loginWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,11 +34,9 @@ export default function Login({ onSwitch, onBack }) {
   return (
     <div className="auth-page">
       <div className="auth-card glass-card">
-        {onBack && (
-          <button type="button" onClick={onBack} className="btn-ghost" style={{ padding: 0, marginBottom: 20, color: 'var(--text-secondary)' }}>
+          <Link to="/" className="btn-ghost" style={{ padding: 0, marginBottom: 20, color: 'var(--text-secondary)', textDecoration: 'none', display: 'inline-block' }}>
             ← Back to Home
-          </button>
-        )}
+          </Link>
         <div className="auth-header">
           <div className="brand-icon" style={{ width: 64, height: 64, borderRadius: '16px', overflow: 'hidden' }}>
             <img src="/logo.png" alt="Habitly Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -74,7 +73,7 @@ export default function Login({ onSwitch, onBack }) {
         </form>
 
         <p className="auth-switch">
-          Don't have an account? <button className="link-btn" onClick={onSwitch}>Create one</button>
+          Don't have an account? <Link to="/register" className="link-btn">Create one</Link>
         </p>
       </div>
     </div>

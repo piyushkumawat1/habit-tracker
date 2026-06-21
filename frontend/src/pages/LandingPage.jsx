@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import '../landing.css';
 
@@ -17,7 +18,8 @@ const Icons = {
   Monitor: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
 };
 
-export default function LandingPage({ onNavigate }) {
+export default function LandingPage() {
+  const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
   // Ensure we mount at the top of the page
@@ -58,8 +60,8 @@ export default function LandingPage({ onNavigate }) {
             <button className="sh-btn sh-btn-ghost" onClick={toggleTheme} style={{ padding: '0 8px' }} title="Toggle Theme">
               {theme === 'dark' ? <Icons.Sun /> : <Icons.Moon />}
             </button>
-            <button className="sh-btn sh-btn-ghost" onClick={() => onNavigate('login')}>Sign in</button>
-            <button className="sh-btn sh-btn-primary" onClick={() => onNavigate('register')}>
+            <button className="sh-btn sh-btn-ghost" onClick={() => navigate('/login')}>Sign in</button>
+            <button className="sh-btn sh-btn-primary" onClick={() => navigate('/register')}>
               Get Habitly <Icons.ArrowRight />
             </button>
           </div>
@@ -82,7 +84,7 @@ export default function LandingPage({ onNavigate }) {
               Habitly helps you design routines, log your mood in seconds, and see the patterns that actually move the needle. Smart gamification, deep analytics, and an AI coach — designed beautifully.
             </p>
             <div className="hero-actions">
-              <button className="sh-btn sh-btn-primary" style={{ height: 44, padding: '0 24px', fontSize: '1rem' }} onClick={() => onNavigate('register')}>
+              <button className="sh-btn sh-btn-primary" style={{ height: 44, padding: '0 24px', fontSize: '1rem' }} onClick={() => navigate('/register')}>
                 Start free — no card required <Icons.ArrowRight />
               </button>
               <button className="sh-btn sh-btn-outline" style={{ height: 44, padding: '0 24px', fontSize: '1rem' }} onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}>
@@ -312,7 +314,7 @@ export default function LandingPage({ onNavigate }) {
                 <li><Icons.Check /> 7-day consistency view</li>
                 <li><Icons.Check /> Virtual Garden (Sprout stage)</li>
               </ul>
-              <button className="sh-btn sh-btn-outline" style={{ width: '100%', marginTop: 'auto' }} onClick={() => onNavigate('register')}>Get started</button>
+              <button className="sh-btn sh-btn-outline" style={{ width: '100%', marginTop: 'auto' }} onClick={() => navigate('/register')}>Get started</button>
             </div>
 
             <div className="sh-card pricing-card popular">
@@ -327,7 +329,7 @@ export default function LandingPage({ onNavigate }) {
                 <li><Icons.Check /> Virtual Garden (Blooming Tree)</li>
                 <li><Icons.Check /> CSV / PDF data export</li>
               </ul>
-              <button className="sh-btn sh-btn-primary" style={{ width: '100%', marginTop: 'auto' }} onClick={() => onNavigate('register')}>Start 14-day trial</button>
+              <button className="sh-btn sh-btn-primary" style={{ width: '100%', marginTop: 'auto' }} onClick={() => navigate('/register')}>Start 14-day trial</button>
             </div>
           </div>
         </div>

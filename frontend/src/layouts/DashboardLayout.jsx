@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Sidebar from '../components/layout/Sidebar.jsx';
 import WelcomeModal from '../components/WelcomeModal.jsx';
 
-export default function DashboardLayout({ currentPage, onNavigate, children }) {
+export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
 
@@ -20,14 +20,9 @@ export default function DashboardLayout({ currentPage, onNavigate, children }) {
     setShowWelcome(false);
   }
 
-  function handleNavigate(page) {
-    onNavigate(page);
-    setSidebarOpen(false);
-  }
-
   return (
     <div id="app">
-      <Sidebar currentPage={currentPage} onNavigate={handleNavigate} isOpen={sidebarOpen} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {sidebarOpen && <div className="sidebar-overlay active" onClick={() => setSidebarOpen(false)} />}
 

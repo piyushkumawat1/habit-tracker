@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { calcHabitStreak, categoryLabel, capitalize, difficultyLabel } from '../lib/utils';
 import { habitsApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
 
-export default function Habits({ habits, logs, refresh, onNavigate }) {
+export default function Habits({ habits, logs, refresh }) {
+  const navigate = useNavigate();
   const showToast = useToast();
   const [activeFilter, setActiveFilter] = useState('all');
   const [confirmId, setConfirmId] = useState(null);
@@ -34,7 +36,7 @@ export default function Habits({ habits, logs, refresh, onNavigate }) {
           <h1>My Habits</h1>
           <p className="page-subtitle">{habits.length} habits tracked</p>
         </div>
-        <button className="btn btn-primary" onClick={() => onNavigate('add-habit')}>+ New Habit</button>
+        <button className="btn btn-primary" onClick={() => navigate('/add-habit')}>+ New Habit</button>
       </div>
 
       <div className="filter-bar" id="filter-bar">

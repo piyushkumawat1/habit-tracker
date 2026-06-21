@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
@@ -18,8 +18,6 @@ import './index.css';
 
 function AppContent() {
   const { isAuthenticated, loading } = useAuth();
-  const [currentPage, setCurrentPage] = useState('dashboard');
-  const [authView, setAuthView] = useState('landing');
   const { habits, logs, loading: dataLoading, refresh } = useHabits();
 
   if (loading) {
@@ -32,30 +30,34 @@ function AppContent() {
   }
 
   if (!isAuthenticated) {
-    if (authView === 'landing') return <TestDashboard onNavigate={setAuthView} />;
-    if (authView === 'login') return <Login onSwitch={() => setAuthView('register')} onBack={() => setAuthView('landing')} />;
-    if (authView === 'register') return <Register onSwitch={() => setAuthView('login')} onBack={() => setAuthView('landing')} />;
-  }
-
-  function renderPage() {
-    switch (currentPage) {
-      case 'dashboard': return <Dashboard habits={habits} logs={logs} refresh={refresh} onNavigate={setCurrentPage} />;
-      case 'habits': return <Habits habits={habits} logs={logs} refresh={refresh} onNavigate={setCurrentPage} />;
-      case 'add-habit': return <AddHabit onNavigate={setCurrentPage} refresh={refresh} habits={habits} />;
-      case 'insights': return <Insights habits={habits} logs={logs} />;
-      case 'challenges': return <Challenges habits={habits} logs={logs} />;
-      case 'profile': return <Profile />;
-      default: return <Dashboard habits={habits} logs={logs} refresh={refresh} onNavigate={setCurrentPage} />;
-    }
+    return (
+      <Routes>
+        <Route path="/" element={<TestDashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    );
   }
 
   return (
-    <DashboardLayout currentPage={currentPage} onNavigate={setCurrentPage}>
+    <DashboardLayout>
       {dataLoading ? (
         <div className="loading-screen" style={{ position: 'relative', minHeight: 400 }}>
           <div className="loading-spinner" />
         </div>
-      ) : renderPage()}
+      ) : (
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<Dashboard habits={habits} logs={logs} refresh={refresh} />} />
+          <Route path="/habits" element={<Habits habits={habits} logs={logs} refresh={refresh} />} />
+          <Route path="/add-habit" element={<AddHabit refresh={refresh} habits={habits} />} />
+          <Route path="/insights" element={<Insights habits={habits} logs={logs} />} />
+          <Route path="/challenges" element={<Challenges habits={habits} logs={logs} />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      )}
     </DashboardLayout>
   );
 }
@@ -65,7 +67,9 @@ export default function App() {
     <ThemeProvider>
       <AuthProvider>
         <ToastProvider>
-          <AppContent />
+          <Router>
+            <AppContent />
+          </Router>
         </ToastProvider>
       </AuthProvider>
     </ThemeProvider>

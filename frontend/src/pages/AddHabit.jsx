@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { habitsApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -6,7 +7,8 @@ import { useAuth } from '../context/AuthContext.jsx';
 const COLORS = ['#8b84ff', '#2dd4bf', '#4ade80', '#fbbf24', '#fb7185', '#38bdf8', '#a78bfa', '#f472b6'];
 const ICONS = ['💧', '🧘', '📖', '🏃', '✍️', '🎯', '🧠', '💤', '🍎', '🚴', '🧹', '💻', '🎵', '📸', '🌿', '☕'];
 
-export default function AddHabit({ onNavigate, refresh, habits }) {
+export default function AddHabit({ refresh, habits }) {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const showToast = useToast();
   const [name, setName] = useState('');
@@ -35,7 +37,7 @@ export default function AddHabit({ onNavigate, refresh, habits }) {
     await habitsApi.create({ name: name.trim(), description: description.trim(), category, frequency, time: selectedTime, reminder, difficulty: selectedDifficulty, color: selectedColor, icon: selectedIcon });
     showToast('Habit created successfully!', '🎉');
     refresh();
-    onNavigate('habits');
+    navigate('/habits');
   }
 
   const times = [{ key: 'morning', label: '🌅 Morning' }, { key: 'afternoon', label: '☀️ Afternoon' }, { key: 'evening', label: '🌙 Evening' }, { key: 'anytime', label: '⏰ Anytime' }];
@@ -53,7 +55,7 @@ export default function AddHabit({ onNavigate, refresh, habits }) {
           <p style={{ color: 'var(--text-secondary)', maxWidth: 400, margin: '0 auto', lineHeight: 1.5 }}>
             You've reached the maximum limit of 5 habits on the Free plan. Upgrade to Pro to track unlimited habits and unlock deep insights.
           </p>
-          <button className="btn btn-primary" onClick={() => onNavigate('profile')} style={{ marginTop: 12 }}>
+          <button className="btn btn-primary" onClick={() => navigate('/profile')} style={{ marginTop: 12 }}>
             Upgrade to Pro
           </button>
         </div>

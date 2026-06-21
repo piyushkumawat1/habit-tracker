@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, 
   Check, 
@@ -19,7 +20,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 
-export default function App() {
+export default function TestDashboard() {
+  const navigate = useNavigate();
   const [isAnnual, setIsAnnual] = useState(true);
   
   const [goalInput, setGoalInput] = useState('');
@@ -61,10 +63,10 @@ export default function App() {
             <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
           </div>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" className="hidden sm:flex">
+            <Button variant="ghost" className="hidden sm:flex" onClick={() => navigate('/login')}>
               Sign In
             </Button>
-            <Button>
+            <Button onClick={() => navigate('/register')}>
               Get Started Free
             </Button>
           </div>
@@ -87,10 +89,10 @@ export default function App() {
             More than just a checklist. Habitly uses AI coaching, mood tracking, and deep behavioral insights to help you build the life you want, one day at a time.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button variant="white" size="lg" className="w-full sm:w-auto font-bold px-8">
+            <Button variant="white" size="lg" className="w-full sm:w-auto font-bold px-8" onClick={() => navigate('/register')}>
               Start your journey <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button variant="outline" size="lg" className="w-full sm:w-auto font-bold px-8">
+            <Button variant="outline" size="lg" className="w-full sm:w-auto font-bold px-8" onClick={() => navigate('/register')}>
               View Pricing
             </Button>
           </div>
@@ -226,7 +228,7 @@ export default function App() {
                 <FeatureItem text="Export / PDF" included={false} />
               </div>
 
-              <Button size="lg" variant="secondary" className="w-full font-bold h-14">
+              <Button size="lg" variant="secondary" className="w-full font-bold h-14" onClick={() => navigate('/register')}>
                 Get Started
               </Button>
             </div>
@@ -257,7 +259,7 @@ export default function App() {
                 <FeatureItem text="Priority support" included={true} />
               </div>
 
-              <Button size="lg" className="w-full font-bold h-14">
+              <Button size="lg" className="w-full font-bold h-14" onClick={() => navigate('/register')}>
                 Upgrade to Pro
               </Button>
             </div>
