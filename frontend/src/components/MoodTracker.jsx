@@ -20,6 +20,7 @@ export default function MoodTracker() {
   const [mood, setMood] = useState(null);
   const [energy, setEnergy] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isLogged, setIsLogged] = useState(false);
   const showToast = useToast();
 
   useEffect(() => {
@@ -29,9 +30,10 @@ export default function MoodTracker() {
   async function loadToday() {
     try {
       const res = await moodApi.getToday();
-      if (res.data) {
+      if (res.data && res.data.mood) {
         setMood(res.data.mood);
         setEnergy(res.data.energy);
+        setIsLogged(true);
       }
     } catch (err) {
       console.error(err);
@@ -51,6 +53,10 @@ export default function MoodTracker() {
     // 2. Background Sync
     try {
       await moodApi.logToday(newMood, newEnergy);
+      // Wait 1 second before hiding so they see the selection
+      setTimeout(() => {
+        setIsLogged(true);
+      }, 800);
     } catch (err) {
       // 3. Rollback on failure
       setMood(prevMood);
@@ -66,6 +72,10 @@ export default function MoodTracker() {
         <div className="loading-spinner" />
       </div>
     );
+  }
+
+  if (isLogged) {
+    return null; // completely hide the section once logged
   }
 
   return (
