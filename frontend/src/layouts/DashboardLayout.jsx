@@ -1,24 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Sidebar from '../components/layout/Sidebar.jsx';
-import WelcomeModal from '../components/WelcomeModal.jsx';
 
 export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
-
-  useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    const lastView = localStorage.getItem('lastGardenViewDate');
-    if (lastView !== today) {
-      setShowWelcome(true);
-    }
-  }, []);
-
-  function handleDismissWelcome() {
-    const today = new Date().toISOString().split('T')[0];
-    localStorage.setItem('lastGardenViewDate', today);
-    setShowWelcome(false);
-  }
 
   return (
     <div id="app">
@@ -37,8 +21,6 @@ export default function DashboardLayout({ children }) {
       <main className="main-content">
         {children}
       </main>
-
-      {showWelcome && <WelcomeModal onClose={handleDismissWelcome} />}
     </div>
   );
 }

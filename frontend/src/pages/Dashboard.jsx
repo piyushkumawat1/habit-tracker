@@ -645,38 +645,7 @@ export default function Dashboard({ habits, logs, refresh }) {
               </button>
             </div>
 
-            {/* ── Coach Insight ── */}
-            {currentInsight && (
-              <div className="coach-card">
-                <div className="coach-header">
-                  <div className="coach-title">
-                    <Sparkles size={18} />
-                    Coach Insight
-                  </div>
-                  <button
-                    className={`coach-refresh ${insightSpinning ? 'spinning' : ''}`}
-                    onClick={cycleInsight}
-                    aria-label="Get different insight"
-                  >
-                    <RefreshCw size={16} />
-                  </button>
-                </div>
 
-                <div className="coach-insight-text">
-                  {currentInsight.text.split(`"${currentInsight.habitName}"`).map((part, i, arr) => (
-                    <span key={i}>
-                      {part}
-                      {i < arr.length - 1 && <em>"{currentInsight.habitName}"</em>}
-                    </span>
-                  ))}
-                </div>
-
-                <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-secondary px-4 py-2 text-sm font-semibold text-foreground transition-all hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95" onClick={openEditForInsight}>
-                  <Zap size={14} />
-                  Adjust Habit
-                </button>
-              </div>
-            )}
           </div>
         </div>
       )}
