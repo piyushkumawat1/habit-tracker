@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getToday, calcOverallStreak, calcHabitStreak, capitalize, formatTime, dateKey } from '../lib/utils';
 import { logsApi, habitsApi } from '../lib/api.js';
 import CreateHabitModal from '../components/CreateHabitModal.jsx';
+import FocusTimerModal from '../components/FocusTimerModal.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import Dialog from '../components/ui/Dialog.jsx';
 import {
@@ -241,6 +242,8 @@ export default function Dashboard({ habits, logs, refresh }) {
   const [insightIndex, setInsightIndex] = useState(0);
   const [insightSpinning, setInsightSpinning] = useState(false);
   const [optimisticLogs, setOptimisticLogs] = useState({});
+  const [energyLevel, setEnergyLevel] = useState('high');
+  const [activeTimerHabit, setActiveTimerHabit] = useState(null);
 
 
   // Edit-habit form state
@@ -273,10 +276,30 @@ export default function Dashboard({ habits, logs, refresh }) {
     });
   }, [habits]);
 
+  const focusGroups = useMemo(() => {
+    const groups = { morning: [], afternoon: [], evening: [], anytime: [] };
+    todaysFocus.forEach(h => {
+      const t = h['time of days']?.toLowerCase() || 'anytime';
+      if (groups[t]) groups[t].push(h);
+      else groups.anytime.push(h);
+    });
+    return groups;
+  }, [todaysFocus]);
+
   const isNewAccount = heatmapData.totalCompletions < 3;
   const currentInsight = insights && insights.length > 0 ? insights[insightIndex % insights.length] : null;
 
   // ── Handlers ──
+  function handleToggleClick(h) {
+    const done = !!todayLogs[h.id];
+    // If unchecked and has a Time target, open timer
+    if (!done && (h.Time || h.time) && (h.Time || h.time) > 0) {
+      setActiveTimerHabit(h);
+    } else {
+      handleToggle(h.id);
+    }
+  }
+
   async function handleToggle(habitId) {
     const wasCompleted = !!todayLogs[habitId];
 
@@ -502,33 +525,73 @@ export default function Dashboard({ habits, logs, refresh }) {
                   <Eye size={18} />
                   Today's Focus
                 </div>
-                <span className="badge" style={{ color: completed === total && total > 0 ? 'var(--green)' : undefined }}>
-                  {completed}/{total}
-                </span>
+                <div className="flex items-center gap-2">
+                  {/* Energy Toggles */}
+                  <div className="flex bg-secondary rounded-lg p-1">
+                    <button onClick={() => setEnergyLevel('high')} className={`px-2 py-1 text-xs rounded-md transition-all ${energyLevel === 'high' ? 'bg-background shadow font-bold' : 'opacity-60 hover:opacity-100'}`} title="High Energy">🔋</button>
+                    <button onClick={() => setEnergyLevel('medium')} className={`px-2 py-1 text-xs rounded-md transition-all ${energyLevel === 'medium' ? 'bg-background shadow font-bold' : 'opacity-60 hover:opacity-100'}`} title="Medium Energy">🪫</button>
+                    <button onClick={() => setEnergyLevel('low')} className={`px-2 py-1 text-xs rounded-md transition-all ${energyLevel === 'low' ? 'bg-background shadow font-bold' : 'opacity-60 hover:opacity-100'}`} title="Low Energy">🛑</button>
+                  </div>
+                  <span className="badge" style={{ color: completed === total && total > 0 ? 'var(--green)' : undefined }}>
+                    {completed}/{total}
+                  </span>
+                </div>
               </div>
 
-              <div className="focus-list">
-                {todaysFocus.map(h => {
-                  const done = !!todayLogs[h.id];
-                  const isHard = h.difficulty === 'hard';
+              <div className="focus-list flex flex-col gap-6">
+                {['morning', 'afternoon', 'evening', 'anytime'].map(timeKey => {
+                  const groupHabits = focusGroups[timeKey];
+                  if (!groupHabits || groupHabits.length === 0) return null;
+                  
                   return (
-                    <div
-                      key={h.id}
-                      className={`focus-item ${done ? 'completed' : ''}`}
-                      onClick={() => handleToggle(h.id)}
-                    >
-                      <div className={`focus-checkbox ${done ? 'checked' : ''}`}>
-                        <Check size={14} />
-                      </div>
-                      {isHard && <Star size={14} className="focus-star" />}
-                      <div className="focus-info">
-                        <div className="focus-name">{h.name}</div>
-                        <div className="focus-meta">
-                          {timeIcon(h['time of days'])}
-                          <span>{formatTime(h['time of days'])}</span>
-                          <span>·</span>
-                          <span>{capitalize(h.difficulty || 'easy')}</span>
-                        </div>
+                    <div key={timeKey} className="flex flex-col gap-2">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground border-b border-border pb-1 mb-1">
+                        {timeKey}
+                      </h4>
+                      <div className="flex flex-col gap-2">
+                        {groupHabits.map(h => {
+                          const done = !!todayLogs[h.id];
+                          const isHard = h.difficulty === 'hard';
+                          
+                          // Streak at Risk logic
+                          const currentHour = new Date().getHours();
+                          const streakLen = calcHabitStreak(h.id, logs);
+                          const isAtRisk = !done && currentHour >= 18 && streakLen >= 3;
+                          
+                          // Energy dimming logic
+                          const isDimmed = !done && energyLevel === 'low' && isHard;
+                          
+                          return (
+                            <div
+                              key={h.id}
+                              className={`focus-item ${done ? 'completed' : ''} ${isAtRisk ? 'ring-2 ring-destructive ring-offset-1 ring-offset-card shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse' : ''} ${isDimmed ? 'opacity-40 grayscale-[0.5]' : ''}`}
+                              onClick={() => handleToggleClick(h)}
+                            >
+                              <div className={`focus-checkbox ${done ? 'checked' : ''}`}>
+                                <Check size={14} />
+                              </div>
+                              {isHard && <Star size={14} className="focus-star" />}
+                              <div className="focus-info">
+                                <div className="focus-name flex items-center justify-between">
+                                  <span>{h.name}</span>
+                                  {isAtRisk && <span className="text-xs font-bold text-destructive flex items-center gap-1">⚠️ Streak at risk!</span>}
+                                </div>
+                                <div className="focus-meta">
+                                  {timeIcon(h['time of days'])}
+                                  <span>{formatTime(h['time of days'])}</span>
+                                  <span>·</span>
+                                  <span>{capitalize(h.difficulty || 'easy')}</span>
+                                  {h.Time && (
+                                    <>
+                                      <span>·</span>
+                                      <span className="flex items-center gap-1 text-primary"><Clock size={12}/> {h.Time}m</span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   );
@@ -624,6 +687,15 @@ export default function Dashboard({ habits, logs, refresh }) {
          ═══════════════════════════════════ */}
 
       <CreateHabitModal isOpen={addDialogOpen} onClose={() => setAddDialogOpen(false)} refresh={refresh} />
+      
+      <FocusTimerModal 
+        isOpen={!!activeTimerHabit} 
+        onClose={() => setActiveTimerHabit(null)} 
+        habit={activeTimerHabit} 
+        onComplete={(id) => {
+          handleToggle(id);
+        }} 
+      />
 
       {/* ── Edit Habit Dialog ── */}
       <Dialog isOpen={editDialogOpen} onClose={() => { setEditDialogOpen(false); setEditHabit(null); }} maxWidth={440}>

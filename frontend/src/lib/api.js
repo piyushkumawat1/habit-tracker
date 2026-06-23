@@ -37,7 +37,7 @@ export const habitsApi = {
   },
   create: async (habitData) => {
     const { data: { user } } = await supabase.auth.getUser();
-    return formatRes(supabase.from('habits').insert({ id: crypto.randomUUID(), created_at: new Date().toISOString(), updated_at: new Date().toISOString(), ...habitData, user_id: user.id }).select().single());
+    return formatRes(supabase.from('habits').insert({ created_at: new Date().toISOString(), updated_at: new Date().toISOString(), ...habitData, user_id: user.id }).select().single());
   },
   update: async (id, habitData) => {
     return formatRes(supabase.from('habits').update({ ...habitData, updated_at: new Date().toISOString() }).eq('id', id).select().single());
@@ -76,7 +76,7 @@ export const logsApi = {
       await supabase.rpc('add_garden_xp', { xp_amount: -20, water_amount: -10 }).catch(() => {});
       return { data: { action: 'removed' } };
     } else {
-      const { data } = await supabase.from('logs').insert({ id: crypto.randomUUID(), date, habit_id: habitId }).select().single();
+      const { data } = await supabase.from('logs').insert({ id: (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15)), date, habit_id: habitId }).select().single();
       // Add XP on completion
       await supabase.rpc('add_garden_xp', { xp_amount: 20, water_amount: 10 }).catch(() => {});
       return { data: { action: 'added', log: data } };
@@ -103,7 +103,7 @@ export const challengesApi = {
     const { data: { user } } = await supabase.auth.getUser();
     
     const payload = {
-      id: crypto.randomUUID(),
+      id: (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15)),
       title: challengeData.title,
       type: challengeData.type,
       target: parseInt(challengeData.target, 10) || 10,
@@ -157,7 +157,7 @@ export const templatesApi = {
     // Add the required fields (id, timestamps) that Supabase expects
     const now = new Date().toISOString();
     const habitsToInsert = templateHabitsArray.map(habit => ({
-      id: crypto.randomUUID(),
+      id: (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15)),
       user_id: userId,
       name: habit.name,
       category: habit.category || 'Other',

@@ -2379,13 +2379,17 @@ input, select, textarea { font-family: inherit; }
   gap: 12px;
   padding: 12px 14px;
   border-radius: var(--radius-sm);
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  background: transparent;
+  background: hsl(var(--secondary) / 0.5);
+  border: 1px solid transparent;
 }
 
 .focus-item:hover {
-  background: hsl(var(--surface-hover));
+  background: hsl(var(--secondary));
+  border-color: hsl(var(--border));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .focus-item.completed .focus-name {
@@ -3221,3 +3225,25 @@ input:focus, textarea:focus, select:focus {
   margin-bottom: 24px;
 }
 
+
+/* Streak at Risk Alert Glow */
+@keyframes pulse-danger {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.animate-pulse {
+  animation: pulse-danger 2s infinite;
+}
+
+/* Time Headers */
+.uppercase {
+  text-transform: uppercase;
+}
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+.grayscale-\[0\.5\] {
+  filter: grayscale(0.5);
+}
