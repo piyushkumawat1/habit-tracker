@@ -37,7 +37,7 @@ export const habitsApi = {
   },
   create: async (habitData) => {
     const { data: { user } } = await supabase.auth.getUser();
-    return formatRes(supabase.from('habits').insert({ created_at: new Date().toISOString(), updated_at: new Date().toISOString(), ...habitData, user_id: user.id }).select().single());
+    return formatRes(supabase.from('habits').insert({ id: (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15)), created_at: new Date().toISOString(), updated_at: new Date().toISOString(), ...habitData, user_id: user.id }).select().single());
   },
   update: async (id, habitData) => {
     return formatRes(supabase.from('habits').update({ ...habitData, updated_at: new Date().toISOString() }).eq('id', id).select().single());
