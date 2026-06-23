@@ -320,6 +320,7 @@ export default function Dashboard({ habits, logs, refresh }) {
       await logsApi.toggle(today, habitId);
       refresh();
     } catch (err) {
+      console.error('Toggle error:', err);
       // Revert optimistic update on failure
       setOptimisticLogs(prev => {
         const next = { ...prev };
