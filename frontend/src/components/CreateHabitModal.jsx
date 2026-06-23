@@ -58,14 +58,10 @@ export default function CreateHabitModal({ isOpen, onClose, refresh }) {
         frequency: newFrequency,
         difficulty: newDifficulty,
         icon: newIcon,
-        time: newTimeOfDay,
-        // Safely serialize new fields into description so we don't break DB schema
-        description: JSON.stringify({ 
-          energyLevel: newEnergy, 
-          targetTime: parseInt(newTime) || null, 
-          targetUnit: 'minutes',
-          color: newColor 
-        }),
+        "time of days": newTimeOfDay,
+        Time: parseInt(newTime) || null,
+        enery_level: newEnergy,
+        color: newColor
       });
       
       showToast('Habit created!', '🎉');
@@ -81,7 +77,7 @@ export default function CreateHabitModal({ isOpen, onClose, refresh }) {
       setNewFrequency('daily');
       setNewTimeOfDay('anytime');
       setNewColor('#f97316');
-      
+            
       if (refresh) refresh();
     } catch (err) {
       showToast('Failed to create habit', '❌');
@@ -214,10 +210,12 @@ export default function CreateHabitModal({ isOpen, onClose, refresh }) {
             </div>
           </div>
 
+          
+
           {/* Row 5: Color Tag */}
           <div className="flex flex-col gap-3 mt-2">
             <label className="text-xs font-semibold text-foreground/80">Color Tag</label>
-            <div className="rounded-xl border border-input bg-card/50 p-3">
+            <div className="rounded-xl border border-input bg-bg p-3">
               <div className="flex flex-wrap gap-2.5">
                 {COLORS.map(color => (
                   <button

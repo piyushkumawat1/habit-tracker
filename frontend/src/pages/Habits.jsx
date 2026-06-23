@@ -57,19 +57,19 @@ export default function Habits({ habits, logs, refresh }) {
         <div className="habits-grid" style={{ display: 'grid' }}>
           {filtered.map(h => {
             const streak = calcHabitStreak(h.id, logs);
+
             return (
               <div className="group relative rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:bg-card/80 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary shadow-sm hover:shadow-md active:scale-[0.98] flex flex-col gap-4" key={h.id}>
                 {/* Accent top border */}
-                <div className="absolute top-0 left-0 right-0 h-1 rounded-t-xl" style={{ background: h.color }} />
+                <div className="absolute top-0 left-0 right-0 h-1 rounded-t-xl" style={{ background: h.color || 'hsl(var(--brand))' }} />
                 
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-xl font-medium text-accent">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-xl font-medium text-primary">
                       {h.icon}
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground text-base tracking-tight">{h.name}</h3>
-                      <p className="text-sm text-muted-foreground line-clamp-1">{h.description || 'No description'}</p>
                     </div>
                   </div>
                   <button 
@@ -91,6 +91,11 @@ export default function Habits({ habits, logs, refresh }) {
                   <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-muted-foreground border border-border">
                     {difficultyLabel(h.difficulty || 'easy')}
                   </span>
+                  {h.Time && (
+                    <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-muted-foreground border border-border">
+                      ⏱️ {h.Time} mins
+                    </span>
+                  )}
                   {streak > 0 && (
                     <span className="ml-auto inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold" style={{ backgroundColor: 'hsl(var(--energy-soft))', color: 'hsl(var(--energy))' }}>
                       🔥 {streak}d

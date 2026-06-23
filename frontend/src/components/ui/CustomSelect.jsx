@@ -22,11 +22,11 @@ export default function CustomSelect({ value, onChange, options, placeholder = '
     <div className="custom-select-container relative w-full" ref={dropdownRef}>
       <button
         type="button"
-        className="flex h-[46px] w-full items-center justify-between rounded-xl border border-input bg-card px-4 py-2 text-sm text-foreground ring-offset-background transition-colors hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-[46px] w-full items-center justify-between rounded-xl border border-input bg-bg px-4 py-2 text-sm text-foreground ring-offset-background transition-all hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{selectedOption ? selectedOption.label : placeholder}</span>
-        <ChevronDown size={16} className={`text-muted-foreground transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown size={16} className={`text-muted-foreground transition-transform duration-200 ${isOpen ? 'rotate-180 text-primary' : ''}`} />
       </button>
 
       {isOpen && (
@@ -35,7 +35,7 @@ export default function CustomSelect({ value, onChange, options, placeholder = '
             {options.map((option) => (
               <li
                 key={option.value}
-                className={`relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 ${value === option.value ? 'bg-accent/50 font-medium' : ''}`}
+                className={`relative flex w-full cursor-pointer select-none items-center rounded-sm py-2 pl-8 pr-2 text-sm font-medium outline-none transition-all duration-150 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 ${value === option.value ? 'bg-primary/10 text-primary' : 'hover:bg-muted hover:translate-x-1 hover:text-foreground'}`}
                 onClick={() => {
                   onChange(option.value);
                   setIsOpen(false);

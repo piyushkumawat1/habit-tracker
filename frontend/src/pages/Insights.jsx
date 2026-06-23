@@ -65,7 +65,7 @@ export default function Insights({ habits, logs }) {
     const dk = dateKey(new Date(Date.now() - d * 86400000));
     const dayLogs = logs[dk] || {};
     habits.forEach(h => {
-      const t = h.time || 'anytime';
+      const t = h['time of days'] || 'anytime';
       times[t].total++;
       if (dayLogs[h.id]) times[t].done++;
     });

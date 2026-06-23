@@ -524,8 +524,8 @@ export default function Dashboard({ habits, logs, refresh }) {
                       <div className="focus-info">
                         <div className="focus-name">{h.name}</div>
                         <div className="focus-meta">
-                          {timeIcon(h.time)}
-                          <span>{formatTime(h.time)}</span>
+                          {timeIcon(h['time of days'])}
+                          <span>{formatTime(h['time of days'])}</span>
                           <span>·</span>
                           <span>{capitalize(h.difficulty || 'easy')}</span>
                         </div>

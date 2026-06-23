@@ -164,7 +164,6 @@ export const templatesApi = {
       frequency: habit.frequency || 'Daily',
       difficulty: habit.difficulty || 'Easy',
       icon: habit.icon || '⭐',
-      description: templateTitle ? `[Template] ${templateTitle}` : null,
       created_at: now,
       updated_at: now
     }));
