@@ -364,12 +364,12 @@ export default function Profile() {
             />
           </div>
 
-          <div className="form-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', background: 'var(--bg-raised)', borderRadius: 'var(--radius-md)', border: user?.is_pro ? '2px solid var(--accent)' : '1px solid var(--border)' }}>
+          <div className="form-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', background: 'hsl(var(--surface))', borderRadius: 'var(--radius-md)', border: user?.is_pro ? '2px solid hsl(var(--brand))' : '1px solid hsl(var(--border))' }}>
             <div>
-              <label style={{ margin: 0, fontWeight: 700, fontSize: '1.1rem', color: user?.is_pro ? 'var(--accent)' : 'inherit' }}>
+              <label style={{ margin: 0, fontWeight: 700, fontSize: '1.1rem', color: user?.is_pro ? 'hsl(var(--brand))' : 'inherit' }}>
                 {user?.is_pro ? '🌟 Pro Plan Active' : 'Free Plan'}
               </label>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)', margin: '4px 0 0 0', maxWidth: '300px', lineHeight: 1.5 }}>
+              <p style={{ fontSize: '0.85rem', color: 'hsl(var(--text-tertiary))', margin: '4px 0 0 0', maxWidth: '300px', lineHeight: 1.5 }}>
                 {user?.is_pro ? 'You have full access to premium features including the AI Coach and deep analytics.' : 'Upgrade to Pro for AI coaching, unlimited habits, and deep analytics.'}
               </p>
             </div>
@@ -379,7 +379,7 @@ export default function Profile() {
                 onClick={handleUpgrade}
                 disabled={upgrading}
                 style={{ 
-                  background: 'var(--accent)', 
+                  background: 'hsl(var(--brand))', 
                   border: 'none', 
                   color: '#fff', 
                   padding: '10px 20px', 
@@ -397,18 +397,18 @@ export default function Profile() {
             )}
           </div>
 
-          <div className="form-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)' }}>
+          <div className="form-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'hsl(var(--surface-hover))', borderRadius: 'var(--radius-md)' }}>
             <div>
               <label style={{ margin: 0, fontWeight: 600 }}>App Theme</label>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)', margin: 0 }}>Switch between dark and light mode</p>
+              <p style={{ fontSize: '0.8rem', color: 'hsl(var(--text-tertiary))', margin: 0 }}>Switch between dark and light mode</p>
             </div>
             <button 
               type="button" 
               onClick={toggleTheme} 
               style={{ 
-                background: 'var(--bg-raised)', 
-                border: '1px solid var(--border)', 
-                color: 'var(--text-primary)', 
+                background: 'hsl(var(--surface))', 
+                border: '1px solid hsl(var(--border))', 
+                color: 'hsl(var(--text-primary))', 
                 padding: '8px 16px', 
                 borderRadius: 'var(--radius-full)',
                 cursor: 'pointer',
@@ -422,17 +422,17 @@ export default function Profile() {
             </button>
           </div>
 
-          <div className="form-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)' }}>
+          <div className="form-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'hsl(var(--surface-hover))', borderRadius: 'var(--radius-md)' }}>
             <div>
               <label style={{ margin: 0, fontWeight: 600 }}>Push Notifications</label>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)', margin: 0 }}>Receive habit reminders on this device</p>
+              <p style={{ fontSize: '0.8rem', color: 'hsl(var(--text-tertiary))', margin: 0 }}>Receive habit reminders on this device</p>
             </div>
             <button 
               type="button" 
               onClick={handleSubscribe} 
               disabled={subscribing}
               style={{ 
-                background: 'var(--accent)', 
+                background: 'hsl(var(--brand))', 
                 border: 'none', 
                 color: '#fff', 
                 padding: '8px 16px', 
@@ -459,12 +459,12 @@ export default function Profile() {
               width: '100%', 
               background: 'transparent', 
               border: '1px solid rgba(251, 113, 133, 0.3)', 
-              color: 'var(--rose)',
+              color: 'hsl(var(--destructive))',
               transition: 'all 0.2s'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'rgba(251, 113, 133, 0.1)';
-              e.currentTarget.style.borderColor = 'var(--rose)';
+              e.currentTarget.style.borderColor = 'hsl(var(--destructive))';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = 'transparent';

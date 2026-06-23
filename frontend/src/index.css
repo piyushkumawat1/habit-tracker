@@ -344,6 +344,8 @@ input, select, textarea { font-family: inherit; }
   white-space: nowrap;
 }
 
+.btn:hover { background: hsl(var(--surface-hover)); }
+
 .btn:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px hsl(var(--bg)), 0 0 0 4px hsl(var(--brand));
@@ -819,7 +821,7 @@ input, select, textarea { font-family: inherit; }
 .form-group select {
   width: 100%;
   padding: 11px 14px;
-  background: hsl(var(--surface));
+  background: hsl(var(--bg));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius-sm);
   color: hsl(var(--text-primary));
@@ -985,7 +987,7 @@ input, select, textarea { font-family: inherit; }
 .form-group input[type="time"] {
   width: 100%;
   padding: 11px 14px;
-  background: hsl(var(--surface));
+  background: hsl(var(--bg));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius-sm);
   color: hsl(var(--text-primary));
@@ -1997,7 +1999,7 @@ input, select, textarea { font-family: inherit; }
 .auth-card .form-input {
   width: 100%;
   padding: 11px 14px;
-  background: hsl(var(--surface));
+  background: hsl(var(--bg));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius-sm);
   color: hsl(var(--text-primary));
@@ -2181,7 +2183,7 @@ input, select, textarea { font-family: inherit; }
   flex-direction: column;
   gap: 2px;
   min-width: 720px;
-  background: hsl(var(--surface));
+  background: hsl(var(--bg));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius-lg);
   padding: 20px;
