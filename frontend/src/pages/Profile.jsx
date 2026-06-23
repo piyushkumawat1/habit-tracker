@@ -378,6 +378,7 @@ export default function Profile() {
                 type="button" 
                 onClick={handleUpgrade}
                 disabled={upgrading}
+                className="transition-all hover:scale-105 active:scale-95 hover:shadow-lg"
                 style={{ 
                   background: 'hsl(var(--brand))', 
                   border: 'none', 
@@ -387,7 +388,6 @@ export default function Profile() {
                   cursor: upgrading ? 'not-allowed' : 'pointer',
                   fontWeight: 600,
                   boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
-                  transition: 'all 0.2s',
                   opacity: upgrading ? 0.7 : 1,
                   whiteSpace: 'nowrap'
                 }}
@@ -405,6 +405,7 @@ export default function Profile() {
             <button 
               type="button" 
               onClick={toggleTheme} 
+              className="transition-all hover:scale-105 active:scale-95 hover:shadow-lg"
               style={{ 
                 background: 'hsl(var(--surface))', 
                 border: '1px solid hsl(var(--border))', 
@@ -431,6 +432,7 @@ export default function Profile() {
               type="button" 
               onClick={handleSubscribe} 
               disabled={subscribing}
+              className="transition-all hover:scale-105 active:scale-95 hover:shadow-lg"
               style={{ 
                 background: 'hsl(var(--brand))', 
                 border: 'none', 
