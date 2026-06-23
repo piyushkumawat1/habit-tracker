@@ -344,7 +344,14 @@ input, select, textarea { font-family: inherit; }
   white-space: nowrap;
 }
 
-.btn:hover { background: hsl(var(--surface-hover)); }
+.btn:hover { 
+  background: hsl(var(--surface-hover)); 
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.btn:active {
+  transform: scale(0.98);
+}
 
 .btn:focus-visible {
   outline: none;
@@ -361,8 +368,9 @@ input, select, textarea { font-family: inherit; }
 }
 
 .btn-primary:hover {
-  background: #7d75f0;
-  transform: translateY(-1px);
+  background: hsl(var(--brand-hover));
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .btn-primary:active { transform: scale(0.96); }
@@ -3105,8 +3113,8 @@ input, select, textarea { font-family: inherit; }
 }
 .btn-primary:hover:not(:disabled) {
   background-color: hsl(var(--brand-hover));
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 .btn-primary:active:not(:disabled) {
   transform: scale(0.98);
@@ -3246,4 +3254,15 @@ input:focus, textarea:focus, select:focus {
 }
 .grayscale-\[0\.5\] {
   filter: grayscale(0.5);
+}
+
+/* Fix Chrome autofill background in dark mode */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px hsl(var(--bg)) inset !important;
+    -webkit-text-fill-color: hsl(var(--text-primary)) !important;
+    caret-color: hsl(var(--text-primary)) !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
