@@ -495,7 +495,7 @@ export default function Dashboard({ habits, logs, refresh }) {
             </div>
             <h3>Welcome to your Dashboard!</h3>
             <p>Start your journey by creating your first habit. We'll track your streaks, show your progress, and give you personalized insights.</p>
-            <button className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95 mt-4" onClick={() => setAddDialogOpen(true)}>
+            <button className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all hover:scale-105 hover:shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95 mt-4" onClick={() => setAddDialogOpen(true)}>
               <Plus size={16} /> Create Your First Habit
             </button>
           </div>
@@ -512,7 +512,7 @@ export default function Dashboard({ habits, logs, refresh }) {
                   <h1>{getGreeting()}</h1>
                   <span className="greeting-date">{getFormattedDate()} · {getFormattedTime()}</span>
                 </div>
-                <button className="inline-flex items-center gap-2 rounded-md border border-border bg-secondary px-4 py-2 text-sm font-semibold text-foreground transition-all hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95" onClick={() => setAddDialogOpen(true)}>
+                <button className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:scale-105 hover:shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95" onClick={() => setAddDialogOpen(true)}>
                   <Plus size={16} /> New Habit
                 </button>
               </div>
@@ -598,7 +598,7 @@ export default function Dashboard({ habits, logs, refresh }) {
                 })}
               </div>
 
-              <button className="flex w-full items-center justify-center gap-1 rounded-b-xl border-t border-border bg-card p-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95" onClick={() => navigate('/habits')}>
+              <button className="flex w-full items-center justify-center gap-1 rounded-b-xl border-t border-border p-4 text-sm font-bold text-primary transition-all hover:scale-105 hover:shadow-lg hover:bg-primary/10 active:scale-95" onClick={() => navigate('/habits')}>
                 View All Habits <ChevronRight size={14} />
               </button>
             </div>
@@ -671,7 +671,7 @@ export default function Dashboard({ habits, logs, refresh }) {
                 <span className="freeze-badge">{freezes}/3 available</span>
               </div>
 
-              <button className="mt-6 flex w-full items-center justify-center rounded-lg px-4 py-3 font-bold shadow transition-all focus-visible:outline-none focus-visible:ring-2 active:scale-[0.98]" style={{ backgroundColor: 'hsl(var(--energy))', color: '#fff' }} onClick={() => navigate('/habits')}>
+              <button className="mt-6 flex w-full items-center justify-center rounded-lg px-4 py-3 font-bold shadow transition-all hover:scale-105 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 active:scale-[0.98]" style={{ backgroundColor: 'hsl(var(--energy))', color: '#fff' }} onClick={() => navigate('/habits')}>
                 Keep going 💪
               </button>
             </div>
