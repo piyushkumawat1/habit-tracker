@@ -2381,15 +2381,15 @@ input, select, textarea { font-family: inherit; }
   border-radius: var(--radius-sm);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  background: hsl(var(--secondary) / 0.5);
+  background: hsl(var(--surface-hover));
   border: 1px solid transparent;
 }
 
 .focus-item:hover {
-  background: hsl(var(--secondary));
-  border-color: hsl(var(--border));
+  background: hsl(var(--border));
+  border-color: hsl(var(--text-tertiary));
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-elevated);
 }
 
 .focus-item.completed .focus-name {
