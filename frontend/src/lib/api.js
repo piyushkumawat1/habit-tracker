@@ -72,8 +72,7 @@ export const logsApi = {
     const { data: existing } = await supabase.from('logs').select('*').eq('date', date).eq('habit_id', habitId).maybeSingle();
     if (existing) {
       await supabase.from('logs').delete().eq('id', existing.id);
-      // Remove XP if unmarked
-      await supabase.rpc('add_garden_xp', { xp_amount: -20, water_amount: -10 });
+      // await supabase.rpc('add_garden_xp', { xp_amount: -20, water_amount: -10 });
       return { data: { action: 'removed' } };
     } else {
       const { error } = await supabase.from('logs').insert({ 
@@ -82,8 +81,7 @@ export const logsApi = {
         habit_id: habitId 
       });
       if (error) throw error;
-      // Add XP on completion
-      await supabase.rpc('add_garden_xp', { xp_amount: 20, water_amount: 10 });
+      // await supabase.rpc('add_garden_xp', { xp_amount: 20, water_amount: 10 });
       return { data: { action: 'added' } };
     }
   },
@@ -95,8 +93,7 @@ export const gardenApi = {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { data: null };
     
-    // Auto-create garden if it doesn't exist via RPC
-    await supabase.rpc('add_garden_xp', { xp_amount: 0, water_amount: 0 });
+    // await supabase.rpc('add_garden_xp', { xp_amount: 0, water_amount: 0 });
     
     return formatRes(supabase.from('virtual_garden').select('*').eq('user_id', user.id).maybeSingle());
   }
