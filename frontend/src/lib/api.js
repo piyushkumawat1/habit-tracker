@@ -76,10 +76,15 @@ export const logsApi = {
       await supabase.rpc('add_garden_xp', { xp_amount: -20, water_amount: -10 }).catch(() => {});
       return { data: { action: 'removed' } };
     } else {
-      const { data } = await supabase.from('logs').insert({ id: (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15)), date, habit_id: habitId }).select().single();
+      const { error } = await supabase.from('logs').insert({ 
+        id: (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15)), 
+        date, 
+        habit_id: habitId 
+      });
+      if (error) throw error;
       // Add XP on completion
       await supabase.rpc('add_garden_xp', { xp_amount: 20, water_amount: 10 }).catch(() => {});
-      return { data: { action: 'added', log: data } };
+      return { data: { action: 'added' } };
     }
   },
 };
