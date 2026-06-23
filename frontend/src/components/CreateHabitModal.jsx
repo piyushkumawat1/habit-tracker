@@ -20,7 +20,7 @@ function capitalize(s) {
 }
 
 export default function CreateHabitModal({ isOpen, onClose, refresh }) {
-  const { showToast } = useToast();
+  const showToast = useToast();
   
   // States
   const [newName, setNewName] = useState('');
