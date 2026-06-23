@@ -92,7 +92,7 @@ export default function Habits({ habits, logs, refresh }) {
                     {difficultyLabel(h.difficulty || 'easy')}
                   </span>
                   {streak > 0 && (
-                    <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-bold text-accent">
+                    <span className="ml-auto inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold" style={{ backgroundColor: 'hsl(var(--energy-soft))', color: 'hsl(var(--energy))' }}>
                       🔥 {streak}d
                     </span>
                   )}

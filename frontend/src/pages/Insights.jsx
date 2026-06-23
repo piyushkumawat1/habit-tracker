@@ -96,7 +96,7 @@ export default function Insights({ habits, logs }) {
 
   // ── Category Chart ──
   const categories = {};
-  const categoryColors = { health: '#2dd4bf', productivity: '#38bdf8', mindfulness: '#8b84ff', learning: '#4ade80', social: '#fbbf24' };
+  const categoryColors = { health: 'hsl(var(--success))', productivity: 'hsl(var(--brand))', mindfulness: 'hsl(var(--freeze))', learning: 'hsl(var(--energy))', social: 'hsl(var(--text-tertiary))', fitness: 'hsl(var(--success))', finance: 'hsl(var(--text-primary))', hobbies: 'hsl(var(--energy))' };
   habits.forEach(h => { categories[h.category] = (categories[h.category] || 0) + 1; });
   const catEntries = Object.entries(categories);
   const radius = 50, circumference = 2 * Math.PI * radius;
@@ -122,7 +122,7 @@ export default function Insights({ habits, logs }) {
     
     // Pro Gate for Heatmap
     if (!user?.is_pro && d > 6) {
-      heatCells.push(<div key={`locked-${d}`} className="heatmap-cell" style={{ opacity: 0.1, background: 'var(--border)' }} title="Pro Feature: View full history" />);
+      heatCells.push(<div key={`locked-${d}`} className="heatmap-cell" style={{ opacity: 0.1, background: 'hsl(var(--border))' }} title="Pro Feature: View full history" />);
       continue;
     }
 
@@ -150,11 +150,11 @@ export default function Insights({ habits, logs }) {
       </div>
 
       {/* Smart Trends (AI) */}
-      <div className="card" style={{ marginBottom: '24px', background: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%)', border: '1px solid var(--primary)' }}>
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary)' }}>✨ Smart AI Trends</h3>
+      <div className="card" style={{ marginBottom: '24px', background: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%)', border: '1px solid hsl(var(--brand))' }}>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'hsl(var(--brand))' }}>✨ Smart AI Trends</h3>
         {trendsLoading ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-secondary)' }}>
-            <div className="loading-spinner" style={{ width: '20px', height: '20px', borderTopColor: 'var(--primary)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'hsl(var(--text-secondary))' }}>
+            <div className="loading-spinner" style={{ width: '20px', height: '20px', borderTopColor: 'hsl(var(--brand))' }} />
             <span>Analyzing your habits and mood...</span>
           </div>
         ) : smartTrends ? (
@@ -162,19 +162,19 @@ export default function Insights({ habits, logs }) {
             <p style={{ fontSize: '1.05rem', lineHeight: '1.6', margin: '0 0 16px 0' }}>{smartTrends.insight}</p>
             {smartTrends.topHabit && (
               <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                <div style={{ background: 'var(--bg-raised)', padding: '12px 16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Top Driver</div>
-                  <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{smartTrends.topHabit}</div>
+                <div style={{ background: 'hsl(var(--surface))', padding: '12px 16px', borderRadius: 'var(--radius-md)', border: '1px solid hsl(var(--border))' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'hsl(var(--text-secondary))', textTransform: 'uppercase', marginBottom: '4px' }}>Top Driver</div>
+                  <div style={{ fontWeight: 600, color: 'hsl(var(--text-primary))' }}>{smartTrends.topHabit}</div>
                 </div>
-                <div style={{ background: 'var(--bg-raised)', padding: '12px 16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Correlation</div>
-                  <div style={{ fontWeight: 600, color: 'var(--success)' }}>+{smartTrends.correlation}% Mood</div>
+                <div style={{ background: 'hsl(var(--surface))', padding: '12px 16px', borderRadius: 'var(--radius-md)', border: '1px solid hsl(var(--border))' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'hsl(var(--text-secondary))', textTransform: 'uppercase', marginBottom: '4px' }}>Correlation</div>
+                  <div style={{ fontWeight: 600, color: 'hsl(var(--success))' }}>+{smartTrends.correlation}% Mood</div>
                 </div>
               </div>
             )}
           </div>
         ) : (
-          <p style={{ color: 'var(--text-secondary)', margin: 0 }}>Log your mood for a few days to unlock personalized insights.</p>
+          <p style={{ color: 'hsl(var(--text-secondary))', margin: 0 }}>Log your mood for a few days to unlock personalized insights.</p>
         )}
       </div>
 
@@ -186,7 +186,7 @@ export default function Insights({ habits, logs }) {
             {totalHabits === 0 ? empty : (
               <div className="svg-chart-wrapper" style={{ width: '100%', height: 160, position: 'relative', overflow: 'hidden' }}>
                 <svg viewBox="-5 -5 110 110" width="100%" height="100%" preserveAspectRatio="none">
-                  <polyline fill="none" stroke="#2dd4bf" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" points={consPoints} />
+                  <polyline fill="none" stroke="hsl(var(--success))" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" points={consPoints} />
                 </svg>
               </div>
             )}
@@ -202,12 +202,12 @@ export default function Insights({ habits, logs }) {
                 <svg viewBox="-5 -5 110 110" width="100%" height="100%" preserveAspectRatio="none">
                   <defs>
                     <linearGradient id="streakGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.3" />
-                      <stop offset="100%" stopColor="#fbbf24" stopOpacity="0" />
+                      <stop offset="0%" stopColor="hsl(var(--energy))" stopOpacity="0.3" />
+                      <stop offset="100%" stopColor="hsl(var(--energy))" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                   <polygon points={`0,100 ${streakPoints} 100,100`} fill="url(#streakGrad)" />
-                  <polyline fill="none" stroke="#fbbf24" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" points={streakPoints} />
+                  <polyline fill="none" stroke="hsl(var(--energy))" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" points={streakPoints} />
                 </svg>
               </div>
             )}
@@ -223,7 +223,7 @@ export default function Insights({ habits, logs }) {
                 {timeRates.map((rate, i) => (
                   <div className="bar-col" key={timeKeys[i]}>
                     <span className="bar-value" style={{ fontSize: '0.75rem' }}>{Math.round(rate)}%</span>
-                    <div className="bar" style={{ height: Math.max(3, (rate / maxTimeRate) * 120), background: 'var(--accent)' }} />
+                    <div className="bar" style={{ height: Math.max(3, (rate / maxTimeRate) * 120), background: 'hsl(var(--brand))' }} />
                     <span className="bar-label">{timeLabels[i].slice(0, 3)}</span>
                   </div>
                 ))}
@@ -240,7 +240,7 @@ export default function Insights({ habits, logs }) {
               {avgRates.map((rate, i) => (
                 <div className="bar-col" key={dayNames[i]}>
                   <span className="bar-value">{rate}%</span>
-                  <div className={`bar ${i === new Date().getDay() ? 'today-bar' : ''}`} style={{ height: Math.max(3, (rate / maxAvg) * 140) }} />
+                  <div className={`bar ${i === new Date().getDay() ? 'today-bar' : ''}`} style={{ height: Math.max(3, (rate / maxAvg) * 140), background: i === new Date().getDay() ? 'hsl(var(--energy))' : 'hsl(var(--brand))' }} />
                   <span className="bar-label">{dayNames[i]}</span>
                 </div>
               ))}
@@ -252,7 +252,7 @@ export default function Insights({ habits, logs }) {
         <div className="insight-card glass-card">
           <h3>Best Streaks</h3>
           <div className="streaks-list">
-            {habits.length === 0 ? <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Add habits to see your streaks.</p> :
+            {habits.length === 0 ? <p style={{ color: 'hsl(var(--text-secondary))', fontSize: '0.9rem' }}>Add habits to see your streaks.</p> :
               sorted.map(h => (
                 <div className="streak-item" key={h.id}>
                   <span className="streak-item-icon">{h.icon}</span>
@@ -271,7 +271,7 @@ export default function Insights({ habits, logs }) {
         <div className="insight-card glass-card">
           <h3>Habit Breakdown by Category</h3>
           <div className="chart-container">
-            {habits.length === 0 ? <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Add habits to see the breakdown.</p> : (
+            {habits.length === 0 ? <p style={{ color: 'hsl(var(--text-secondary))', fontSize: '0.9rem' }}>Add habits to see the breakdown.</p> : (
               <div className="donut-chart-wrapper">
                 <svg className="donut-svg" viewBox="0 0 140 140">
                   {catEntries.map(([cat, count]) => {
@@ -282,8 +282,8 @@ export default function Insights({ habits, logs }) {
                     cumPct += pct;
                     return <circle key={cat} cx="70" cy="70" r={radius} fill="none" stroke={color} strokeWidth="18" strokeDasharray={`${da} ${circumference}`} strokeDashoffset={doff} transform="rotate(-90 70 70)" />;
                   })}
-                  <text x="70" y="66" textAnchor="middle" fill="var(--text-primary)" fontSize="22" fontWeight="800">{totalHabits}</text>
-                  <text x="70" y="84" textAnchor="middle" fill="var(--text-secondary)" fontSize="10" fontWeight="500">habits</text>
+                  <text x="70" y="66" textAnchor="middle" fill="hsl(var(--text-primary))" fontSize="22" fontWeight="800">{totalHabits}</text>
+                  <text x="70" y="84" textAnchor="middle" fill="hsl(var(--text-secondary))" fontSize="10" fontWeight="500">habits</text>
                 </svg>
                 <div className="donut-legend">
                   {catEntries.map(([cat, count]) => (
@@ -302,7 +302,7 @@ export default function Insights({ habits, logs }) {
         <div className="insight-card glass-card span-2" style={{ position: 'relative' }}>
           <h3>Consistency Heatmap {user?.is_pro ? '(Last 12 Weeks)' : '(Last 7 Days)'}</h3>
           <div className="heatmap-container">
-            {totalHabits === 0 ? <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Add habits to see the heatmap.</p> : (
+            {totalHabits === 0 ? <p style={{ color: 'hsl(var(--text-secondary))', fontSize: '0.9rem' }}>Add habits to see the heatmap.</p> : (
               <div className="heatmap-wrapper">
                 <div className="heatmap-days">
                   {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => <span key={i}>{d}</span>)}
@@ -312,8 +312,8 @@ export default function Insights({ habits, logs }) {
             )}
           </div>
           {!user?.is_pro && totalHabits > 0 && (
-            <div style={{ position: 'absolute', bottom: 16, right: 16, background: 'var(--bg-raised)', padding: '6px 12px', borderRadius: '16px', border: '1px solid var(--accent)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-              <span style={{ fontSize: '0.8rem', color: 'var(--accent)', fontWeight: 600 }}>🌟 Pro: View full 12 weeks</span>
+            <div style={{ position: 'absolute', bottom: 16, right: 16, background: 'hsl(var(--surface))', padding: '6px 12px', borderRadius: '16px', border: '1px solid hsl(var(--brand))', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+              <span style={{ fontSize: '0.8rem', color: 'hsl(var(--brand))', fontWeight: 600 }}>🌟 Pro: View full 12 weeks</span>
             </div>
           )}
         </div>

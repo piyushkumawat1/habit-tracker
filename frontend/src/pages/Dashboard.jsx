@@ -386,11 +386,11 @@ export default function Dashboard({ habits, logs, refresh }) {
           </div>
           <div className="heatmap-legend">
             <span>Less</span>
-            <div className="heatmap-legend-cell" style={{ background: 'rgba(255,255,255,0.04)' }} />
-            <div className="heatmap-legend-cell" style={{ background: 'rgba(251,191,36,0.15)' }} />
-            <div className="heatmap-legend-cell" style={{ background: 'rgba(245,158,11,0.3)' }} />
-            <div className="heatmap-legend-cell" style={{ background: 'rgba(217,119,6,0.5)' }} />
-            <div className="heatmap-legend-cell" style={{ background: 'rgba(180,83,9,0.7)' }} />
+            <div className="heatmap-legend-cell level-0" />
+            <div className="heatmap-legend-cell level-1" />
+            <div className="heatmap-legend-cell level-2" />
+            <div className="heatmap-legend-cell level-3" />
+            <div className="heatmap-legend-cell level-4" />
             <span>More</span>
           </div>
         </div>
@@ -554,7 +554,7 @@ export default function Dashboard({ habits, logs, refresh }) {
               </div>
               <div className="quick-stats-row">
                 <div className="quick-stat-item">
-                  <span className="quick-stat-value">{completed}/{total}</span>
+                  <span className="quick-stat-value" style={{ color: completed > 0 ? 'hsl(var(--success))' : 'hsl(var(--text-secondary))' }}>{completed}/{total}</span>
                   <span className="quick-stat-label">Today's Progress</span>
                 </div>
                 <div className="quick-stat-item">
@@ -608,7 +608,7 @@ export default function Dashboard({ habits, logs, refresh }) {
                 <span className="freeze-badge">{freezes}/3 available</span>
               </div>
 
-              <button className="mt-6 flex w-full items-center justify-center rounded-lg bg-accent px-4 py-3 font-bold text-accent-foreground shadow transition-all hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98]" onClick={() => navigate('/habits')}>
+              <button className="mt-6 flex w-full items-center justify-center rounded-lg px-4 py-3 font-bold shadow transition-all focus-visible:outline-none focus-visible:ring-2 active:scale-[0.98]" style={{ backgroundColor: 'hsl(var(--energy))', color: '#fff' }} onClick={() => navigate('/habits')}>
                 Keep going 💪
               </button>
             </div>

@@ -7,47 +7,80 @@ export default {
   theme: {
     extend: {
       colors: {
-        border: "oklch(var(--tw-border) / <alpha-value>)",
-        input: "oklch(var(--tw-input) / <alpha-value>)",
-        ring: "oklch(var(--tw-ring) / <alpha-value>)",
-        background: "oklch(var(--tw-background) / <alpha-value>)",
-        foreground: "oklch(var(--tw-foreground) / <alpha-value>)",
+        bg: "hsl(var(--bg) / <alpha-value>)",
+        surface: "hsl(var(--surface) / <alpha-value>)",
+        "surface-hover": "hsl(var(--surface-hover) / <alpha-value>)",
+        border: "hsl(var(--border) / <alpha-value>)",
+        
+        text: {
+          primary: "hsl(var(--text-primary) / <alpha-value>)",
+          secondary: "hsl(var(--text-secondary) / <alpha-value>)",
+          tertiary: "hsl(var(--text-tertiary) / <alpha-value>)",
+        },
+        
+        brand: {
+          DEFAULT: "hsl(var(--brand) / <alpha-value>)",
+          hover: "hsl(var(--brand-hover) / <alpha-value>)",
+          soft: "hsl(var(--brand-soft))",
+        },
+        
+        energy: {
+          DEFAULT: "hsl(var(--energy) / <alpha-value>)",
+          hover: "hsl(var(--energy-hover) / <alpha-value>)",
+          soft: "hsl(var(--energy-soft))",
+        },
+        
+        success: {
+          DEFAULT: "hsl(var(--success) / <alpha-value>)",
+          soft: "hsl(var(--success-soft))",
+        },
+        
+        freeze: {
+          DEFAULT: "hsl(var(--freeze) / <alpha-value>)",
+          soft: "hsl(var(--freeze-soft))",
+        },
+        
+        destructive: {
+          DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
+          soft: "hsl(var(--destructive-soft))",
+        },
+
+        // Legacy mappings (so Shadcn components like CustomSelect using `border-input` or `bg-card` don't completely break, we map them to our new variables)
+        input: "hsl(var(--border) / <alpha-value>)",
+        ring: "hsl(var(--brand) / <alpha-value>)",
+        background: "hsl(var(--bg) / <alpha-value>)",
+        foreground: "hsl(var(--text-primary) / <alpha-value>)",
         primary: {
-          DEFAULT: "oklch(var(--tw-primary) / <alpha-value>)",
-          foreground: "oklch(var(--tw-primary-foreground) / <alpha-value>)",
+          DEFAULT: "hsl(var(--brand) / <alpha-value>)",
+          foreground: "hsl(var(--text-primary) / <alpha-value>)",
         },
         secondary: {
-          DEFAULT: "oklch(var(--tw-secondary) / <alpha-value>)",
-          foreground: "oklch(var(--tw-secondary-foreground) / <alpha-value>)",
-        },
-        destructive: {
-          DEFAULT: "oklch(var(--tw-destructive) / <alpha-value>)",
-          foreground: "oklch(var(--tw-destructive-foreground) / <alpha-value>)",
+          DEFAULT: "hsl(var(--surface) / <alpha-value>)",
+          foreground: "hsl(var(--text-primary) / <alpha-value>)",
         },
         muted: {
-          DEFAULT: "oklch(var(--tw-muted) / <alpha-value>)",
-          foreground: "oklch(var(--tw-muted-foreground) / <alpha-value>)",
+          DEFAULT: "hsl(var(--surface-hover) / <alpha-value>)",
+          foreground: "hsl(var(--text-secondary) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "oklch(var(--tw-accent) / <alpha-value>)",
-          foreground: "oklch(var(--tw-accent-foreground) / <alpha-value>)",
+          DEFAULT: "hsl(var(--brand-soft))",
+          foreground: "hsl(var(--brand) / <alpha-value>)",
         },
         popover: {
-          DEFAULT: "oklch(var(--tw-popover) / <alpha-value>)",
-          foreground: "oklch(var(--tw-popover-foreground) / <alpha-value>)",
+          DEFAULT: "hsl(var(--surface) / <alpha-value>)",
+          foreground: "hsl(var(--text-primary) / <alpha-value>)",
         },
         card: {
-          DEFAULT: "oklch(var(--tw-card) / <alpha-value>)",
-          foreground: "oklch(var(--tw-card-foreground) / <alpha-value>)",
+          DEFAULT: "hsl(var(--surface) / <alpha-value>)",
+          foreground: "hsl(var(--text-primary) / <alpha-value>)",
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "var(--radius-lg)",
+        md: "var(--radius-md)",
+        sm: "var(--radius-sm)",
       },
     },
   },
   plugins: [],
 }
-
