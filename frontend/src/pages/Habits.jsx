@@ -4,6 +4,7 @@ import { calcHabitStreak, categoryLabel, capitalize, difficultyLabel } from '../
 import { habitsApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
 import CreateHabitModal from '../components/CreateHabitModal.jsx';
+import { Edit2 } from 'lucide-react';
 
 export default function Habits({ habits, logs, refresh }) {
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ export default function Habits({ habits, logs, refresh }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [confirmId, setConfirmId] = useState(null);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editHabit, setEditHabit] = useState(null);
 
   const filtered = activeFilter === 'all' ? habits : habits.filter(h => h.category === activeFilter);
 
@@ -73,6 +76,13 @@ export default function Habits({ habits, logs, refresh }) {
                     </div>
                   </div>
                   <button 
+                    className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary active:scale-95"
+                    onClick={() => { setEditHabit(h); setEditDialogOpen(true); }} 
+                    title="Edit habit"
+                  >
+                    <Edit2 size={16} />
+                  </button>
+                  <button 
                     className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive active:scale-95"
                     onClick={() => setConfirmId(h.id)} 
                     title="Delete habit"
@@ -121,7 +131,7 @@ export default function Habits({ habits, logs, refresh }) {
         </div>
       )}
 
-      <CreateHabitModal isOpen={addDialogOpen} onClose={() => setAddDialogOpen(false)} refresh={refresh} />
+      <CreateHabitModal isOpen={addDialogOpen || editDialogOpen} onClose={() => { setAddDialogOpen(false); setEditDialogOpen(false); setEditHabit(null); }} refresh={refresh} editHabit={editHabit} />
     </section>
   );
 }

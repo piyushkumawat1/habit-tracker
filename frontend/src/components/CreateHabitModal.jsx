@@ -19,7 +19,7 @@ function capitalize(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-export default function CreateHabitModal({ isOpen, onClose, refresh }) {
+export default function CreateHabitModal({ isOpen, onClose, refresh, editHabit }) {
   const showToast = useToast();
   
   // States
@@ -47,27 +47,18 @@ export default function CreateHabitModal({ isOpen, onClose, refresh }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  async function handleCreateHabit(e) {
-    e.preventDefault();
-    if (!newName.trim()) return;
-
-    try {
-      await habitsApi.create({
-        name: newName.trim(),
-        category: newCategory,
-        frequency: newFrequency,
-        difficulty: newDifficulty,
-        icon: newIcon,
-        "time of days": newTimeOfDay,
-        Time: parseInt(newTime) || null,
-        enery_level: newEnergy,
-        color: newColor
-      });
-      
-      showToast('Habit created!', '🎉');
-      onClose();
-      
-      // Reset form
+  useEffect(() => {
+    if (editHabit && isOpen) {
+      setNewName(editHabit.name || '');
+      setNewIcon(editHabit.icon || '⏰');
+      setNewCategory(editHabit.category || 'custom');
+      setNewEnergy(editHabit.enery_level || 'high');
+      setNewDifficulty(editHabit.difficulty || 'easy');
+      setNewTime(editHabit.Time || '');
+      setNewFrequency(editHabit.frequency || 'daily');
+      setNewTimeOfDay(editHabit['time of days'] || 'anytime');
+      setNewColor(editHabit.color || '#f97316');
+    } else if (!editHabit && isOpen) {
       setNewName('');
       setNewIcon('⏰');
       setNewCategory('custom');
@@ -77,10 +68,39 @@ export default function CreateHabitModal({ isOpen, onClose, refresh }) {
       setNewFrequency('daily');
       setNewTimeOfDay('anytime');
       setNewColor('#f97316');
+    }
+  }, [editHabit, isOpen]);
+
+  async function handleCreateHabit(e) {
+    e.preventDefault();
+    if (!newName.trim()) return;
+
+    const payload = {
+      name: newName.trim(),
+      category: newCategory,
+      frequency: newFrequency,
+      difficulty: newDifficulty,
+      icon: newIcon,
+      "time of days": newTimeOfDay,
+      Time: parseInt(newTime) || null,
+      enery_level: newEnergy,
+      color: newColor
+    };
+
+    try {
+      if (editHabit) {
+        await habitsApi.update(editHabit.id, payload);
+        showToast('Habit updated!', '✅');
+      } else {
+        await habitsApi.create(payload);
+        showToast('Habit created!', '🎉');
+      }
+      
+      onClose();
             
       if (refresh) refresh();
     } catch (err) {
-      showToast('Failed to create habit', '❌');
+      showToast(editHabit ? 'Failed to update habit' : 'Failed to create habit', '❌');
     }
   }
 
@@ -89,8 +109,8 @@ export default function CreateHabitModal({ isOpen, onClose, refresh }) {
       <div className="flex flex-col gap-6 pt-2 pb-2">
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-xl font-bold text-foreground tracking-tight">Create Habit</h2>
-            <p className="text-sm text-muted-foreground mt-1">Keep it simple. What's the smallest step?</p>
+            <h2 className="text-xl font-bold text-foreground tracking-tight">{editHabit ? 'Edit Habit' : 'Create Habit'}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{editHabit ? 'Adjust your habit settings.' : "Keep it simple. What's the smallest step?"}</p>
           </div>
         </div>
 
@@ -234,10 +254,11 @@ export default function CreateHabitModal({ isOpen, onClose, refresh }) {
           {/* Submit */}
           <button 
             type="submit" 
-            className="mt-4 flex w-full h-[50px] items-center justify-center rounded-xl bg-primary px-4 font-bold text-primary-foreground shadow-md transition-all hover:bg-primary/90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-[0.98] disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+            style={{ backgroundColor: newColor, boxShadow: `0 4px 14px ${newColor}40` }}
             disabled={!newName.trim()}
           >
-            Create Habit
+            {editHabit ? 'Save Changes' : 'Create Habit'}
           </button>
         </form>
       </div>

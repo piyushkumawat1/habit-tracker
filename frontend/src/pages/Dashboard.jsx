@@ -8,7 +8,7 @@ import { useToast } from '../context/ToastContext.jsx';
 import Dialog from '../components/ui/Dialog.jsx';
 import {
   Flame, Star, Snowflake, Sparkles, Plus, RefreshCw, Check,
-  ChevronRight, Sun, Moon, Cloud, Clock, TrendingUp, Zap, Eye, Sunrise
+  ChevronRight, Sun, Moon, Cloud, Clock, TrendingUp, Zap, Eye, Sunrise, Edit2
 } from 'lucide-react';
 
 // ── Constants ──
@@ -246,10 +246,6 @@ export default function Dashboard({ habits, logs, refresh }) {
   const [activeTimerHabit, setActiveTimerHabit] = useState(null);
 
 
-  // Edit-habit form state
-  const [editName, setEditName] = useState('');
-  const [editCategory, setEditCategory] = useState('');
-  const [editDifficulty, setEditDifficulty] = useState('');
 
   const today = getToday();
   const todayLogs = { ...(logs[today] || {}), ...optimisticLogs };
@@ -332,33 +328,12 @@ export default function Dashboard({ habits, logs, refresh }) {
   }
 
 
-  async function handleEditHabit(e) {
-    e.preventDefault();
-    if (!editHabit || !editName.trim()) return;
-
-    try {
-      await habitsApi.update(editHabit.id, {
-        name: editName.trim(),
-        category: editCategory,
-        difficulty: editDifficulty,
-      });
-      showToast('Habit updated!', '✅');
-      setEditDialogOpen(false);
-      setEditHabit(null);
-      refresh();
-    } catch (err) {
-      showToast('Failed to update habit', '❌');
-    }
-  }
 
   function openEditForInsight() {
     if (!currentInsight) return;
     const habit = habits.find(h => h.id === currentInsight.habitId);
     if (!habit) return;
     setEditHabit(habit);
-    setEditName(habit.name);
-    setEditCategory(habit.category || 'health');
-    setEditDifficulty(habit.difficulty || 'easy');
     setEditDialogOpen(true);
   }
 
@@ -582,6 +557,13 @@ export default function Dashboard({ habits, logs, refresh }) {
                                   <span>{formatTime(h['time of days'])}</span>
                                   <span>·</span>
                                   <span>{capitalize(h.difficulty || 'easy')}</span>
+                                  <button 
+                                    className="ml-2 text-muted-foreground hover:text-primary transition-colors"
+                                    onClick={(e) => { e.stopPropagation(); setEditHabit(h); setEditDialogOpen(true); }}
+                                    title="Edit Habit"
+                                  >
+                                    <Edit2 size={14} />
+                                  </button>
                                   {h.Time && (
                                     <>
                                       <span>·</span>
@@ -687,7 +669,7 @@ export default function Dashboard({ habits, logs, refresh }) {
            DIALOGS
          ═══════════════════════════════════ */}
 
-      <CreateHabitModal isOpen={addDialogOpen} onClose={() => setAddDialogOpen(false)} refresh={refresh} />
+      <CreateHabitModal isOpen={addDialogOpen || editDialogOpen} onClose={() => { setAddDialogOpen(false); setEditDialogOpen(false); setEditHabit(null); }} refresh={refresh} editHabit={editHabit} />
       
       <FocusTimerModal 
         isOpen={!!activeTimerHabit} 
@@ -698,51 +680,7 @@ export default function Dashboard({ habits, logs, refresh }) {
         }} 
       />
 
-      {/* ── Edit Habit Dialog ── */}
-      <Dialog isOpen={editDialogOpen} onClose={() => { setEditDialogOpen(false); setEditHabit(null); }} maxWidth={440}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: 4, color: 'var(--text-primary)' }}>Adjust Habit</h2>
-        <p style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)', marginBottom: 20 }}>Fine-tune based on coach insight</p>
 
-        <form className="add-habit-dialog-form" onSubmit={handleEditHabit}>
-          <div className="dialog-form-group">
-            <label htmlFor="edit-habit-name">Name</label>
-            <input
-              id="edit-habit-name"
-              type="text"
-              value={editName}
-              onChange={e => setEditName(e.target.value)}
-              maxLength={60}
-            />
-          </div>
-
-          <div className="dialog-form-group">
-            <label htmlFor="edit-habit-category">Category</label>
-            <select id="edit-habit-category" value={editCategory} onChange={e => setEditCategory(e.target.value)}>
-              {CATEGORIES.map(c => <option key={c} value={c}>{capitalize(c)}</option>)}
-            </select>
-          </div>
-
-          <div className="dialog-form-group">
-            <label>Difficulty</label>
-            <div className="dialog-difficulty-group">
-              {['easy', 'medium', 'hard'].map(d => (
-                <button
-                  key={d}
-                  type="button"
-                  className={`dialog-difficulty-option ${editDifficulty === d ? 'active' : ''}`}
-                  onClick={() => setEditDifficulty(d)}
-                >
-                  {d === 'easy' ? '🟢' : d === 'medium' ? '🟡' : '🔴'} {capitalize(d)}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button type="submit" className="btn btn-primary btn-block" disabled={!editName.trim()}>
-            Save Changes
-          </button>
-        </form>
-      </Dialog>
     </section>
   );
 }
