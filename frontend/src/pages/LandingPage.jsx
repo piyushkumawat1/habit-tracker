@@ -204,7 +204,7 @@ export default function LandingPage() {
 <div className="bg-[#4648d4] text-[#ffffff] p-10 rounded-2xl organic-shadow relative overflow-hidden transform md:scale-105 hover:-translate-y-2 transition-transform duration-500 shadow-2xl shadow-[#4648d4]/30">
 <div className="absolute top-6 right-6 bg-white/20 text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-widest backdrop-blur-sm">Most Popular</div>
 <h4 className="font-[Inter] text-[#bec2ff] mb-2 uppercase tracking-widest">Habitly PRO</h4>
-<div className="text-[32px] font-[Inter] mb-2">₹10<span className="text-[16px] font-[Inter]">/lifetime</span></div>
+<div className="text-[32px] font-[Inter] mb-2">$4.99<span className="text-[16px] font-[Inter]">/mo</span></div>
 <p className="text-[#bec2ff] text-sm mb-6">Unlimited tracking &amp; analytics</p>
 <ul className="space-y-4 mb-10">
 <li className="flex items-center gap-2"><Star className="text-white" size={20} /> Unlimited Routine Tracks</li>
