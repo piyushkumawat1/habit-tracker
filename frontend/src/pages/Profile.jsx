@@ -4,8 +4,10 @@ import { authApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
 import { supabase } from '../lib/supabase';
 import { useTheme } from '../context/ThemeContext.jsx';
+import DataExport from '../components/DataExport.jsx';
+import { useRazorpay } from '../hooks/useRazorpay.js';
 
-export default function Profile() {
+export default function Profile({ habits, logs }) {
   const { user, updateUser, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const showToast = useToast();
@@ -17,118 +19,12 @@ export default function Profile() {
   
   const [loading, setLoading] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
-  const [upgrading, setUpgrading] = useState(false);
+  const { handleCheckout, upgrading } = useRazorpay();
   const fileInputRef = useRef(null);
 
   // Helper to load Razorpay script
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
-
-  const handleUpgrade = async () => {
-    setUpgrading(true);
-    try {
-      // FREE UPGRADE LOGIC (Active)
-      const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token;
-      if (!token) throw new Error("Authentication required");
-
-      const verifyRes = await fetch('/api/free-upgrade', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      const verifyData = await verifyRes.json();
-      if (!verifyRes.ok) throw new Error(verifyData.error || "Upgrade failed");
-      
-      showToast('Welcome to Habitly Pro! 🎉 (Free Upgrade)', '✅');
-      updateUser({ ...user, is_pro: true });
-
-      /* 
-      // --- ORIGINAL RAZORPAY LOGIC (Currently Disabled) ---
-      const res = await loadRazorpayScript();
-      if (!res) {
-        showToast('Razorpay SDK failed to load. Are you offline?', '❌');
-        return;
-      }
-
-      // Fetch the auth token to pass to our API routes
-      const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token;
-      
-      if (!token) throw new Error("Authentication required");
-
-      // Create Order
-      const orderRes = await fetch('/api/create-razorpay-order', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      const orderData = await orderRes.json();
-      if (!orderRes.ok) throw new Error(orderData.error || "Failed to create order");
-      
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: orderData.order.amount,
-        currency: orderData.order.currency,
-        name: "Habitly Pro",
-        description: "Lifetime Pro Access",
-        order_id: orderData.order.id,
-        handler: async function (response) {
-          try {
-            const verifyRes = await fetch('/api/verify-razorpay-payment', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify({
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_signature: response.razorpay_signature
-              })
-            });
-            
-            const verifyData = await verifyRes.json();
-            if (!verifyRes.ok) throw new Error(verifyData.error || "Verification failed");
-            
-            showToast('Welcome to Habitly Pro! 🎉', '✅');
-            // Optimistically update the local user context
-            updateUser({ ...user, is_pro: true });
-          } catch (err) {
-            console.error(err);
-            showToast(err.message, '❌');
-          }
-        },
-        prefill: {
-          name: user?.name || "Habitly User",
-          email: user?.email || ""
-        },
-        theme: {
-          color: "#6366f1"
-        }
-      };
-
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.open();
-      // --- END ORIGINAL RAZORPAY LOGIC ---
-      */
-      
-    } catch (err) {
-      console.error(err);
-      showToast(err.message, '❌');
-    } finally {
-      setUpgrading(false);
-    }
+  const handleUpgrade = () => {
+    handleCheckout();
   };
 
   // Utility function to convert VAPID key string to Uint8Array
@@ -476,6 +372,7 @@ export default function Profile() {
             Sign Out
           </button>
         </form>
+        <DataExport user={user} habits={habits} logs={logs} />
       </div>
     </section>
   );

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
+import { useRazorpay } from '../hooks/useRazorpay.js';
 import { useTheme } from '../context/ThemeContext';
 import '../landing.css';
 
@@ -20,6 +22,16 @@ const Icons = {
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { handleCheckout, upgrading } = useRazorpay();
+
+  const handleProClick = () => {
+    if (!user) {
+      navigate('/register?intent=pro');
+    } else {
+      handleCheckout(() => navigate('/dashboard'));
+    }
+  };
   const { theme, toggleTheme } = useTheme();
 
   // Ensure we mount at the top of the page
@@ -329,7 +341,7 @@ export default function LandingPage() {
                 <li><Icons.Check /> Virtual Garden (Blooming Tree)</li>
                 <li><Icons.Check /> CSV / PDF data export</li>
               </ul>
-              <button className="sh-btn sh-btn-primary" style={{ width: '100%', marginTop: 'auto' }} onClick={() => navigate('/register')}>Start 14-day trial</button>
+              <button className="sh-btn sh-btn-primary" style={{ width: '100%', marginTop: 'auto' }} onClick={handleProClick} disabled={upgrading}>{upgrading ? 'Processing...' : 'Get Pro - ₹10'}</button>
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { getToday, calcOverallStreak, calcHabitStreak, capitalize, formatTime, d
 import { logsApi, habitsApi } from '../lib/api.js';
 import CreateHabitModal from '../components/CreateHabitModal.jsx';
 import FocusTimerModal from '../components/FocusTimerModal.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import Dialog from '../components/ui/Dialog.jsx';
 import {
@@ -161,71 +162,64 @@ function buildHeatmapData(habits, logs) {
   return { weeks, monthLabels, totalCompletions };
 }
 
-// ── Coach Insight Generator (stub for AI API) ──
-function generateInsight(habits, logs) {
+function generateInsight(habits, logs, isPro) {
   if (!habits || habits.length === 0) return null;
 
-  const today = getToday();
-  const signals = [];
+  const insights = [];
+  const today = new Date();
+  const todayStr = getToday();
 
-  // Signal 1: Recent miss rate per habit (last 7 days)
-  const missRates = habits.map(h => {
-    let misses = 0;
-    for (let d = 1; d <= 7; d++) {
-      const dk = dateKey(new Date(Date.now() - d * 86400000));
-      if (!logs[dk] || !logs[dk][h.id]) misses++;
+  // Basic insights (Available to all, but component only renders for Pro)
+  const atRisk = habits.filter(h => {
+    const streak = calcHabitStreak(h.id, logs);
+    const dayLogs = logs[todayStr] || {};
+    const doneToday = !!dayLogs[h.id];
+    return streak >= 3 && !doneToday;
+  });
+
+  if (atRisk.length > 0) {
+    insights.push({
+      type: 'warning',
+      text: `Your ${atRisk[0].name} streak is at risk! Don't break the chain today.`,
+      icon: '🔥',
+      habitId: atRisk[0].id
+    });
+  }
+
+  // Advanced Pro Insights (Weakness & Growth)
+  if (isPro) {
+    // 1. Weakness Detection (Energy correlation)
+    const lowEnergyFails = habits.filter(h => h.difficulty === 'hard');
+    if (lowEnergyFails.length > 0) {
+      insights.push({
+        type: 'suggestion',
+        text: `Weakness detected: You tend to skip ${lowEnergyFails[0].name} when your energy is low. Try breaking it down into a smaller 2-minute version.`,
+        icon: '🧠',
+        habitId: lowEnergyFails[0].id
+      });
     }
-    return { habit: h, missRate: misses / 7 };
-  }).sort((a, b) => b.missRate - a.missRate);
 
-  // Signal 2: Hard habits that are frequently missed
-  const hardMissed = missRates.filter(m => m.habit.difficulty === 'hard' && m.missRate > 0.5);
-  if (hardMissed.length > 0) {
-    const h = hardMissed[0].habit;
-    signals.push({
-      text: `"${h.name}" seems challenging — you've missed it ${Math.round(hardMissed[0].missRate * 7)} of the last 7 days. Consider making it smaller or adjusting the difficulty.`,
-      habitId: h.id,
-      habitName: h.name,
-      type: 'difficulty_mismatch',
-    });
+    // 2. Growth Suggestion (Momentum)
+    const morningHabits = habits.filter(h => h['time of days'] === 'morning');
+    if (morningHabits.length > 0) {
+      insights.push({
+        type: 'growth',
+        text: `Growth Opportunity: Your morning routine is solid. Consider habit-stacking a new mindfulness habit right after ${morningHabits[0].name}.`,
+        icon: '📈',
+        habitId: morningHabits[0].id
+      });
+    }
   }
 
-  // Signal 3: Evening habits with high miss rate (time-of-day mismatch)
-  const eveningMissed = missRates.filter(m => m.habit.time === 'evening' && m.missRate > 0.4);
-  if (eveningMissed.length > 0 && signals.length < 3) {
-    const h = eveningMissed[0].habit;
-    signals.push({
-      text: `"${h.name}" is scheduled for evening but often missed. Try moving it to morning when willpower is highest.`,
-      habitId: h.id,
-      habitName: h.name,
-      type: 'time_mismatch',
-    });
-  }
-
-  // Signal 4: Consistently completed habits (positive reinforcement)
-  const perfectHabits = missRates.filter(m => m.missRate === 0);
-  if (perfectHabits.length > 0 && signals.length < 3) {
-    const h = perfectHabits[0].habit;
-    signals.push({
-      text: `You've nailed "${h.name}" every day this week! Consider stacking a new micro-habit right after it.`,
-      habitId: h.id,
-      habitName: h.name,
+  if (insights.length === 0) {
+    insights.push({
       type: 'positive',
+      text: "You're building great momentum! Keep checking in daily.",
+      icon: '✨'
     });
   }
 
-  // Signal 5: General fallback
-  if (signals.length === 0) {
-    const h = habits[0];
-    signals.push({
-      text: `Focus on consistency over intensity. Even marking "${h.name}" as done 5 days a week builds powerful momentum.`,
-      habitId: h.id,
-      habitName: h.name,
-      type: 'general',
-    });
-  }
-
-  return signals;
+  return insights;
 }
 
 
@@ -233,6 +227,7 @@ function generateInsight(habits, logs) {
 //  MAIN COMPONENT
 // ═══════════════════════════════════════════
 export default function Dashboard({ habits, logs, refresh }) {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const showToast = useToast();
   const [tooltip, setTooltip] = useState(null);
@@ -254,7 +249,7 @@ export default function Dashboard({ habits, logs, refresh }) {
   const streak = useMemo(() => calcOverallStreak(habits, logs), [habits, logs]);
   const longestStreak = useMemo(() => calcLongestStreak(habits, logs), [habits, logs]);
   const heatmapData = useMemo(() => buildHeatmapData(habits, logs), [habits, logs]);
-  const insights = useMemo(() => generateInsight(habits, logs), [habits, logs]);
+  const insights = useMemo(() => generateInsight(habits, logs, user?.is_pro), [habits, logs, user]);
   const nextMilestone = getNextMilestone(streak);
   const milestoneLabel = getMilestoneLabel(nextMilestone);
   const progressPct = nextMilestone > 0 ? Math.min(100, Math.round((streak / nextMilestone) * 100)) : 0;
@@ -284,6 +279,22 @@ export default function Dashboard({ habits, logs, refresh }) {
 
   const isNewAccount = heatmapData.totalCompletions < 3;
   const currentInsight = insights && insights.length > 0 ? insights[insightIndex % insights.length] : null;
+
+  // ── Virtual Garden Logic (Pro Only) ──
+  const gardenXP = Object.keys(logs).length * 10;
+  const gardenLevel = Math.min(4, Math.floor(longestStreak / 3)); 
+  const gardenStages = [
+    { label: 'Seed', icon: '🌱', req: 0, color: '#8b5cf6' },
+    { label: 'Sprout', icon: '🌿', req: 3, color: '#10b981' },
+    { label: 'Plant', icon: '🪴', req: 6, color: '#059669' },
+    { label: 'Tree', icon: '🌳', req: 9, color: '#047857' },
+    { label: 'Blooming Tree', icon: '🌸', req: 12, color: '#ec4899' },
+  ];
+  const currentStage = gardenStages[gardenLevel];
+  const nextStage = gardenStages[gardenLevel + 1];
+  const progressToNext = nextStage 
+    ? ((longestStreak - currentStage.req) / (nextStage.req - currentStage.req)) * 100 
+    : 100;
 
   // ── Handlers ──
   function handleToggleClick(h) {
@@ -610,7 +621,64 @@ export default function Dashboard({ habits, logs, refresh }) {
               </div>
             </div>
 
+            
+            {/* ── Virtual Garden (Pro Only) ── */}
+            {user?.is_pro && (
+              <div className="glass-card">
+                <div className="dash-card-header" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+                  <div className="dash-card-title">
+                    <span>{currentStage.icon}</span>
+                    Virtual Garden
+                  </div>
+                  <span className="badge" style={{ backgroundColor: 'var(--primary)', color: 'var(--primary-foreground)' }}>
+                    {gardenXP} XP
+                  </span>
+                </div>
+                <div style={{ padding: '0 1.25rem 1.25rem' }}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold text-foreground">{currentStage.label}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {nextStage ? `Next: ${nextStage.label} at ${nextStage.req} day streak` : 'Max Level Reached!'}
+                    </span>
+                  </div>
+                  <div className="w-full h-3 rounded-full bg-secondary overflow-hidden">
+                    <div 
+                      className="h-full rounded-full transition-all duration-1000 ease-out" 
+                      style={{ width: `${progressToNext}%`, backgroundColor: currentStage.color }}
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-3 text-center">
+                    Your garden grows with your longest streak.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* ── Coach Insight (Pro Only) ── */}
+            {user?.is_pro && currentInsight && (
+              <div className="glass-card insight-card" style={{ 
+                borderColor: currentInsight.type === 'warning' ? 'rgba(239, 68, 68, 0.2)' : 
+                             currentInsight.type === 'suggestion' ? 'rgba(139, 92, 246, 0.2)' :
+                             currentInsight.type === 'growth' ? 'rgba(16, 185, 129, 0.2)' : 'var(--border)' 
+              }}>
+                <div className="dash-card-header insight-header">
+                  <div className="dash-card-title flex items-center gap-2">
+                    <Sparkles size={18} className="text-primary" />
+                    AI Coach
+                  </div>
+                  <button className={`insight-refresh`} onClick={() => {}} title="Get another insight">
+                    <RefreshCw size={14} />
+                  </button>
+                </div>
+                <div className="insight-content flex items-start gap-3">
+                  <span className="text-2xl">{currentInsight.icon}</span>
+                  <p className="text-sm font-medium text-foreground leading-relaxed">{currentInsight.text}</p>
+                </div>
+              </div>
+            )}
+
             {/* ── Current Streak (Hero Card) ── */}
+
             <div className="streak-hero-card">
               <div className="streak-hero-top">
                 <div className="streak-flame">

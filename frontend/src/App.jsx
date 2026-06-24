@@ -51,7 +51,7 @@ function AppContent() {
           <Route path="/habits" element={<Habits habits={habits} logs={logs} refresh={refresh} />} />
           <Route path="/insights" element={<Insights habits={habits} logs={logs} />} />
           <Route path="/challenges" element={<Challenges habits={habits} logs={logs} />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile habits={habits} logs={logs} />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       )}

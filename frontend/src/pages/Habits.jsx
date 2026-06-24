@@ -4,9 +4,12 @@ import { calcHabitStreak, categoryLabel, capitalize, difficultyLabel } from '../
 import { habitsApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
 import CreateHabitModal from '../components/CreateHabitModal.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
+import AiCoachChat from '../components/AiCoachChat.jsx';
 import { Edit2 } from 'lucide-react';
 
 export default function Habits({ habits, logs, refresh }) {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const showToast = useToast();
   const [activeFilter, setActiveFilter] = useState('all');
@@ -128,6 +131,12 @@ export default function Habits({ habits, logs, refresh }) {
               <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
             </div>
           </div>
+        </div>
+      )}
+
+      {user?.is_pro && (
+        <div style={{ marginTop: '2rem' }}>
+          <AiCoachChat />
         </div>
       )}
 
