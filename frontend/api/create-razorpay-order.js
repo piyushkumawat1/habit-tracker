@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
     const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
     const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
-    
+
     if (!supabaseUrl || !supabaseKey) {
       throw new Error("Missing Supabase Environment Variables");
     }
@@ -53,13 +53,13 @@ export default async function handler(req, res) {
     });
 
     const options = {
-      amount: 39900, // 399.00 INR
+      amount: 89900, // 899.00 INR
       currency: 'INR',
-      receipt: `rcpt_${user.id.slice(0,8)}_${Date.now()}`
+      receipt: `rcpt_${user.id.slice(0, 8)}_${Date.now()}`
     };
 
     const order = await razorpay.orders.create(options);
-    
+
     if (!order) {
       throw new Error("Razorpay order creation failed");
     }

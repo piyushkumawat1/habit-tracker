@@ -321,7 +321,7 @@ export default function LandingPage() {
 <div className="bg-[var(--ld-primary)] text-[var(--ld-on-primary)] p-10 rounded-2xl organic-shadow relative overflow-hidden transform md:scale-105 hover:-translate-y-2 transition-transform duration-500 shadow-2xl shadow-[var(--ld-primary)]/30 hover:shadow-[var(--ld-primary)]/50 hover:-translate-y-3 transition-all duration-500">
 <div className="absolute top-6 right-6 bg-[var(--ld-card)]/20 text-[var(--ld-on-primary)] text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-widest backdrop-blur-sm">Most Popular</div>
 <h4 className="font-[Inter] text-[var(--ld-inverse-primary)] mb-2 uppercase tracking-widest">Habitly PRO</h4>
-<div className="text-[32px] font-[Inter] mb-2">₹399<span className="text-[16px] font-[Inter]">/mo</span></div>
+<div className="text-[32px] font-[Inter] mb-2">₹415<span className="text-[16px] font-[Inter]">/mo</span></div>
 <p className="text-[var(--ld-inverse-primary)] text-sm mb-6">Unlimited tracking &amp; analytics</p>
 <ul className="space-y-4 mb-10">
 <li className="flex items-center gap-2"><Star className="text-[var(--ld-on-primary)]" size={20} /> Unlimited Routine Tracks</li>
