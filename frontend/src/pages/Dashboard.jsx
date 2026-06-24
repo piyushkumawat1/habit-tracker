@@ -382,6 +382,30 @@ export default function Dashboard({ habits, logs, refresh }) {
   // ═════════════════════════════════
   //  RENDER
   // ═════════════════════════════════
+
+  const handleSnapshot = async () => {
+    try {
+      const dashboardElement = document.querySelector('.dashboard-grid');
+      if (!dashboardElement) return;
+      
+      showToast('Generating snapshot...', '⏳');
+      const canvas = await html2canvas(dashboardElement, {
+        backgroundColor: document.documentElement.classList.contains('dark') ? '#0a0a0a' : '#fafafa',
+        scale: 2
+      });
+      
+      const link = document.createElement('a');
+      link.download = `Habitly_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      showToast('Snapshot Exported!', '✅');
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to generate snapshot', '❌');
+    }
+  };
+
   return (
     <section id="page-home" className="page active dashboard-warm">
 
@@ -429,7 +453,31 @@ export default function Dashboard({ habits, logs, refresh }) {
                 {heatmapData.weeks.map((week, weekIndex) => {
                   const cell = week[dayIndex];
                   if (!cell) return <div key={weekIndex} className="heatmap-cell" style={{ visibility: 'hidden' }} />;
-                  return (
+                
+  const handleSnapshot = async () => {
+    try {
+      const dashboardElement = document.querySelector('.dashboard-grid');
+      if (!dashboardElement) return;
+      
+      showToast('Generating snapshot...', '⏳');
+      const canvas = await html2canvas(dashboardElement, {
+        backgroundColor: document.documentElement.classList.contains('dark') ? '#0a0a0a' : '#fafafa',
+        scale: 2
+      });
+      
+      const link = document.createElement('a');
+      link.download = `Habitly_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      showToast('Snapshot Exported!', '✅');
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to generate snapshot', '❌');
+    }
+  };
+
+  return (
                     <div
                       key={weekIndex}
                       className={`heatmap-cell level-${cell.level}`}
@@ -499,9 +547,16 @@ export default function Dashboard({ habits, logs, refresh }) {
                   <h1>{getGreeting()}</h1>
                   <span className="greeting-date">{getFormattedDate()} · {getFormattedTime()}</span>
                 </div>
-                <button className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:scale-105 hover:shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95" onClick={() => setAddDialogOpen(true)}>
-                  <Plus size={16} /> New Habit
-                </button>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  {user?.is_pro && (
+                    <button className="dash-snapshot-btn" onClick={handleSnapshot} title="Take Snapshot of Dashboard">
+                      <Camera size={14} /> Snapshot
+                    </button>
+                  )}
+                  <button className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:scale-105 hover:shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95" onClick={() => setAddDialogOpen(true)}>
+                    <Plus size={16} /> New Habit
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -530,7 +585,31 @@ export default function Dashboard({ habits, logs, refresh }) {
                   const groupHabits = focusGroups[timeKey];
                   if (!groupHabits || groupHabits.length === 0) return null;
                   
-                  return (
+                
+  const handleSnapshot = async () => {
+    try {
+      const dashboardElement = document.querySelector('.dashboard-grid');
+      if (!dashboardElement) return;
+      
+      showToast('Generating snapshot...', '⏳');
+      const canvas = await html2canvas(dashboardElement, {
+        backgroundColor: document.documentElement.classList.contains('dark') ? '#0a0a0a' : '#fafafa',
+        scale: 2
+      });
+      
+      const link = document.createElement('a');
+      link.download = `Habitly_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      showToast('Snapshot Exported!', '✅');
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to generate snapshot', '❌');
+    }
+  };
+
+  return (
                     <div key={timeKey} className="flex flex-col gap-2">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground border-b border-border pb-1 mb-1">
                         {timeKey}
@@ -548,7 +627,31 @@ export default function Dashboard({ habits, logs, refresh }) {
                           // Energy dimming logic
                           const isDimmed = !done && energyLevel === 'low' && isHard;
                           
-                          return (
+                        
+  const handleSnapshot = async () => {
+    try {
+      const dashboardElement = document.querySelector('.dashboard-grid');
+      if (!dashboardElement) return;
+      
+      showToast('Generating snapshot...', '⏳');
+      const canvas = await html2canvas(dashboardElement, {
+        backgroundColor: document.documentElement.classList.contains('dark') ? '#0a0a0a' : '#fafafa',
+        scale: 2
+      });
+      
+      const link = document.createElement('a');
+      link.download = `Habitly_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      showToast('Snapshot Exported!', '✅');
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to generate snapshot', '❌');
+    }
+  };
+
+  return (
                             <div
                               key={h.id}
                               className={`focus-item ${done ? 'completed' : ''} ${isAtRisk ? 'ring-2 ring-destructive ring-offset-1 ring-offset-card shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse' : ''} ${isDimmed ? 'opacity-40 grayscale-[0.5]' : ''}`}
