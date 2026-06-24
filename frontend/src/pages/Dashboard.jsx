@@ -9,8 +9,9 @@ import { useToast } from '../context/ToastContext.jsx';
 import Dialog from '../components/ui/Dialog.jsx';
 import {
   Flame, Star, Snowflake, Sparkles, Plus, RefreshCw, Check,
-  ChevronRight, Sun, Moon, Cloud, Clock, TrendingUp, Zap, Eye, Sunrise, Edit2
+  ChevronRight, Sun, Moon, Cloud, Clock, TrendingUp, Zap, Eye, Sunrise, Edit2, Camera
 } from 'lucide-react';
+import html2canvas from 'html2canvas';
 
 // ── Constants ──
 const MILESTONES = [7, 21, 30, 60, 100, 365];
