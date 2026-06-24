@@ -596,33 +596,7 @@ export default function Dashboard({ habits, logs, refresh }) {
                 View All Habits <ChevronRight size={14} />
               </button>
             </div>
-          </div>
-
-          {/* ═════ RIGHT COLUMN ═════ */}
-          <div className="dashboard-col">
-
-            {/* ── Quick Stats ── */}
-            <div className="glass-card">
-              <div className="dash-card-header">
-                <div className="dash-card-title">
-                  <TrendingUp size={18} />
-                  Quick Stats
-                </div>
-              </div>
-              <div className="quick-stats-row">
-                <div className="quick-stat-item">
-                  <span className="quick-stat-value" style={{ color: completed > 0 ? 'hsl(var(--success))' : 'hsl(var(--text-secondary))' }}>{completed}/{total}</span>
-                  <span className="quick-stat-label">Today's Progress</span>
-                </div>
-                <div className="quick-stat-item">
-                  <span className="quick-stat-value">{total}</span>
-                  <span className="quick-stat-label">Active Habits</span>
-                </div>
-              </div>
-            </div>
-
-            
-            {/* ── Virtual Garden (Pro Only) ── */}
+{/* ── Virtual Garden (Pro Only) ── */}
             {user?.is_pro && (
               <div className="glass-card">
                 <div className="dash-card-header" style={{ borderBottom: 'none', paddingBottom: 0 }}>
@@ -654,28 +628,31 @@ export default function Dashboard({ habits, logs, refresh }) {
               </div>
             )}
 
-            {/* ── Coach Insight (Pro Only) ── */}
-            {user?.is_pro && currentInsight && (
-              <div className="glass-card insight-card" style={{ 
-                borderColor: currentInsight.type === 'warning' ? 'rgba(239, 68, 68, 0.2)' : 
-                             currentInsight.type === 'suggestion' ? 'rgba(139, 92, 246, 0.2)' :
-                             currentInsight.type === 'growth' ? 'rgba(16, 185, 129, 0.2)' : 'var(--border)' 
-              }}>
-                <div className="dash-card-header insight-header">
-                  <div className="dash-card-title flex items-center gap-2">
-                    <Sparkles size={18} className="text-primary" />
-                    AI Coach
-                  </div>
-                  <button className={`insight-refresh`} onClick={() => {}} title="Get another insight">
-                    <RefreshCw size={14} />
-                  </button>
-                </div>
-                <div className="insight-content flex items-start gap-3">
-                  <span className="text-2xl">{currentInsight.icon}</span>
-                  <p className="text-sm font-medium text-foreground leading-relaxed">{currentInsight.text}</p>
+            
+          </div>
+
+          {/* ═════ RIGHT COLUMN ═════ */}
+          <div className="dashboard-col">
+
+            {/* ── Quick Stats ── */}
+            <div className="glass-card">
+              <div className="dash-card-header">
+                <div className="dash-card-title">
+                  <TrendingUp size={18} />
+                  Quick Stats
                 </div>
               </div>
-            )}
+              <div className="quick-stats-row">
+                <div className="quick-stat-item">
+                  <span className="quick-stat-value" style={{ color: completed > 0 ? 'hsl(var(--success))' : 'hsl(var(--text-secondary))' }}>{completed}/{total}</span>
+                  <span className="quick-stat-label">Today's Progress</span>
+                </div>
+                <div className="quick-stat-item">
+                  <span className="quick-stat-value">{total}</span>
+                  <span className="quick-stat-label">Active Habits</span>
+                </div>
+              </div>
+            </div>
 
             {/* ── Current Streak (Hero Card) ── */}
 
@@ -728,7 +705,33 @@ export default function Dashboard({ habits, logs, refresh }) {
             </div>
 
 
-          </div>
+
+            {/* ── Coach Insight (Pro Only) ── */}
+            {user?.is_pro && currentInsight && (
+              <div className="glass-card insight-card" style={{ 
+                borderColor: currentInsight.type === 'warning' ? 'rgba(239, 68, 68, 0.2)' : 
+                             currentInsight.type === 'suggestion' ? 'rgba(139, 92, 246, 0.2)' :
+                             currentInsight.type === 'growth' ? 'rgba(16, 185, 129, 0.2)' : 'var(--border)' 
+              }}>
+                <div className="dash-card-header insight-header">
+                  <div className="dash-card-title flex items-center gap-2">
+                    <Sparkles size={18} className="text-primary" />
+                    AI Coach
+                  </div>
+                  <button className={`insight-refresh`} onClick={() => {}} title="Get another insight">
+                    <RefreshCw size={14} />
+                  </button>
+                </div>
+                <div className="insight-content flex items-start gap-3">
+                  <span className="text-2xl">{currentInsight.icon}</span>
+                  <p className="text-sm font-medium text-foreground leading-relaxed">{currentInsight.text}</p>
+                </div>
+              </div>
+            )}
+
+            
+            
+                      </div>
         </div>
       )}
 

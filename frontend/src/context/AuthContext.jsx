@@ -45,10 +45,6 @@ export function AuthProvider({ children }) {
       }
       let fetchedUser = data || { id: authUser.id, email: authUser.email, name: authUser.user_metadata?.full_name || authUser.user_metadata?.name };
       
-      // --- PAYWALL BYPASS ---
-      // Temporarily granting all users Pro status so you can test features without upgrading.
-      fetchedUser.is_pro = true;
-      // ----------------------
 
       setUser(fetchedUser);
     } finally {
