@@ -125,7 +125,7 @@ export default function LandingPage() {
 </div>
 {/* Step 2 */}
 <div className="flex flex-col items-center text-center group">
-<div className="w-20 h-20 rounded-2xl bg-[var(--ld-primary)] flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-500 shadow-lg shadow-[var(--ld-primary)]/30">
+<div className="w-20 h-20 rounded-2xl bg-[var(--ld-primary)] flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-500 shadow-lg shadow-[var(--ld-primary)]/30 hover:shadow-[var(--ld-primary)]/50 hover:-translate-y-3 transition-all duration-500">
 <Zap className="text-[var(--ld-on-primary)]" size={32} />
 </div>
 <h3 className="font-[Inter] text-[24px] text-[var(--ld-on-surface)] mb-3">Act</h3>
@@ -259,37 +259,37 @@ export default function LandingPage() {
 </div>
 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 {/* Feature 1 */}
-<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 transition-colors">
+<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(0,0,0,0.2)] transition-all duration-300">
 <Calendar className="text-primary mb-6" size={32} />
 <h3 className="font-[Inter] mb-3 text-[var(--ld-on-primary)]">Flexible habit scheduling</h3>
 <p className="text-[var(--ld-on-surface-variant)] text-sm leading-relaxed text-[var(--ld-on-primary)]/70">Daily, weekly, time-of-day specific. Match the cadence your life actually has.</p>
 </div>
 {/* Feature 2 */}
-<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 transition-colors">
+<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(0,0,0,0.2)] transition-all duration-300">
 <Smile className="text-primary mb-6" size={32} />
 <h3 className="font-[Inter] mb-3 text-[var(--ld-on-primary)]">Mood &amp; Energy Tracking</h3>
 <p className="text-[var(--ld-on-surface-variant)] text-sm leading-relaxed text-[var(--ld-on-primary)]/70">Habits don't happen in a vacuum. Track how your daily habits correlate directly to how you feel.</p>
 </div>
 {/* Feature 3 */}
-<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 transition-colors">
+<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(0,0,0,0.2)] transition-all duration-300">
 <TrendingUp className="text-primary mb-6" size={32} />
 <h3 className="font-[Inter] mb-3 text-[var(--ld-on-primary)]">Consistency Visualizer</h3>
 <p className="text-[var(--ld-on-surface-variant)] text-sm leading-relaxed text-[var(--ld-on-primary)]/70">View performance heatmaps and streak trajectories. Replace guesswork with visual evidence of growth.</p>
 </div>
 {/* Feature 4 */}
-<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 transition-colors">
+<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(0,0,0,0.2)] transition-all duration-300">
 <BarChart className="text-primary mb-6" size={32} />
 <h3 className="font-[Inter] mb-3 text-[var(--ld-on-primary)]">Deep analytics</h3>
 <p className="text-[var(--ld-on-surface-variant)] text-sm leading-relaxed text-[var(--ld-on-primary)]/70">Per-habit completion, time-of-day patterns, consistency heatmaps, and beautiful category charts.</p>
 </div>
 {/* Feature 5 */}
-<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 transition-colors">
+<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(0,0,0,0.2)] transition-all duration-300">
 <Brain className="text-primary mb-6" size={32} />
 <h3 className="font-[Inter] mb-3 text-[var(--ld-on-primary)]">AI coach</h3>
 <p className="text-[var(--ld-on-surface-variant)] text-sm leading-relaxed text-[var(--ld-on-primary)]/70">Personalized advice based on your real data. It spots patterns, suggests tweaks, and celebrates the wins.</p>
 </div>
 {/* Feature 6 */}
-<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 transition-colors">
+<div className="p-8 rounded-2xl bg-[var(--ld-card)]/5 border border-white/10 hover:bg-[var(--ld-card)]/10 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(0,0,0,0.2)] transition-all duration-300">
 <Download className="text-primary mb-6" size={32} />
 <h3 className="font-[Inter] mb-3 text-[var(--ld-on-primary)]">Data Export PRO</h3>
 <p className="text-[var(--ld-on-surface-variant)] text-sm leading-relaxed text-[var(--ld-on-primary)]/70">Your habits are yours. Export your full history securely to CSV or generate professional PDF reports.</p>
@@ -306,7 +306,7 @@ export default function LandingPage() {
 </div>
 <div className="grid grid-cols-1 md:grid-cols-2 gap-[24px] max-w-4xl mx-auto">
 {/* Standard Plan */}
-<div className="bg-[var(--ld-card)] p-10 rounded-2xl border border-[var(--ld-outline-variant)]/30 organic-shadow hover:-translate-y-2 transition-transform duration-500">
+<div className="bg-[var(--ld-card)] p-10 rounded-2xl border border-[var(--ld-outline-variant)]/30 organic-shadow hover:-translate-y-3 hover:shadow-2xl hover:shadow-[var(--ld-on-surface)]/10 transition-all duration-500">
 <h4 className="font-[Inter] text-[var(--ld-on-surface-variant)] mb-2 uppercase tracking-widest">Personal</h4>
 <div className="text-[32px] font-[Inter] text-[var(--ld-on-surface)] mb-6">Free</div>
 <ul className="space-y-4 mb-10 text-[var(--ld-on-surface-variant)]">
@@ -315,10 +315,10 @@ export default function LandingPage() {
 <li className="flex items-center gap-2"><Check className="text-primary" size={20} /> Community Insights</li>
 <li className="flex items-center gap-2 opacity-40"><X size={20} /> Advanced AI Coaching</li>
 </ul>
-<button className="w-full border-2 border-[var(--ld-primary)] text-[var(--ld-primary)] py-3 rounded-lg font-[Inter] hover:bg-[var(--ld-primary)]/5 transition-all" onClick={() => navigate('/register')}>Get Started</button>
+<button className="w-full border-2 border-[var(--ld-primary)] text-[var(--ld-primary)] py-3 rounded-lg font-[Inter] hover:bg-[var(--ld-primary)] hover:text-white hover:-translate-y-1 hover:shadow-lg transition-all duration-300" onClick={() => navigate('/register')}>Get Started</button>
 </div>
 {/* PRO Plan */}
-<div className="bg-[var(--ld-primary)] text-[var(--ld-on-primary)] p-10 rounded-2xl organic-shadow relative overflow-hidden transform md:scale-105 hover:-translate-y-2 transition-transform duration-500 shadow-2xl shadow-[var(--ld-primary)]/30">
+<div className="bg-[var(--ld-primary)] text-[var(--ld-on-primary)] p-10 rounded-2xl organic-shadow relative overflow-hidden transform md:scale-105 hover:-translate-y-2 transition-transform duration-500 shadow-2xl shadow-[var(--ld-primary)]/30 hover:shadow-[var(--ld-primary)]/50 hover:-translate-y-3 transition-all duration-500">
 <div className="absolute top-6 right-6 bg-[var(--ld-card)]/20 text-[var(--ld-on-primary)] text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-widest backdrop-blur-sm">Most Popular</div>
 <h4 className="font-[Inter] text-[var(--ld-inverse-primary)] mb-2 uppercase tracking-widest">Habitly PRO</h4>
 <div className="text-[32px] font-[Inter] mb-2">$4.99<span className="text-[16px] font-[Inter]">/mo</span></div>
@@ -329,7 +329,7 @@ export default function LandingPage() {
 <li className="flex items-center gap-2"><Star className="text-[var(--ld-on-primary)]" size={20} /> Full Data Export Suite</li>
 <li className="flex items-center gap-2"><Star className="text-[var(--ld-on-primary)]" size={20} /> Priority Support</li>
 </ul>
-<button className="w-full bg-[var(--ld-card)] text-[var(--ld-primary)] py-3 rounded-lg font-[Inter] hover:bg-[var(--ld-card)]/90 transition-all font-bold" onClick={handleProClick} disabled={upgrading}>{upgrading ? 'Processing...' : 'Upgrade to Pro'}</button>
+<button className="w-full bg-white text-[#4648d4] py-3 rounded-lg font-[Inter] hover:bg-white/90 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 font-bold" onClick={handleProClick} disabled={upgrading}>{upgrading ? 'Processing...' : 'Upgrade to Pro'}</button>
 </div>
 </div>
 </div>
@@ -342,7 +342,7 @@ export default function LandingPage() {
 </div>
 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 {/* Testimonial 1 */}
-<div className="bg-[var(--ld-card)] p-8 rounded-2xl border border-[var(--ld-outline-variant)]/20 shadow-sm">
+<div className="bg-[var(--ld-card)] p-8 rounded-2xl border border-[var(--ld-outline-variant)]/20 shadow-sm hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
 <div className="flex text-[var(--ld-primary)] mb-4">
 <Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} />
 </div>
@@ -356,7 +356,7 @@ export default function LandingPage() {
 </div>
 </div>
 {/* Testimonial 2 */}
-<div className="bg-[var(--ld-card)] p-8 rounded-2xl border border-[var(--ld-outline-variant)]/20 shadow-sm">
+<div className="bg-[var(--ld-card)] p-8 rounded-2xl border border-[var(--ld-outline-variant)]/20 shadow-sm hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
 <div className="flex text-[var(--ld-primary)] mb-4">
 <Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} />
 </div>
@@ -370,7 +370,7 @@ export default function LandingPage() {
 </div>
 </div>
 {/* Testimonial 3 */}
-<div className="bg-[var(--ld-card)] p-8 rounded-2xl border border-[var(--ld-outline-variant)]/20 shadow-sm">
+<div className="bg-[var(--ld-card)] p-8 rounded-2xl border border-[var(--ld-outline-variant)]/20 shadow-sm hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
 <div className="flex text-[var(--ld-primary)] mb-4">
 <Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} />
 </div>
