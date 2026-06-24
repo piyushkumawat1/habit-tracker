@@ -82,7 +82,7 @@ export default function LandingPage() {
                         Start Optimizing
                         <ArrowRight size={16} />
 </button>
-<a href="#methodology" className="border-2 border-[var(--ld-outline-variant)] text-[var(--ld-on-surface)] px-8 py-4 rounded-lg font-[Inter] hover:bg-[var(--ld-surface-container)] transition-all text-center flex items-center justify-center">
+<a href="#dashboard-preview" className="border-2 border-[var(--ld-outline-variant)] text-[var(--ld-on-surface)] px-8 py-4 rounded-lg font-[Inter] hover:bg-[var(--ld-surface-container)] transition-all text-center flex items-center justify-center">
                         View Dashboard
                     </a>
 </div>
@@ -141,6 +141,114 @@ export default function LandingPage() {
 </div>
 </div>
 </div>
+</section>
+{/* Dashboard Preview Section */}
+<section className="py-[120px] bg-[var(--ld-surface)] transition-all duration-700 opacity-100" id="dashboard-preview">
+  <div className="max-w-[1200px] mx-auto px-[20px]">
+    <div className="text-center mb-16">
+      <h2 className="font-[Inter] text-[32px] font-bold text-[var(--ld-on-surface)] mb-4">See It In Action</h2>
+      <p className="font-[Inter] text-[var(--ld-on-surface-variant)] max-w-2xl mx-auto">Experience the professional dark mode dashboard. Track habits, grow your virtual garden, and get AI-powered insights all in one place.</p>
+    </div>
+    
+    <div className="relative w-full max-w-[1000px] mx-auto bg-[#09090b] rounded-2xl shadow-2xl overflow-hidden border border-[#27272a] flex shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+      {/* Sidebar Mockup */}
+      <div className="w-[200px] hidden md:flex flex-col border-r border-[#27272a] p-4 bg-[#09090b]">
+        <div className="font-[Inter] text-[#f8f9ff] font-bold text-lg mb-8 flex items-center gap-2"><span className="text-[var(--ld-primary)]">🌿</span> Habitly</div>
+        <div className="flex flex-col gap-2">
+          <div className="px-3 py-2 bg-[#27272a] rounded-lg text-[#f8f9ff] text-sm font-medium flex items-center gap-2"><Calendar size={16}/> Dashboard</div>
+          <div className="px-3 py-2 text-[#a1a1aa] hover:text-[#f8f9ff] rounded-lg text-sm font-medium flex items-center gap-2"><BarChart size={16}/> Analytics</div>
+          <div className="px-3 py-2 text-[#a1a1aa] hover:text-[#f8f9ff] rounded-lg text-sm font-medium flex items-center gap-2"><Brain size={16}/> AI Coach</div>
+        </div>
+      </div>
+      
+      {/* Main Content Mockup */}
+      <div className="flex-1 p-6 bg-[#09090b]">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h3 className="text-2xl font-bold text-[#f8f9ff] font-[Inter]">Today's Focus</h3>
+            <p className="text-[#a1a1aa] text-sm font-[Inter]">Thursday, Oct 24 • You're on a 12-day streak!</p>
+          </div>
+          <div className="bg-gradient-to-r from-[#d4972f] to-[#e8b04b] text-[#3a2706] text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider font-[Inter]">Pro Member</div>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-4">
+            {/* Habit Rows */}
+            <div className="bg-[#18181b] border border-[#27272a] p-4 rounded-xl flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <div className="w-6 h-6 rounded-md bg-[var(--ld-primary)] flex items-center justify-center text-white"><Check size={14}/></div>
+                <div>
+                  <div className="text-[#f8f9ff] font-medium text-sm line-through opacity-70 font-[Inter]">Morning Meditation</div>
+                  <div className="text-xs text-[#a1a1aa] font-[Inter]">Morning • <span className="text-[#e8b04b]">🔥 14 days</span></div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-[#18181b] border border-[#27272a] p-4 rounded-xl flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <div className="w-6 h-6 rounded-md bg-[var(--ld-primary)] flex items-center justify-center text-white"><Check size={14}/></div>
+                <div>
+                  <div className="text-[#f8f9ff] font-medium text-sm line-through opacity-70 font-[Inter]">Read 20 Pages</div>
+                  <div className="text-xs text-[#a1a1aa] font-[Inter]">Afternoon • <span className="text-[#e8b04b]">🔥 8 days</span></div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-[#18181b] border border-[#27272a] p-4 rounded-xl flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <div className="w-6 h-6 rounded-md bg-[#27272a] flex items-center justify-center border border-[#3f3f46]"></div>
+                <div>
+                  <div className="text-[#f8f9ff] font-medium text-sm font-[Inter]">Deep Work Block</div>
+                  <div className="text-xs text-[#a1a1aa] font-[Inter]">Afternoon • <span className="text-[#e8b04b]">🔥 3 days</span></div>
+                </div>
+              </div>
+            </div>
+            
+            {/* AI Coach Card */}
+            <div className="mt-6 bg-gradient-to-br from-[#1e1b4b] to-[#312e81] border border-[#4338ca] p-4 rounded-xl relative overflow-hidden">
+              <div className="flex items-start gap-3 relative z-10">
+                <div className="p-2 bg-[#4f46e5] rounded-lg text-white"><Brain size={18}/></div>
+                <div>
+                  <h4 className="text-[#e0e7ff] font-bold text-sm mb-1 font-[Inter]">AI Coach Insight</h4>
+                  <p className="text-[#c7d2fe] text-xs leading-relaxed font-[Inter]">You've consistently completed your morning meditation! Your energy levels average 20% higher on days you meditate. Keep it up!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="space-y-6">
+            {/* Virtual Garden Card */}
+            <div className="bg-[#18181b] border border-[#27272a] p-6 rounded-xl flex flex-col items-center text-center">
+              <h4 className="text-[#f8f9ff] font-bold text-sm mb-4 font-[Inter]">Virtual Garden</h4>
+              <div className="text-6xl mb-4 animate-pulse">🌳</div>
+              <div className="text-[var(--ld-primary)] font-bold text-sm mb-2 font-[Inter]">Level 12 • Blooming Tree</div>
+              <div className="w-full bg-[#27272a] h-2 rounded-full overflow-hidden mb-2">
+                <div className="bg-[var(--ld-primary)] h-full w-[75%]"></div>
+              </div>
+              <div className="text-[#a1a1aa] text-xs font-[Inter]">750 / 1000 XP to next stage</div>
+            </div>
+            
+            {/* Stats Card */}
+            <div className="bg-[#18181b] border border-[#27272a] p-4 rounded-xl">
+              <h4 className="text-[#f8f9ff] font-bold text-sm mb-3 font-[Inter]">Weekly Consistency</h4>
+              <div className="flex justify-between items-end h-16 gap-1">
+                <div className="w-full bg-[var(--ld-primary)] rounded-t-sm h-[100%] opacity-80"></div>
+                <div className="w-full bg-[var(--ld-primary)] rounded-t-sm h-[80%] opacity-80"></div>
+                <div className="w-full bg-[var(--ld-primary)] rounded-t-sm h-[90%] opacity-80"></div>
+                <div className="w-full bg-[var(--ld-primary)] rounded-t-sm h-[100%] opacity-100"></div>
+                <div className="w-full bg-[#27272a] rounded-t-sm h-[20%]"></div>
+                <div className="w-full bg-[#27272a] rounded-t-sm h-[20%]"></div>
+                <div className="w-full bg-[#27272a] rounded-t-sm h-[20%]"></div>
+              </div>
+              <div className="flex justify-between mt-2 text-[10px] text-[#a1a1aa] font-[Inter]">
+                <span>M</span><span>T</span><span>W</span><span className="text-[#f8f9ff] font-bold">T</span><span>F</span><span>S</span><span>S</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 {/* Features Section */}
 <section className="py-[120px] bg-[var(--ld-inverted-surface)] text-[var(--ld-on-primary)] transition-all duration-700 opacity-100" id="features">
