@@ -53,8 +53,8 @@ export default async function handler(req, res) {
     });
 
     const options = {
-      amount: 1000, // 10.00 INR
-      currency: 'INR',
+      amount: 499, // 4.99 USD
+      currency: 'USD',
       receipt: `rcpt_${user.id.slice(0,8)}_${Date.now()}`
     };
 
