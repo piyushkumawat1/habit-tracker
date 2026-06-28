@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { Link } from 'react-router-dom';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function Register() {
   const { register, loginWithGoogle } = useAuth();
@@ -9,16 +10,24 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const turnstileRef = useRef(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!captchaToken) {
+      setError('Please complete the CAPTCHA to continue.');
+      return;
+    }
     setError('');
     setLoading(true);
     try {
-      await register(email, password, name || undefined);
+      await register(email, password, name || undefined, captchaToken);
       // Wait for AuthContext's onAuthStateChange to pick up the session
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
+      turnstileRef.current?.reset();
+      setCaptchaToken('');
     } finally {
       setLoading(false);
     }
@@ -73,7 +82,15 @@ export default function Register() {
             <label className="form-label" htmlFor="reg-password">Password</label>
             <input id="reg-password" type="password" className="form-input" placeholder="At least 6 characters" required minLength={6} value={password} onChange={e => setPassword(e.target.value)} />
           </div>
-          <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '1rem 0' }}>
+            <Turnstile
+              siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+              onSuccess={(token) => setCaptchaToken(token)}
+              ref={turnstileRef}
+              options={{ theme: 'auto' }}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary btn-block" disabled={loading || !captchaToken}>
             {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
