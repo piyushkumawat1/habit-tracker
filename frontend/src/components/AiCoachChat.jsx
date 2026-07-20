@@ -44,7 +44,9 @@ export default function AiCoachChat() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to get response");
+        const errText = await response.text();
+        console.error("Backend Error:", response.status, errText);
+        throw new Error(`Failed to get response: ${response.status} ${response.statusText}`);
       }
 
       const reader = response.body.getReader();
