@@ -22,7 +22,7 @@ function AppContent() {
     return (
       <div className="loading-screen">
         <div className="loading-spinner" />
-        <p>Loading Habitly...</p>
+        <p>Loading Habitley...</p>
       </div>
     );
   }

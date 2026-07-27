@@ -46,7 +46,7 @@ export function useRazorpay() {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: orderData.order.amount,
         currency: orderData.order.currency,
-        name: "Habitly Pro",
+        name: "Habitley Pro",
         description: "Lifetime Pro Access",
         order_id: orderData.order.id,
         handler: async function (response) {
@@ -67,7 +67,7 @@ export function useRazorpay() {
             const verifyData = await verifyRes.json();
             if (!verifyRes.ok) throw new Error(verifyData.error || "Verification failed");
             
-            showToast('Welcome to Habitly Pro! 🎉', '✅');
+            showToast('Welcome to Habitley Pro! 🎉', '✅');
             updateUser({ ...user, is_pro: true });
             if (onSuccessCallback) onSuccessCallback();
           } catch (err) {
@@ -76,7 +76,7 @@ export function useRazorpay() {
           }
         },
         prefill: {
-          name: user?.name || "Habitly User",
+          name: user?.name || "Habitley User",
           email: user?.email || ""
         },
         theme: {

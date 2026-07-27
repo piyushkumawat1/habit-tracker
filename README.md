@@ -1,4 +1,4 @@
-# Habitly — Smart Habit Tracker
+# Habitley — Smart Habit Tracker
 
 A modern, full-stack, serverless habit tracking application designed to help you build consistency, visualize your progress, and conquer your goals.
 

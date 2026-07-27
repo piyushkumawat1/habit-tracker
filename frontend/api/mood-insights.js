@@ -48,7 +48,7 @@ export default async function handler(req) {
       });
     }
 
-    const systemPrompt = `You are a data analyst for Habitly. Analyze the user's habits, logs, and mood history over the last 30 days. Identify patterns. Which habit correlates most with their high mood days? Return ONLY a JSON object with this exact structure: {"insight": "A short 1-sentence insight", "correlation": 85, "topHabit": "Meditation"}`;
+    const systemPrompt = `You are a data analyst for Habitley. Analyze the user's habits, logs, and mood history over the last 30 days. Identify patterns. Which habit correlates most with their high mood days? Return ONLY a JSON object with this exact structure: {"insight": "A short 1-sentence insight", "correlation": 85, "topHabit": "Meditation"}`;
 
     const dataPayload = {
       habits,

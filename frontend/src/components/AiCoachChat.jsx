@@ -4,7 +4,7 @@ import { Send, Sparkles, User, Loader2 } from 'lucide-react';
 
 export default function AiCoachChat() {
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hi! I'm your Habitly AI Coach. Ask me for health tips or advice on building better habits!" }
+    { role: 'assistant', content: "Hi! I'm your Habitley AI Coach. Ask me for health tips or advice on building better habits!" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);

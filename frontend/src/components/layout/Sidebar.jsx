@@ -22,9 +22,9 @@ export default function Sidebar({ isOpen, onClose }) {
         onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
       >
         <div className="brand-icon" style={{ borderRadius: '8px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px' }}>
-          <img src="/logo.png" alt="Habitly Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img src="/logo.png" alt="Habitley Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
-        <span className="brand-name" style={{ color: 'var(--text-primary)', fontSize: '1.25rem', fontWeight: '700', letterSpacing: '0.5px' }}>Habitly</span>
+        <span className="brand-name" style={{ color: 'var(--text-primary)', fontSize: '1.25rem', fontWeight: '700', letterSpacing: '0.5px' }}>Habitley</span>
       </Link>
 
       <ul className="nav-links">

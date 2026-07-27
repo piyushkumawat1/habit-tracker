@@ -6,7 +6,7 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('habitly_theme');
+    const savedTheme = localStorage.getItem('habitley_theme');
     if (savedTheme) {
       setTheme(savedTheme);
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
@@ -16,7 +16,7 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('habitly_theme', theme);
+    localStorage.setItem('habitley_theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {

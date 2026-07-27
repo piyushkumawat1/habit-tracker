@@ -166,7 +166,7 @@ export default function Challenges({ habits, logs }) {
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.font = 'bold 32px sans-serif';
-    ctx.fillText('My Habitly Stats', 300, 100);
+    ctx.fillText('My Habitley Stats', 300, 100);
     ctx.font = 'bold 80px sans-serif';
     ctx.fillStyle = '#fbbf24';
     ctx.fillText(`🔥 ${overallStreak}`, 300, 210);
@@ -183,7 +183,7 @@ export default function Challenges({ habits, logs }) {
       previewRef.current.style.display = 'block';
     }
     const link = document.createElement('a');
-    link.download = 'habitly-stats.png';
+    link.download = 'habitley-stats.png';
     link.href = dataUrl;
     link.click();
   }
@@ -217,7 +217,7 @@ export default function Challenges({ habits, logs }) {
       
       ctx.font = 'italic bold 45px serif';
       ctx.fillStyle = '#eab308';
-      ctx.fillText('Habitly Champion', 400, 310);
+      ctx.fillText('Habitley Champion', 400, 310);
       
       ctx.font = '22px sans-serif';
       ctx.fillStyle = '#cbd5e1';

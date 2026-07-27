@@ -46,7 +46,7 @@ export default function DataExport({ habits, logs, user }) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `Habitly_Data_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `Habitley_Data_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -64,7 +64,7 @@ export default function DataExport({ habits, logs, user }) {
     const doc = new jsPDF();
     doc.setFontSize(20);
     doc.setTextColor(40, 40, 40);
-    doc.text('Habitly Journey Report', 14, 22);
+    doc.text('Habitley Journey Report', 14, 22);
     
     doc.setFontSize(11);
     doc.setTextColor(100, 100, 100);
@@ -82,7 +82,7 @@ export default function DataExport({ habits, logs, user }) {
       alternateRowStyles: { fillColor: [245, 245, 245] }
     });
 
-    doc.save(`Habitly_Journey_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save(`Habitley_Journey_${new Date().toISOString().split('T')[0]}.pdf`);
     showToast('PDF Exported Successfully!', '✅');
   };
 

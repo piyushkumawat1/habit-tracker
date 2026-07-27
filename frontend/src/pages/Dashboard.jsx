@@ -396,7 +396,7 @@ export default function Dashboard({ habits, logs, refresh }) {
       });
       
       const link = document.createElement('a');
-      link.download = `Habitly_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
+      link.download = `Habitley_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       
@@ -467,7 +467,7 @@ export default function Dashboard({ habits, logs, refresh }) {
       });
       
       const link = document.createElement('a');
-      link.download = `Habitly_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
+      link.download = `Habitley_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       
@@ -599,7 +599,7 @@ export default function Dashboard({ habits, logs, refresh }) {
       });
       
       const link = document.createElement('a');
-      link.download = `Habitly_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
+      link.download = `Habitley_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       
@@ -641,7 +641,7 @@ export default function Dashboard({ habits, logs, refresh }) {
       });
       
       const link = document.createElement('a');
-      link.download = `Habitly_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
+      link.download = `Habitley_Dashboard_${new Date().toISOString().split('T')[0]}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       

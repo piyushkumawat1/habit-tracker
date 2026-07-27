@@ -51,7 +51,7 @@ export default async function handler(req) {
       .select('name, category, frequency, difficulty')
       .eq('user_id', user.id);
 
-    const systemPrompt = `You are a supportive, concise, and highly intelligent habit coach for the premium web app Habitly. 
+    const systemPrompt = `You are a supportive, concise, and highly intelligent habit coach for the premium web app Habitley. 
     The user's current habits are: ${JSON.stringify(habits)}. 
     Give them actionable, short advice based on these habits. Keep responses relatively brief and highly encouraging. Use emojis where appropriate.`;
 

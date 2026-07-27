@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 // Initialize VAPID keys
 // This runs on Vercel Serverless environment securely.
 webpush.setVAPIDDetails(
-  'mailto:admin@habitly.com',
+  'mailto:admin@habitley.com',
   process.env.VITE_VAPID_PUBLIC_KEY || process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
   process.env.VAPID_PRIVATE_KEY
 );
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     }
 
     const payload = JSON.stringify({ 
-      title: title || 'Habitly Reminder', 
+      title: title || 'Habitley Reminder', 
       body: body || 'Time to complete your habit!', 
       url: url || '/dashboard' 
     });
