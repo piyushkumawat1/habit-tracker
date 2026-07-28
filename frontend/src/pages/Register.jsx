@@ -116,7 +116,7 @@ export default function Register() {
 
               <div>
                 <label className="block text-[13px] font-semibold text-[var(--ld-text-secondary)] mb-1.5" htmlFor="reg-otp">Verification Code</label>
-                <input id="reg-otp" type="text" required value={otp} onChange={e => setOtp(e.target.value)} className="w-full text-center tracking-widest text-lg bg-[var(--ld-surface)] border border-[var(--ld-border)] rounded-xl px-4 py-3 text-[var(--ld-text)] focus:outline-none focus:border-[var(--ld-primary-light)] focus:ring-1 focus:ring-[var(--ld-primary-light)] transition-all" placeholder="000000" maxLength={6} />
+                <input id="reg-otp" type="text" required value={otp} onChange={e => setOtp(e.target.value)} className="w-full text-center tracking-widest text-lg bg-[var(--ld-surface)] border border-[var(--ld-border)] rounded-xl px-4 py-3 text-[var(--ld-text)] focus:outline-none focus:border-[var(--ld-primary-light)] focus:ring-1 focus:ring-[var(--ld-primary-light)] transition-all" placeholder="Enter code" maxLength={8} />
               </div>
 
               <button type="submit" disabled={loading} className="w-full py-3.5 mt-2 rounded-xl bg-[var(--ld-primary)] hover:bg-[var(--ld-primary-hover)] text-white font-bold text-sm transition-all shadow-sm flex justify-center items-center">
