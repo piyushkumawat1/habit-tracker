@@ -52,8 +52,12 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const login = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const login = async (email, password, captchaToken) => {
+    const { data, error } = await supabase.auth.signInWithPassword({ 
+      email, 
+      password,
+      options: { captchaToken }
+    });
     if (error) throw error;
     return data.user;
   };

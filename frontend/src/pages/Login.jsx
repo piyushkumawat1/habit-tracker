@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { Link, useNavigate } from 'react-router-dom';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { ArrowLeft, Mail } from 'lucide-react';
 import '../landing.css';
 
@@ -12,15 +13,23 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const turnstileRef = useRef(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!captchaToken) {
+      setError('Please complete the CAPTCHA check below to continue.');
+      return;
+    }
     setError('');
     setLoading(true);
     try {
-      await login(email, password);
+      await login(email, password, captchaToken);
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.');
+      turnstileRef.current?.reset();
+      setCaptchaToken('');
     } finally {
       setLoading(false);
     }
@@ -90,6 +99,18 @@ export default function Login() {
                 <input id="login-password" type="password" required minLength={6} value={password} onChange={e => setPassword(e.target.value)} className="w-full bg-[var(--ld-surface)] border border-[var(--ld-border)] rounded-xl px-4 py-3 text-sm text-[var(--ld-text)] focus:outline-none focus:border-[var(--ld-primary-light)] focus:ring-1 focus:ring-[var(--ld-primary-light)] transition-all placeholder:text-[var(--ld-text-muted)]" placeholder="••••••••" />
               </div>
               
+              <div className="flex justify-center my-2 bg-[var(--ld-surface)] p-2 rounded-xl border border-[var(--ld-border)]">
+                <Turnstile
+                  siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                  onSuccess={(token) => {
+                    setCaptchaToken(token);
+                    setError('');
+                  }}
+                  ref={turnstileRef}
+                  options={{ theme: 'auto' }}
+                />
+              </div>
+
               <button type="submit" disabled={loading} className="w-full py-3.5 mt-2 rounded-xl bg-[var(--ld-primary)] hover:bg-[var(--ld-primary-hover)] text-white font-bold text-sm transition-all shadow-sm flex justify-center items-center">
                 {loading ? 'Signing in...' : 'Sign In'}
               </button>
