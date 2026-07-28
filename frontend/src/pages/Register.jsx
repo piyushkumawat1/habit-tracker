@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { Turnstile } from '@marsidev/react-turnstile';
@@ -6,7 +6,7 @@ import { ArrowLeft, Mail } from 'lucide-react';
 import '../landing.css';
 
 export default function Register() {
-  const { register, loginWithGoogle, verifyOtp } = useAuth();
+  const { register, loginWithGoogle, verifyOtp, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -19,6 +19,13 @@ export default function Register() {
   const [captchaToken, setCaptchaToken] = useState('');
   const turnstileRef = useRef(null);
 
+  // Redirect to dashboard if they are already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/habits');
+    }
+  }, [isAuthenticated, navigate]);
+
   async function handleSubmit(e) {
     e.preventDefault();
     if (!captchaToken) {
@@ -30,8 +37,12 @@ export default function Register() {
     try {
       const data = await register(email, password, name || undefined, captchaToken);
       if (data?.user && !data.session) {
+        // Confirm email is required
         setShowOtpForm(true);
         setError('');
+      } else if (data?.session) {
+        // Auto logged in (Confirm email is off)
+        navigate('/habits');
       }
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
