@@ -107,7 +107,7 @@ export default function Register() {
               
               <div className="flex justify-center my-2 bg-[var(--ld-surface)] p-2 rounded-xl border border-[var(--ld-border)]">
                 <Turnstile
-                  siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                  siteKey="0x4AAAAAADsYN2KCL5LrWKY2"
                   onSuccess={(token) => {
                     setCaptchaToken(token);
                     setError('');
