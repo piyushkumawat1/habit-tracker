@@ -842,8 +842,18 @@ export default function Dashboard({ habits, logs, refresh }) {
                     <Sparkles size={18} />
                     AI Coach
                   </div>
-                  <button className={`coach-insight-refresh ${insightSpinning ? 'spinning' : ''}`} onClick={cycleInsight} title="Get another insight">
-                    <RefreshCw size={14} />
+                  <button 
+                    type="button"
+                    className={`coach-insight-refresh ${insightSpinning ? 'spinning' : ''}`} 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      cycleInsight();
+                    }} 
+                    title="Get another insight"
+                    style={{ position: 'relative', zIndex: 10, cursor: 'pointer' }}
+                  >
+                    <RefreshCw size={14} style={{ pointerEvents: 'none' }} />
                   </button>
                 </div>
                 <div className="coach-insight-content flex items-start gap-4">
