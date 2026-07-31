@@ -805,7 +805,7 @@ export default function Dashboard({ habits, logs, refresh }) {
               </div>
 
               <button className="mt-6 flex w-full items-center justify-center rounded-lg px-4 py-3 font-bold shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 active:scale-[0.98]" style={{ background: 'linear-gradient(135deg, #FF4500, #FF8C00)', color: '#fff', border: 'none', textShadow: '0 1px 2px rgba(0,0,0,0.2)' }} onClick={() => navigate('/habits')}>
-                Fuel the Fire 🔥
+                Build Your Momentum 🚀
               </button>
             </div>
 
