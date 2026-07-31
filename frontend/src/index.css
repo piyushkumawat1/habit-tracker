@@ -2593,13 +2593,13 @@ input, select, textarea { font-family: inherit; }
 
 /* ---------- Streak Hero Card ---------- */
 .streak-hero-card {
-  background: hsl(var(--surface));
-  border: 1px solid hsl(var(--border));
+  background: linear-gradient(180deg, hsl(var(--surface)), hsl(var(--bg)));
+  border: 1px solid rgba(255, 140, 0, 0.15);
   border-radius: var(--radius-lg);
   padding: 24px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 30px hsl(var(--energy-soft)), 0 0 0 1px hsl(var(--border));
+  box-shadow: 0 8px 32px rgba(255, 69, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .streak-hero-card::before {
@@ -2609,7 +2609,7 @@ input, select, textarea { font-family: inherit; }
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, hsl(var(--energy)), hsl(var(--energy)), hsl(var(--energy)));
+  background: linear-gradient(90deg, #FF4500, #FF8C00, #FFD700);
 }
 
 .streak-hero-top {
@@ -2623,21 +2623,29 @@ input, select, textarea { font-family: inherit; }
   width: 56px;
   height: 56px;
   border-radius: var(--radius-md);
-  background: hsl(var(--energy-soft));
+  background: linear-gradient(135deg, rgba(255, 69, 0, 0.15), rgba(255, 140, 0, 0.05));
+  border: 1px solid rgba(255, 140, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: inset 0 2px 10px rgba(255, 69, 0, 0.1);
 }
 
-.streak-flame svg { color: inherit; }
+.streak-flame svg { 
+  color: #FF6B00; 
+  filter: drop-shadow(0 2px 4px rgba(255, 69, 0, 0.4));
+}
 
 .streak-number {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: 800;
   letter-spacing: -0.04em;
-  color: hsl(var(--text-primary));
+  background: linear-gradient(135deg, #FF4500, #FFD700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(255, 69, 0, 0.2));
 }
 
 .streak-number-label {
@@ -2672,9 +2680,10 @@ input, select, textarea { font-family: inherit; }
 .streak-progress-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, hsl(var(--energy)), hsl(var(--energy)));
+  background: linear-gradient(90deg, #FF4500, #FF8C00, #FFD700);
   transition: width 0.6s var(--ease);
   position: relative;
+  box-shadow: 0 0 12px rgba(255, 140, 0, 0.6);
 }
 
 .streak-progress-fill::after {
