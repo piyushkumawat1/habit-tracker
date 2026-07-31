@@ -3312,11 +3312,53 @@ input:focus, textarea:focus, select:focus {
 
 /* Coach Insight */
 .coach-insight-card {
-  background-color: hsl(var(--brand-soft));
-  border-left: 4px solid hsl(var(--brand));
-  border-radius: var(--radius-md);
-  padding: 16px;
+  background: linear-gradient(135deg, rgba(var(--insight-color), 0.08) 0%, rgba(var(--insight-color), 0.02) 100%);
+  border: 1px solid rgba(var(--insight-color), 0.2);
+  border-radius: var(--radius-lg);
+  padding: 20px;
   margin-bottom: 24px;
+  box-shadow: 0 4px 24px rgba(var(--insight-color), 0.06);
+  transition: all 0.3s var(--ease);
+}
+
+.coach-insight-header {
+  border-bottom: 1px solid rgba(var(--insight-color), 0.1);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.coach-insight-refresh {
+  background: rgba(var(--insight-color), 0.1);
+  color: rgb(var(--insight-color));
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.coach-insight-refresh:hover {
+  background: rgba(var(--insight-color), 0.25);
+  transform: scale(1.05);
+}
+
+.coach-insight-refresh.spinning {
+  animation: spin 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.coach-insight-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(var(--insight-color), 0.2);
 }
 
 

@@ -813,23 +813,30 @@ export default function Dashboard({ habits, logs, refresh }) {
 
             {/* ── Coach Insight (Pro Only) ── */}
             {user?.is_pro && currentInsight && (
-              <div className="glass-card insight-card" style={{ 
-                borderColor: currentInsight.type === 'warning' ? 'rgba(239, 68, 68, 0.2)' : 
-                             currentInsight.type === 'suggestion' ? 'rgba(139, 92, 246, 0.2)' :
-                             currentInsight.type === 'growth' ? 'rgba(16, 185, 129, 0.2)' : 'var(--border)' 
-              }}>
-                <div className="dash-card-header insight-header">
-                  <div className="dash-card-title flex items-center gap-2">
-                    <Sparkles size={18} className="text-primary" />
+              <div 
+                className="coach-insight-card" 
+                style={{ 
+                  '--insight-color': currentInsight.type === 'warning' ? '239, 68, 68' : 
+                                     currentInsight.type === 'suggestion' ? '139, 92, 246' :
+                                     currentInsight.type === 'growth' ? '16, 185, 129' : '139, 92, 246'
+                }}
+              >
+                <div className="dash-card-header coach-insight-header">
+                  <div className="dash-card-title flex items-center gap-2" style={{ color: 'rgb(var(--insight-color))' }}>
+                    <Sparkles size={18} />
                     AI Coach
                   </div>
-                  <button className={`insight-refresh`} onClick={() => {}} title="Get another insight">
+                  <button className={`coach-insight-refresh ${insightSpinning ? 'spinning' : ''}`} onClick={cycleInsight} title="Get another insight">
                     <RefreshCw size={14} />
                   </button>
                 </div>
-                <div className="insight-content flex items-start gap-3">
-                  <span className="text-2xl">{currentInsight.icon}</span>
-                  <p className="text-sm font-medium text-foreground leading-relaxed">{currentInsight.text}</p>
+                <div className="coach-insight-content flex items-start gap-4">
+                  <div className="coach-insight-icon-wrapper" style={{ background: 'rgba(var(--insight-color), 0.1)' }}>
+                    <span className="text-2xl">{currentInsight.icon}</span>
+                  </div>
+                  <p className="text-sm font-medium text-foreground leading-relaxed" style={{ paddingTop: '2px' }}>
+                    {currentInsight.text}
+                  </p>
                 </div>
               </div>
             )}
