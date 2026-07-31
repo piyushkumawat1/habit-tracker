@@ -213,6 +213,22 @@ function generateInsight(habits, logs, isPro) {
     }
   }
 
+  if (insights.length < 3) {
+    insights.push({
+      type: 'suggestion',
+      text: "Consistency is key. Focus on completing just one core habit today, no matter what.",
+      icon: '🎯'
+    });
+  }
+  
+  if (insights.length < 4) {
+    insights.push({
+      type: 'growth',
+      text: "Did you know? Users who log habits before 10 AM are 3x more likely to maintain a 30-day streak.",
+      icon: '💡'
+    });
+  }
+
   if (insights.length === 0) {
     insights.push({
       type: 'positive',
