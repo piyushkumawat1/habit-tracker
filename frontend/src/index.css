@@ -1591,7 +1591,11 @@ input, select, textarea { font-family: inherit; }
 
   .main-content {
     margin-left: 0;
-    padding: calc(72px + env(safe-area-inset-top)) 16px calc(24px + 70px + env(safe-area-inset-bottom));
+    padding: calc(72px + env(safe-area-inset-top)) 16px 24px;
+  }
+
+  .glass-card, .card, .habit-card {
+    padding: 16px;
   }
 
   .page-header h1 { font-size: 1.35rem; }
@@ -2237,6 +2241,7 @@ input, select, textarea { font-family: inherit; }
 }
 
 .heatmap-scroll-wrapper {
+  width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 8px;
@@ -3086,11 +3091,11 @@ input, select, textarea { font-family: inherit; }
 
   .heatmap-container {
     min-width: 600px;
+    padding: 12px;
   }
 
   .greeting-card {
-    flex-direction: column;
-    align-items: flex-start;
+    gap: 8px;
   }
 
   .greeting-add-btn {

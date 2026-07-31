@@ -191,21 +191,21 @@ export default function Profile({ habits, logs }) {
   };
 
   return (
-    <section className="page active" style={{ maxWidth: 600, margin: '0 auto', paddingTop: '2rem' }}>
-      <div className="page-header" style={{ marginBottom: '2rem' }}>
+    <section className="page active profile-page" style={{ maxWidth: 600, margin: '0 auto' }}>
+      <div className="page-header" style={{ marginBottom: '1.5rem' }}>
         <div>
           <h1>Your Profile</h1>
           <p className="page-subtitle">Manage your personal information and preferences</p>
         </div>
       </div>
 
-      <div className="glass-card" style={{ padding: '2rem' }}>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div className="glass-card">
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
             <div 
               className="user-avatar" 
-              style={{ width: 100, height: 100, fontSize: '3rem', cursor: 'pointer', position: 'relative', overflow: 'hidden', borderRadius: '50%', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+              style={{ width: 80, height: 80, fontSize: '2.5rem', cursor: 'pointer', position: 'relative', overflow: 'hidden', borderRadius: '50%', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
               onClick={() => fileInputRef.current?.click()}
             >
               {avatar ? (

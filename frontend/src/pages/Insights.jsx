@@ -301,15 +301,17 @@ export default function Insights({ habits, logs }) {
         {/* Heatmap */}
         <div className="insight-card glass-card span-2" style={{ position: 'relative' }}>
           <h3>Consistency Heatmap {user?.is_pro ? '(Last 12 Weeks)' : '(Last 7 Days)'}</h3>
-          <div className="heatmap-container">
-            {totalHabits === 0 ? <p style={{ color: 'hsl(var(--text-secondary))', fontSize: '0.9rem' }}>Add habits to see the heatmap.</p> : (
-              <div className="heatmap-wrapper">
-                <div className="heatmap-days">
-                  {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => <span key={i}>{d}</span>)}
+          <div className="heatmap-scroll-wrapper">
+            <div className="heatmap-container">
+              {totalHabits === 0 ? <p style={{ color: 'hsl(var(--text-secondary))', fontSize: '0.9rem' }}>Add habits to see the heatmap.</p> : (
+                <div className="heatmap-wrapper">
+                  <div className="heatmap-days">
+                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => <span key={i}>{d}</span>)}
+                  </div>
+                  <div className="heatmap-grid">{heatCells}</div>
                 </div>
-                <div className="heatmap-grid">{heatCells}</div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
           {!user?.is_pro && totalHabits > 0 && (
             <div style={{ position: 'absolute', bottom: 16, right: 16, background: 'hsl(var(--surface))', padding: '6px 12px', borderRadius: '16px', border: '1px solid hsl(var(--brand))', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
