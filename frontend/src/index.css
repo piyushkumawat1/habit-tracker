@@ -1202,10 +1202,12 @@ input, select, textarea { font-family: inherit; }
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
+  min-width: 0;
 }
 
 .insight-card {
   min-height: 260px;
+  min-width: 0;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -2193,6 +2195,8 @@ input, select, textarea { font-family: inherit; }
 /* ---------- Heatmap ---------- */
 .heatmap-section {
   margin-bottom: 28px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .heatmap-header {
@@ -2389,12 +2393,14 @@ input, select, textarea { font-family: inherit; }
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   align-items: start;
+  min-width: 0;
 }
 
 .dashboard-col {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 0;
 }
 
 /* ---------- Greeting Card ---------- */
