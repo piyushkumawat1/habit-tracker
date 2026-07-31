@@ -2643,6 +2643,7 @@ input, select, textarea { font-family: inherit; }
   letter-spacing: -0.04em;
   background: linear-gradient(135deg, #FF4500, #FFD700);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1;
   filter: drop-shadow(0 4px 8px rgba(255, 69, 0, 0.2));
