@@ -4,6 +4,7 @@ import { calcHabitStreak, categoryLabel, capitalize, difficultyLabel } from '../
 import { habitsApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
 import CreateHabitModal from '../components/CreateHabitModal.jsx';
+import FloatingActionButton from '../components/ui/FloatingActionButton.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import AiCoachChat from '../components/AiCoachChat.jsx';
 import { Edit2 } from 'lucide-react';
@@ -44,7 +45,7 @@ export default function Habits({ habits, logs, refresh }) {
           <h1>My Habits</h1>
           <p className="page-subtitle">{habits.length} habits tracked</p>
         </div>
-        <button className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95" onClick={() => setAddDialogOpen(true)}>+ New Habit</button>
+        <button className="hidden md:inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95" onClick={() => setAddDialogOpen(true)}>+ New Habit</button>
       </div>
 
       <div className="filter-bar" id="filter-bar">
@@ -141,6 +142,11 @@ export default function Habits({ habits, logs, refresh }) {
       )}
 
       <CreateHabitModal isOpen={addDialogOpen || editDialogOpen} onClose={() => { setAddDialogOpen(false); setEditDialogOpen(false); setEditHabit(null); }} refresh={refresh} editHabit={editHabit} />
+      
+      {/* Mobile Floating Action Button */}
+      <div className="md:hidden">
+        <FloatingActionButton onClick={() => setAddDialogOpen(true)} />
+      </div>
     </section>
   );
 }

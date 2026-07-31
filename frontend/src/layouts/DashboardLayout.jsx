@@ -1,26 +1,32 @@
 import { useState } from 'react';
 import Sidebar from '../components/layout/Sidebar.jsx';
+import BottomNav from '../components/layout/BottomNav.jsx';
 
 export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div id="app">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+    <div id="app" className="pb-[calc(env(safe-area-inset-bottom)+70px)] md:pb-0">
+      {/* Desktop Sidebar */}
+      <div className="hidden md:block">
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      </div>
 
-      {sidebarOpen && <div className="sidebar-overlay active" onClick={() => setSidebarOpen(false)} />}
-
-      <header className="mobile-header">
-        <button className="menu-toggle" aria-label="Toggle menu" onClick={() => setSidebarOpen(!sidebarOpen)}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <span className="mobile-brand">Habitley</span>
-        <div style={{ width: 36 }} />
+      {/* Mobile Top Header */}
+      <header className="mobile-header md:hidden">
+        <div className="flex items-center gap-2">
+          <img src="/logo.png" alt="Habitley" className="w-7 h-7" />
+          <span className="mobile-brand">Habitley</span>
+        </div>
       </header>
 
+      {/* Main Content Area */}
       <main className="main-content">
         {children}
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }

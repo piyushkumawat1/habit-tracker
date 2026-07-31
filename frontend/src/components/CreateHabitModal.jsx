@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import Dialog from './ui/Dialog.jsx';
+import BottomSheet from './ui/BottomSheet.jsx';
 import CustomSelect from './ui/CustomSelect.jsx';
 import { habitsApi } from '../lib/api.js';
 import { useToast } from '../context/ToastContext.jsx';
@@ -105,14 +105,8 @@ export default function CreateHabitModal({ isOpen, onClose, refresh, editHabit }
   }
 
   return (
-    <Dialog isOpen={isOpen} onClose={onClose} maxWidth={460}>
+    <BottomSheet isOpen={isOpen} onClose={onClose} title={editHabit ? 'Edit Habit' : 'Create Habit'}>
       <div className="flex flex-col gap-6 pt-2 pb-2">
-        <div className="flex justify-between items-start">
-          <div>
-            <h2 className="text-xl font-bold text-foreground tracking-tight">{editHabit ? 'Edit Habit' : 'Create Habit'}</h2>
-            <p className="text-sm text-muted-foreground mt-1">{editHabit ? 'Adjust your habit settings.' : "Keep it simple. What's the smallest step?"}</p>
-          </div>
-        </div>
 
         <form className="flex flex-col gap-5" onSubmit={handleCreateHabit}>
           
@@ -262,6 +256,6 @@ export default function CreateHabitModal({ isOpen, onClose, refresh, editHabit }
           </button>
         </form>
       </div>
-    </Dialog>
+    </BottomSheet>
   );
 }

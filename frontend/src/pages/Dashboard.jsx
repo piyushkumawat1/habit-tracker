@@ -4,6 +4,7 @@ import { getToday, calcOverallStreak, calcHabitStreak, capitalize, formatTime, d
 import { logsApi, habitsApi } from '../lib/api.js';
 import CreateHabitModal from '../components/CreateHabitModal.jsx';
 import FocusTimerModal from '../components/FocusTimerModal.jsx';
+import FloatingActionButton from '../components/ui/FloatingActionButton.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import Dialog from '../components/ui/Dialog.jsx';
@@ -531,7 +532,7 @@ export default function Dashboard({ habits, logs, refresh }) {
             </div>
             <h3>Welcome to your Dashboard!</h3>
             <p>Start your journey by creating your first habit. We'll track your streaks, show your progress, and give you personalized insights.</p>
-            <button className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all hover:scale-105 hover:shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95 mt-4" onClick={() => setAddDialogOpen(true)}>
+            <button className="hidden md:inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all hover:scale-105 hover:shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95 mt-4" onClick={() => setAddDialogOpen(true)}>
               <Plus size={16} /> Create Your First Habit
             </button>
           </div>
@@ -554,7 +555,7 @@ export default function Dashboard({ habits, logs, refresh }) {
                       <Camera size={14} /> Snapshot
                     </button>
                   )}
-                  <button className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:scale-105 hover:shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95" onClick={() => setAddDialogOpen(true)}>
+                  <button className="hidden md:inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:scale-105 hover:shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95" onClick={() => setAddDialogOpen(true)}>
                     <Plus size={16} /> New Habit
                   </button>
                 </div>
@@ -855,6 +856,10 @@ export default function Dashboard({ habits, logs, refresh }) {
         }} 
       />
 
+      {/* Mobile Floating Action Button */}
+      <div className="md:hidden">
+        <FloatingActionButton onClick={() => setAddDialogOpen(true)} />
+      </div>
 
     </section>
   );
