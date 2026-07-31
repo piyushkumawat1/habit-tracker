@@ -273,7 +273,6 @@ input, select, textarea { font-family: inherit; }
   margin-left: var(--sidebar-width);
   flex: 1;
   padding: 36px 44px;
-  max-width: 1100px;
 }
 
 /* ================================================

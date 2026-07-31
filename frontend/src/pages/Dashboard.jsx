@@ -409,7 +409,7 @@ export default function Dashboard({ habits, logs, refresh }) {
   };
 
   return (
-    <section id="page-home" className="page active dashboard-warm">
+    <section id="page-home" className="page active dashboard-warm" style={{ maxWidth: 1400, margin: '0 auto' }}>
 
       {/* ── ACTIVITY HEATMAP ── */}
       <div className="heatmap-section">
