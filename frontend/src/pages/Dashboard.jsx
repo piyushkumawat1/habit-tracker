@@ -717,32 +717,36 @@ export default function Dashboard({ habits, logs, refresh }) {
                 View All Habits <ChevronRight size={14} />
               </button>
             </div>
-{/* ── Virtual Garden (Pro Only) ── */}
+            {/* ── Virtual Garden (Pro Only) ── */}
             {user?.is_pro && (
-              <div className="glass-card">
-                <div className="dash-card-header" style={{ borderBottom: 'none', paddingBottom: 0 }}>
-                  <div className="dash-card-title">
-                    <span>{currentStage.icon}</span>
+              <div className="garden-card">
+                <div className="garden-header">
+                  <div className="garden-title">
+                    <span className="text-xl">{currentStage.icon}</span>
                     Virtual Garden
                   </div>
-                  <span className="badge" style={{ backgroundColor: 'var(--primary)', color: 'var(--primary-foreground)' }}>
+                  <div className="garden-xp-badge">
                     {gardenXP} XP
-                  </span>
+                  </div>
                 </div>
-                <div style={{ padding: '0 1.25rem 1.25rem' }}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-foreground">{currentStage.label}</span>
-                    <span className="text-xs text-muted-foreground">
+                <div className="garden-content">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-bold" style={{ color: currentStage.color }}>{currentStage.label}</span>
+                    <span className="text-xs font-medium" style={{ color: 'hsl(var(--text-tertiary))' }}>
                       {nextStage ? `Next: ${nextStage.label} at ${nextStage.req} day streak` : 'Max Level Reached!'}
                     </span>
                   </div>
-                  <div className="w-full h-3 rounded-full bg-secondary overflow-hidden">
+                  <div className="garden-progress-bg">
                     <div 
-                      className="h-full rounded-full transition-all duration-1000 ease-out" 
-                      style={{ width: `${progressToNext}%`, backgroundColor: currentStage.color }}
+                      className="garden-progress-fill" 
+                      style={{ 
+                        width: `${progressToNext}%`, 
+                        background: `linear-gradient(90deg, ${currentStage.color}88, ${currentStage.color})`,
+                        boxShadow: `0 0 12px ${currentStage.color}40`
+                      }}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-3 text-center">
+                  <p className="text-xs mt-4 text-center font-medium" style={{ color: 'hsl(var(--text-secondary))' }}>
                     Your garden grows with your longest streak.
                   </p>
                 </div>
