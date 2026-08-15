@@ -17,14 +17,14 @@ export default function BottomSheet({ isOpen, onClose, title, children }) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
+        <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center pointer-events-none">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 z-[100] backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto"
           />
           
           {/* Sheet */}
@@ -41,9 +41,9 @@ export default function BottomSheet({ isOpen, onClose, title, children }) {
                 onClose();
               }
             }}
-            className="fixed z-[101] bg-[hsl(var(--surface))] flex flex-col shadow-2xl overflow-hidden
-                       bottom-0 left-0 right-0 rounded-t-3xl border-t border-[hsl(var(--border))] w-full max-h-[90vh]
-                       md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-[460px] md:rounded-t-2xl md:border-l md:border-r"
+            className="relative z-[101] bg-[hsl(var(--surface))] flex flex-col shadow-2xl overflow-hidden
+                       rounded-t-3xl border-t border-[hsl(var(--border))] w-full max-h-[90vh] pointer-events-auto
+                       md:w-[460px] md:rounded-2xl md:border md:max-h-[85vh]"
           >
             {/* Drag Handle */}
             <div className="w-full flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
@@ -62,7 +62,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }) {
               {children}
             </div>
           </motion.div>
-        </>
+        </div>
       )}
     </AnimatePresence>
   );
